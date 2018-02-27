@@ -17,7 +17,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 
 //==============================================================================
-LazarusAudioProcessor::LazarusAudioProcessor()
+JuicySFAudioProcessor::JuicySFAudioProcessor()
      : AudioProcessor (getBusesProperties()),
        fluidSynthModel(),
        lastUIWidth(400),
@@ -26,12 +26,12 @@ LazarusAudioProcessor::LazarusAudioProcessor()
     initialiseSynth();
 }
 
-LazarusAudioProcessor::~LazarusAudioProcessor()
+JuicySFAudioProcessor::~JuicySFAudioProcessor()
 {
 //    delete fluidSynthModel;
 }
 
-void LazarusAudioProcessor::initialiseSynth() {
+void JuicySFAudioProcessor::initialiseSynth() {
     fluidSynthModel.initialise();
 
     fluidSynth = fluidSynthModel.getSynth();
@@ -47,12 +47,12 @@ void LazarusAudioProcessor::initialiseSynth() {
 }
 
 //==============================================================================
-const String LazarusAudioProcessor::getName() const
+const String JuicySFAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool LazarusAudioProcessor::acceptsMidi() const
+bool JuicySFAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -61,7 +61,7 @@ bool LazarusAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool LazarusAudioProcessor::producesMidi() const
+bool JuicySFAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -70,37 +70,37 @@ bool LazarusAudioProcessor::producesMidi() const
    #endif
 }
 
-double LazarusAudioProcessor::getTailLengthSeconds() const
+double JuicySFAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int LazarusAudioProcessor::getNumPrograms()
+int JuicySFAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int LazarusAudioProcessor::getCurrentProgram()
+int JuicySFAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void LazarusAudioProcessor::setCurrentProgram (int index)
+void JuicySFAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const String LazarusAudioProcessor::getProgramName (int index)
+const String JuicySFAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void LazarusAudioProcessor::changeProgramName (int index, const String& newName)
+void JuicySFAudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
 
 //==============================================================================
-void LazarusAudioProcessor::prepareToPlay (double sampleRate, int /*samplesPerBlock*/)
+void JuicySFAudioProcessor::prepareToPlay (double sampleRate, int /*samplesPerBlock*/)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
@@ -110,14 +110,14 @@ void LazarusAudioProcessor::prepareToPlay (double sampleRate, int /*samplesPerBl
     reset();
 }
 
-void LazarusAudioProcessor::releaseResources()
+void JuicySFAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
     keyboardState.reset();
 }
 
-bool LazarusAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool JuicySFAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
     // Only mono/stereo and input/output must have same layout
     const AudioChannelSet& mainOutput = layouts.getMainOutputChannelSet();
@@ -135,12 +135,12 @@ bool LazarusAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
     return mainOutput.size() <= 2;
 }
 
-AudioProcessor::BusesProperties LazarusAudioProcessor::getBusesProperties() {
+AudioProcessor::BusesProperties JuicySFAudioProcessor::getBusesProperties() {
     return BusesProperties().withInput  ("Input",  AudioChannelSet::stereo(), true)
             .withOutput ("Output", AudioChannelSet::stereo(), true);
 }
 
-void LazarusAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
+void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
     jassert (!isUsingDoublePrecision());
     const int numSamples = buffer.getNumSamples();
 
@@ -163,18 +163,18 @@ void LazarusAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
 }
 
 //==============================================================================
-bool LazarusAudioProcessor::hasEditor() const
+bool JuicySFAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-AudioProcessorEditor* LazarusAudioProcessor::createEditor()
+AudioProcessorEditor* JuicySFAudioProcessor::createEditor()
 {
     return new LazarusAudioProcessorEditor (*this);
 }
 
 //==============================================================================
-void LazarusAudioProcessor::getStateInformation (MemoryBlock& destData)
+void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
@@ -196,7 +196,7 @@ void LazarusAudioProcessor::getStateInformation (MemoryBlock& destData)
     copyXmlToBinary (xml, destData);
 }
 
-void LazarusAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -221,11 +221,11 @@ void LazarusAudioProcessor::setStateInformation (const void* data, int sizeInByt
 }
 
 // FluidSynth only supports float in its process function, so that's all we can support.
-bool LazarusAudioProcessor::supportsDoublePrecisionProcessing() const {
+bool JuicySFAudioProcessor::supportsDoublePrecisionProcessing() const {
     return false;
 }
 
-FluidSynthModel* LazarusAudioProcessor::getFluidSynthModel() {
+FluidSynthModel* JuicySFAudioProcessor::getFluidSynthModel() {
     return &fluidSynthModel;
 }
 
@@ -233,19 +233,19 @@ FluidSynthModel* LazarusAudioProcessor::getFluidSynthModel() {
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new LazarusAudioProcessor();
+    return new JuicySFAudioProcessor();
 }
 
-void LazarusAudioProcessor::setLastUIWidth(int width) {
+void JuicySFAudioProcessor::setLastUIWidth(int width) {
     this->lastUIWidth = width;
 }
-void LazarusAudioProcessor::setLastUIHeight(int height) {
+void JuicySFAudioProcessor::setLastUIHeight(int height) {
     this->lastUIHeight = height;
 }
 
-int LazarusAudioProcessor::getLastUIWidth() {
+int JuicySFAudioProcessor::getLastUIWidth() {
     return lastUIWidth;
 }
-int LazarusAudioProcessor::getLastUIHeight() {
+int JuicySFAudioProcessor::getLastUIHeight() {
     return lastUIHeight;
 }

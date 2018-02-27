@@ -16,12 +16,12 @@
 //==============================================================================
 /**
 */
-class LazarusAudioProcessor  : public AudioProcessor
+class JuicySFAudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    LazarusAudioProcessor();
-    ~LazarusAudioProcessor();
+    JuicySFAudioProcessor();
+    ~JuicySFAudioProcessor();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -80,5 +80,5 @@ private:
 
 //    Model* model;
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LazarusAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuicySFAudioProcessor)
 };

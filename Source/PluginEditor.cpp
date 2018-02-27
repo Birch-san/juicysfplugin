@@ -12,7 +12,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-LazarusAudioProcessorEditor::LazarusAudioProcessorEditor (LazarusAudioProcessor& p)
+LazarusAudioProcessorEditor::LazarusAudioProcessorEditor (JuicySFAudioProcessor& p)
     : AudioProcessorEditor (&p),
       processor (p),
       midiKeyboard (p.keyboardState, SurjectiveMidiKeyboardComponent::horizontalKeyboard),

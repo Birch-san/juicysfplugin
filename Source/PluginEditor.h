@@ -22,7 +22,7 @@
 class LazarusAudioProcessorEditor  : public AudioProcessorEditor
 {
 public:
-    LazarusAudioProcessorEditor (LazarusAudioProcessor&);
+    LazarusAudioProcessorEditor (JuicySFAudioProcessor&);
     ~LazarusAudioProcessorEditor();
 
     //==============================================================================
@@ -35,7 +35,7 @@ public:
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
-    LazarusAudioProcessor& processor;
+    JuicySFAudioProcessor& processor;
 
     SurjectiveMidiKeyboardComponent midiKeyboard;
     TablesComponent tablesComponent;
