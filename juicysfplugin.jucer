@@ -8,6 +8,44 @@
               pluginCode="Jspf" pluginManufacturerCode="Blbs">
   <MAINGROUP id="rCqBG3" name="juicysfplugin">
     <GROUP id="{ED7E27E3-B67D-383C-F819-F05289E08A33}" name="Source">
+      <FILE id="jhSsxG" name="FilePicker.cpp" compile="1" resource="0" file="Source/FilePicker.cpp"/>
+      <FILE id="kDg5Qi" name="FilePicker.h" compile="0" resource="0" file="Source/FilePicker.h"/>
+      <FILE id="xg2XPM" name="FluidSynthModel.cpp" compile="1" resource="0"
+            file="Source/FluidSynthModel.cpp"/>
+      <FILE id="kOSlkW" name="FluidSynthModel.h" compile="0" resource="0"
+            file="Source/FluidSynthModel.h"/>
+      <FILE id="olazZO" name="MyColours.cpp" compile="1" resource="0" file="Source/MyColours.cpp"/>
+      <FILE id="RbaYg9" name="MyColours.h" compile="0" resource="0" file="Source/MyColours.h"/>
+      <FILE id="ZFYfhD" name="Pill.cpp" compile="1" resource="0" file="Source/Pill.cpp"/>
+      <FILE id="CBKk98" name="Pill.h" compile="0" resource="0" file="Source/Pill.h"/>
+      <FILE id="esyv7j" name="Pills.cpp" compile="1" resource="0" file="Source/Pills.cpp"/>
+      <FILE id="qlJw1C" name="Pills.h" compile="0" resource="0" file="Source/Pills.h"/>
+      <FILE id="Q7V7pC" name="Preset.cpp" compile="1" resource="0" file="Source/Preset.cpp"/>
+      <FILE id="bPOtSV" name="Preset.h" compile="0" resource="0" file="Source/Preset.h"/>
+      <FILE id="tlzfXV" name="PresetsToBanks.h" compile="0" resource="0"
+            file="Source/PresetsToBanks.h"/>
+      <FILE id="SEcFsz" name="SoundfontSynthSound.cpp" compile="1" resource="0"
+            file="Source/SoundfontSynthSound.cpp"/>
+      <FILE id="kCI8aL" name="SoundfontSynthSound.h" compile="0" resource="0"
+            file="Source/SoundfontSynthSound.h"/>
+      <FILE id="FKMDFe" name="SoundfontSynthVoice.cpp" compile="1" resource="0"
+            file="Source/SoundfontSynthVoice.cpp"/>
+      <FILE id="t75qEY" name="SoundfontSynthVoice.h" compile="0" resource="0"
+            file="Source/SoundfontSynthVoice.h"/>
+      <FILE id="uAVIjl" name="SurjectiveMidiKeyboardComponent.cpp" compile="1"
+            resource="0" file="Source/SurjectiveMidiKeyboardComponent.cpp"/>
+      <FILE id="m3NMU5" name="SurjectiveMidiKeyboardComponent.h" compile="0"
+            resource="0" file="Source/SurjectiveMidiKeyboardComponent.h"/>
+      <FILE id="lKz1Zz" name="TableComponent.cpp" compile="1" resource="0"
+            file="Source/TableComponent.cpp"/>
+      <FILE id="D2v6G2" name="TableComponent.h" compile="0" resource="0"
+            file="Source/TableComponent.h"/>
+      <FILE id="DFpwRJ" name="TableModel.cpp" compile="1" resource="0" file="Source/TableModel.cpp"/>
+      <FILE id="iaUXIc" name="TableModel.h" compile="0" resource="0" file="Source/TableModel.h"/>
+      <FILE id="XSCMOI" name="TablesComponent.cpp" compile="1" resource="0"
+            file="Source/TablesComponent.cpp"/>
+      <FILE id="m0tqZa" name="TablesComponent.h" compile="0" resource="0"
+            file="Source/TablesComponent.h"/>
       <FILE id="wm4EZl" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="ABJlXP" name="PluginProcessor.h" compile="0" resource="0"

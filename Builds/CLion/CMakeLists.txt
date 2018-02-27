@@ -54,6 +54,31 @@ add_executable (STANDALONE_PLUGIN
 set_source_files_properties ("../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Standalone.cpp" PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library (SHARED_CODE STATIC
+    "../../Source/FilePicker.cpp"
+    "../../Source/FilePicker.h"
+    "../../Source/FluidSynthModel.cpp"
+    "../../Source/FluidSynthModel.h"
+    "../../Source/MyColours.cpp"
+    "../../Source/MyColours.h"
+    "../../Source/Pill.cpp"
+    "../../Source/Pill.h"
+    "../../Source/Pills.cpp"
+    "../../Source/Pills.h"
+    "../../Source/Preset.cpp"
+    "../../Source/Preset.h"
+    "../../Source/PresetsToBanks.h"
+    "../../Source/SoundfontSynthSound.cpp"
+    "../../Source/SoundfontSynthSound.h"
+    "../../Source/SoundfontSynthVoice.cpp"
+    "../../Source/SoundfontSynthVoice.h"
+    "../../Source/SurjectiveMidiKeyboardComponent.cpp"
+    "../../Source/SurjectiveMidiKeyboardComponent.h"
+    "../../Source/TableComponent.cpp"
+    "../../Source/TableComponent.h"
+    "../../Source/TableModel.cpp"
+    "../../Source/TableModel.h"
+    "../../Source/TablesComponent.cpp"
+    "../../Source/TablesComponent.h"
     "../../Source/PluginProcessor.cpp"
     "../../Source/PluginProcessor.h"
     "../../Source/PluginEditor.cpp"
@@ -1352,6 +1377,19 @@ add_library (SHARED_CODE STATIC
     "../../JuceLibraryCode/JuceHeader.h"
 )
 
+set_source_files_properties ("../../Source/FilePicker.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/FluidSynthModel.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/MyColours.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/Pill.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/Pills.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/Preset.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/PresetsToBanks.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/SoundfontSynthSound.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/SoundfontSynthVoice.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/SurjectiveMidiKeyboardComponent.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/TableComponent.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/TableModel.h" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../Source/TablesComponent.h" PROPERTIES HEADER_FILE_ONLY TRUE)
 set_source_files_properties ("../../Source/PluginProcessor.h" PROPERTIES HEADER_FILE_ONLY TRUE)
 set_source_files_properties ("../../Source/PluginEditor.h" PROPERTIES HEADER_FILE_ONLY TRUE)
 set_source_files_properties ("../../../../../../Applications/JUCE/modules/juce_audio_basics/audio_play_head/juce_AudioPlayHead.h" PROPERTIES HEADER_FILE_ONLY TRUE)

@@ -11,17 +11,17 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-
+#include "FluidSynthModel.h"
 
 //==============================================================================
 /**
 */
-class JuicysfpluginAudioProcessor  : public AudioProcessor
+class LazarusAudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    JuicysfpluginAudioProcessor();
-    ~JuicysfpluginAudioProcessor();
+    LazarusAudioProcessor();
+    ~LazarusAudioProcessor();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -31,7 +31,7 @@ public:
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
    #endif
 
-    void processBlock (AudioBuffer<float>&, MidiBuffer&) override;
+    void processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) override;
 
     //==============================================================================
     AudioProcessorEditor* createEditor() override;
@@ -42,7 +42,6 @@ public:
 
     bool acceptsMidi() const override;
     bool producesMidi() const override;
-    bool isMidiEffect() const override;
     double getTailLengthSeconds() const override;
 
     //==============================================================================
@@ -56,7 +55,30 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    bool supportsDoublePrecisionProcessing() const override;
+
+    FluidSynthModel* getFluidSynthModel();
+
+    MidiKeyboardState keyboardState;
+
+    int getLastUIWidth();
+    int getLastUIHeight();
+
+    void setLastUIWidth(int width);
+    void setLastUIHeight(int height);
+
 private:
+    void initialiseSynth();
+
+    FluidSynthModel fluidSynthModel;
+    fluid_synth_t* fluidSynth;
+    Synthesiser synth;
+
+    static BusesProperties getBusesProperties();
+
+    int lastUIWidth, lastUIHeight;
+
+//    Model* model;
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuicysfpluginAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LazarusAudioProcessor)
 };
