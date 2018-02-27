@@ -5,7 +5,8 @@
               pluginWantsMidiIn="1" pluginEditorRequiresKeys="1" headerPath="/usr/local/include"
               companyName="Birchlabs" companyWebsite="https://birchlabs.co.uk"
               bundleIdentifier="uk.co.birchlabs.juicysfplugin" pluginManufacturer="birchlabs"
-              pluginCode="Jspf" pluginManufacturerCode="Blbs">
+              pluginCode="Jspf" pluginManufacturerCode="Blbs" pluginName="Juicy SF"
+              pluginDesc="Audio plugin to play soundfonts">
   <MAINGROUP id="rCqBG3" name="juicysfplugin">
     <GROUP id="{ED7E27E3-B67D-383C-F819-F05289E08A33}" name="Source">
       <FILE id="jhSsxG" name="FilePicker.cpp" compile="1" resource="0" file="Source/FilePicker.cpp"/>
@@ -119,4 +120,7 @@
     <MODULE id="juce_video" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
   <JUCEOPTIONS/>
+  <LIVE_SETTINGS>
+    <OSX/>
+  </LIVE_SETTINGS>
 </JUCERPROJECT>

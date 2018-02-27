@@ -37,9 +37,9 @@
         <array>
           <dict>
             <key>name</key>
-            <string>birchlabs: JUCE Project</string>
+            <string>birchlabs: Juicy SF</string>
             <key>description</key>
-            <string>JUCE Project</string>
+            <string>Audio plugin to play soundfonts</string>
             <key>factoryFunction</key>
             <string>JUCEProjectAUFactoryAUv3</string>
             <key>manufacturer</key>

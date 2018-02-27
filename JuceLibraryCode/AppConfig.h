@@ -307,10 +307,10 @@
  #define JucePlugin_Enable_IAA             0
 #endif
 #ifndef  JucePlugin_Name
- #define JucePlugin_Name                   "JUCE Project"
+ #define JucePlugin_Name                   "Juicy SF"
 #endif
 #ifndef  JucePlugin_Desc
- #define JucePlugin_Desc                   "JUCE Project"
+ #define JucePlugin_Desc                   "Audio plugin to play soundfonts"
 #endif
 #ifndef  JucePlugin_Manufacturer
  #define JucePlugin_Manufacturer           "birchlabs"
@@ -415,5 +415,5 @@
  #define JucePlugin_IAASubType             JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_IAAName
- #define JucePlugin_IAAName                "birchlabs: JUCE Project"
+ #define JucePlugin_IAAName                "birchlabs: Juicy SF"
 #endif
