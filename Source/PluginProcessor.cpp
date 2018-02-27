@@ -174,7 +174,7 @@ bool JuicySFAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* JuicySFAudioProcessor::createEditor()
 {
-    return new LazarusAudioProcessorEditor (*this);
+    return new JuicySFAudioProcessorEditor (*this);
 }
 
 //==============================================================================

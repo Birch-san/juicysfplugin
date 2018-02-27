@@ -12,7 +12,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-LazarusAudioProcessorEditor::LazarusAudioProcessorEditor (JuicySFAudioProcessor& p)
+JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor& p)
     : AudioProcessorEditor (&p),
       processor (p),
       midiKeyboard (p.keyboardState, SurjectiveMidiKeyboardComponent::horizontalKeyboard),
@@ -37,12 +37,12 @@ LazarusAudioProcessorEditor::LazarusAudioProcessorEditor (JuicySFAudioProcessor&
     addAndMakeVisible(filePicker);
 }
 
-LazarusAudioProcessorEditor::~LazarusAudioProcessorEditor()
+JuicySFAudioProcessorEditor::~JuicySFAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void LazarusAudioProcessorEditor::paint (Graphics& g)
+void JuicySFAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
@@ -61,7 +61,7 @@ void LazarusAudioProcessorEditor::paint (Graphics& g)
     }
 }
 
-void LazarusAudioProcessorEditor::resized()
+void JuicySFAudioProcessorEditor::resized()
 {
     const int padding = 8;
     const int pianoHeight = 70;
@@ -86,7 +86,7 @@ void LazarusAudioProcessorEditor::resized()
     processor.setLastUIHeight(getHeight());
 }
 
-bool LazarusAudioProcessorEditor::keyPressed(const KeyPress &key) {
+bool JuicySFAudioProcessorEditor::keyPressed(const KeyPress &key) {
 //    if (!hasKeyboardFocus(false))
 //        return false;
 //    if (key.getKeyCode() == KeyPress::upKey){
@@ -113,7 +113,7 @@ bool LazarusAudioProcessorEditor::keyPressed(const KeyPress &key) {
     return false;
 }
 
-bool LazarusAudioProcessorEditor::keyStateChanged (bool isKeyDown) {
+bool JuicySFAudioProcessorEditor::keyStateChanged (bool isKeyDown) {
     return midiKeyboard.keyStateChanged(isKeyDown);
 //    for(auto childComponent : getChildren()) {
 //        if (childComponent->keyStateChanged(isKeyDown)) return true;

@@ -19,11 +19,11 @@
 //==============================================================================
 /**
 */
-class LazarusAudioProcessorEditor  : public AudioProcessorEditor
+class JuicySFAudioProcessorEditor  : public AudioProcessorEditor
 {
 public:
-    LazarusAudioProcessorEditor (JuicySFAudioProcessor&);
-    ~LazarusAudioProcessorEditor();
+    JuicySFAudioProcessorEditor (JuicySFAudioProcessor&);
+    ~JuicySFAudioProcessorEditor();
 
     //==============================================================================
     void paint (Graphics&) override;
@@ -43,5 +43,5 @@ private:
 
     bool focusInitialized;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LazarusAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuicySFAudioProcessorEditor)
 };
