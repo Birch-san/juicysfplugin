@@ -20,6 +20,10 @@ FluidSynthModel::~FluidSynthModel() {
 }
 
 void FluidSynthModel::initialise() {
+    if (initialised) {
+        delete_fluid_synth(synth);
+        delete_fluid_settings(settings);
+    }
     settings = new_fluid_settings();
     // https://sourceforge.net/p/fluidsynth/wiki/FluidSettings/
     fluid_settings_setstr(settings, "synth.verbose", "yes");

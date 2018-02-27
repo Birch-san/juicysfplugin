@@ -152,6 +152,10 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     synth.renderNextBlock (buffer, midiMessages, 0, numSamples);
     fluid_synth_process(fluidSynth, numSamples, 1, nullptr, buffer.getNumChannels(), buffer.getArrayOfWritePointers());
 
+    // (see juce_VST3_Wrapper.cpp for the assertion this would trip otherwise)
+    // we are !JucePlugin_ProducesMidiOutput, so clear remaining MIDI messages from our buffer
+    midiMessages.clear();
+
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
