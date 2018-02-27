@@ -22,6 +22,15 @@ add_library (VST MODULE
 
 set_source_files_properties ("../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.cpp" PROPERTIES HEADER_FILE_ONLY TRUE)
 
+add_library (VST3 MODULE
+    "../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3_Wrapper.cpp"
+    "../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.cpp"
+    "../../JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp"
+)
+
+set_source_files_properties ("../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3_Wrapper.cpp" PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties ("../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.cpp" PROPERTIES HEADER_FILE_ONLY TRUE)
+
 add_library (AU MODULE
     "../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/AU/juce_AU_Wrapper.mm"
     "../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_1.mm"
@@ -2638,8 +2647,10 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
 execute_process (COMMAND uname -m OUTPUT_VARIABLE JUCE_ARCH_LABEL OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 target_include_directories (VST PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
+    "/usr/local/include"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -2681,7 +2692,7 @@ set_target_properties (VST PROPERTIES
     XCODE_ATTRIBUTE_INSTALL_PATH "$(HOME)/Library/Audio/Plug-Ins/VST/"
     XCODE_ATTRIBUTE_LIBRARY_STYLE Bundle
     XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET_ppc 10.4
-    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER com.yourcompany.juicysfplugin
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
     XCODE_ATTRIBUTE_SDKROOT_ppc macosx10.5
     XCODE_ATTRIBUTE_USE_HEADERMAP NO
     XCODE_ATTRIBUTE_WRAPPER_EXTENSION vst
@@ -2694,6 +2705,8 @@ set_target_properties (VST PROPERTIES
 
 target_link_libraries (VST PRIVATE
     SHARED_CODE
+    "-L/usr/local/lib"
+    "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
     "-framework AVFoundation"
@@ -2716,9 +2729,94 @@ add_custom_command (TARGET VST POST_BUILD
     COMMENT "Copying \"juicysfplugin.vst\" to \"$ENV{HOME}/Library/Audio/Plug-Ins/VST/\""
 )
 
-target_include_directories (AU PRIVATE
+target_include_directories (VST3 PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
+    "/usr/local/include"
+    "/Applications/JUCE/modules/juce_audio_plugin_client"
+)
+
+target_compile_definitions (VST3 PRIVATE
+    "_DEBUG=1"
+    "DEBUG=1"
+    "JUCER_XCODE_MAC_F6D2F4CF=1"
+    "JUCE_APP_VERSION=1.0.0"
+    "JUCE_APP_VERSION_HEX=0x10000"
+    "JucePlugin_Build_VST=0"
+    "JucePlugin_Build_VST3=1"
+    "JucePlugin_Build_AU=0"
+    "JucePlugin_Build_AUv3=0"
+    "JucePlugin_Build_RTAS=0"
+    "JucePlugin_Build_AAX=0"
+    "JucePlugin_Build_Standalone=0"
+)
+
+target_compile_options (VST3 PRIVATE
+    -mmacosx-version-min=10.11
+    -O0
+)
+
+set_target_properties (VST3 PROPERTIES
+    OUTPUT_NAME "juicysfplugin"
+    CXX_STANDARD 14
+    CXX_EXTENSIONS OFF
+    XCODE_ATTRIBUTE_CLANG_LINK_OBJC_RUNTIME NO
+    XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES YES
+    XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "$(PROJECT_DIR)/build/$(CONFIGURATION)"
+    XCODE_ATTRIBUTE_COPY_PHASE_STRIP NO
+    XCODE_ATTRIBUTE_DEPLOYMENT_LOCATION YES
+    XCODE_ATTRIBUTE_DSTROOT /
+    XCODE_ATTRIBUTE_GCC_DYNAMIC_NO_PIC NO
+    XCODE_ATTRIBUTE_GCC_VERSION com.apple.compilers.llvm.clang.1_0
+    XCODE_ATTRIBUTE_GENERATE_PKGINFO_FILE YES
+    XCODE_ATTRIBUTE_INFOPLIST_FILE "/Users/birch/git/juicysfplugin/Builds/CLion/Debug-Info-VST3.plist"
+    XCODE_ATTRIBUTE_INFOPLIST_PREPROCESS NO
+    XCODE_ATTRIBUTE_INSTALL_PATH "$(HOME)/Library/Audio/Plug-Ins/VST3/"
+    XCODE_ATTRIBUTE_LIBRARY_STYLE Bundle
+    XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET_ppc 10.4
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
+    XCODE_ATTRIBUTE_SDKROOT_ppc macosx10.5
+    XCODE_ATTRIBUTE_USE_HEADERMAP NO
+    XCODE_ATTRIBUTE_WRAPPER_EXTENSION vst3
+    MACOSX_BUNDLE_INFO_PLIST "/Users/birch/git/juicysfplugin/Builds/CLion/Debug-Info-VST3.plist"
+    XCODE_ATTRIBUTE_PRODUCT_NAME "juicysfplugin"
+    BUNDLE TRUE
+    BUNDLE_EXTENSION vst3
+    XCODE_ATTRIBUTE_MACH_O_TYPE "mh_bundle"
+)
+
+target_link_libraries (VST3 PRIVATE
+    SHARED_CODE
+    "-L/usr/local/lib"
+    "-lfluidsynth"
+    "-framework Accelerate"
+    "-framework AudioToolbox"
+    "-framework AVFoundation"
+    "-framework AVKit"
+    "-framework Carbon"
+    "-framework Cocoa"
+    "-framework CoreAudio"
+    "-framework CoreMedia"
+    "-framework CoreMIDI"
+    "-framework DiscRecording"
+    "-framework IOKit"
+    "-framework OpenGL"
+    "-framework QuartzCore"
+    "-framework WebKit"
+)
+
+add_custom_command (TARGET VST3 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "$ENV{HOME}/Library/Audio/Plug-Ins/VST3/juicysfplugin.vst3"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_BINARY_DIR}/juicysfplugin.vst3" "$ENV{HOME}/Library/Audio/Plug-Ins/VST3/juicysfplugin.vst3"
+    COMMENT "Copying \"juicysfplugin.vst3\" to \"$ENV{HOME}/Library/Audio/Plug-Ins/VST3/\""
+)
+
+target_include_directories (AU PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "../../JuceLibraryCode"
+    "/Applications/JUCE/modules"
+    "/usr/local/include"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -2754,8 +2852,10 @@ if (RC_COMPILER)
     execute_process (COMMAND
         ${RC_COMPILER}
         -d ppc_$ppc -d i386_$i386 -d ppc64_$ppc64 -d x86_64_$x86_64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I "$(DEVELOPER_DIR)/Extras/CoreAudio/AudioUnits/AUPublic/AUBase"
+        -I "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
         -I "${PROJECT_SOURCE_DIR}/../../JuceLibraryCode"
         -I "/Applications/JUCE/modules"
+        -I "/usr/local/include"
         -I "/Applications/JUCE/modules/juce_audio_plugin_client"
         ${AU_REZ_SOURCES}
         -o ${AU_REZ_OUTPUT}
@@ -2784,7 +2884,7 @@ set_target_properties (AU PROPERTIES
     XCODE_ATTRIBUTE_INSTALL_PATH "$(HOME)/Library/Audio/Plug-Ins/Components/"
     XCODE_ATTRIBUTE_LIBRARY_STYLE Bundle
     XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET_ppc 10.4
-    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER com.yourcompany.juicysfplugin
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
     XCODE_ATTRIBUTE_SDKROOT_ppc macosx10.5
     XCODE_ATTRIBUTE_USE_HEADERMAP NO
     XCODE_ATTRIBUTE_WRAPPER_EXTENSION component
@@ -2797,6 +2897,8 @@ set_target_properties (AU PROPERTIES
 
 target_link_libraries (AU PRIVATE
     SHARED_CODE
+    "-L/usr/local/lib"
+    "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
     "-framework AudioUnit"
@@ -2822,8 +2924,10 @@ add_custom_command (TARGET AU POST_BUILD
 )
 
 target_include_directories (STANDALONE_PLUGIN PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
+    "/usr/local/include"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -2860,7 +2964,7 @@ set_target_properties (STANDALONE_PLUGIN PROPERTIES
     XCODE_ATTRIBUTE_INFOPLIST_FILE "/Users/birch/git/juicysfplugin/Builds/CLion/Debug-Info-Standalone_Plugin.plist"
     XCODE_ATTRIBUTE_INFOPLIST_PREPROCESS NO
     XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET_ppc 10.4
-    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER com.yourcompany.juicysfplugin
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
     XCODE_ATTRIBUTE_SDKROOT_ppc macosx10.5
     XCODE_ATTRIBUTE_USE_HEADERMAP NO
     MACOSX_BUNDLE_INFO_PLIST "/Users/birch/git/juicysfplugin/Builds/CLion/Debug-Info-Standalone_Plugin.plist"
@@ -2870,6 +2974,8 @@ set_target_properties (STANDALONE_PLUGIN PROPERTIES
 
 target_link_libraries (STANDALONE_PLUGIN PRIVATE
     SHARED_CODE
+    "-L/usr/local/lib"
+    "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
     "-framework AVFoundation"
@@ -2887,8 +2993,10 @@ target_link_libraries (STANDALONE_PLUGIN PRIVATE
 )
 
 target_include_directories (SHARED_CODE PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
+    "/usr/local/include"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -2899,9 +3007,9 @@ target_compile_definitions (SHARED_CODE PRIVATE
     "JUCE_APP_VERSION=1.0.0"
     "JUCE_APP_VERSION_HEX=0x10000"
     "JucePlugin_Build_VST=1"
-    "JucePlugin_Build_VST3=0"
+    "JucePlugin_Build_VST3=1"
     "JucePlugin_Build_AU=1"
-    "JucePlugin_Build_AUv3=0"
+    "JucePlugin_Build_AUv3=1"
     "JucePlugin_Build_RTAS=0"
     "JucePlugin_Build_AAX=0"
     "JucePlugin_Build_Standalone=1"
@@ -2925,12 +3033,14 @@ set_target_properties (SHARED_CODE PROPERTIES
     XCODE_ATTRIBUTE_GCC_VERSION com.apple.compilers.llvm.clang.1_0
     XCODE_ATTRIBUTE_INSTALL_PATH "@executable_path/../Frameworks"
     XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET_ppc 10.4
-    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER com.yourcompany.juicysfplugin
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
     XCODE_ATTRIBUTE_SDKROOT_ppc macosx10.5
     XCODE_ATTRIBUTE_USE_HEADERMAP NO
 )
 
 target_link_libraries (SHARED_CODE PRIVATE
+    "-L/usr/local/lib"
+    "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
     "-framework AVFoundation"
@@ -2961,8 +3071,10 @@ if (CMAKE_BUILD_TYPE STREQUAL Release)
 execute_process (COMMAND uname -m OUTPUT_VARIABLE JUCE_ARCH_LABEL OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 target_include_directories (VST PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
+    "/usr/local/include"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -3006,7 +3118,7 @@ set_target_properties (VST PROPERTIES
     XCODE_ATTRIBUTE_INSTALL_PATH "$(HOME)/Library/Audio/Plug-Ins/VST/"
     XCODE_ATTRIBUTE_LIBRARY_STYLE Bundle
     XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET_ppc 10.4
-    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER com.yourcompany.juicysfplugin
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
     XCODE_ATTRIBUTE_SDKROOT_ppc macosx10.5
     XCODE_ATTRIBUTE_USE_HEADERMAP NO
     XCODE_ATTRIBUTE_WRAPPER_EXTENSION vst
@@ -3019,6 +3131,8 @@ set_target_properties (VST PROPERTIES
 
 target_link_libraries (VST PRIVATE
     SHARED_CODE
+    "-L/usr/local/lib"
+    "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
     "-framework AVFoundation"
@@ -3041,9 +3155,96 @@ add_custom_command (TARGET VST POST_BUILD
     COMMENT "Copying \"juicysfplugin.vst\" to \"$ENV{HOME}/Library/Audio/Plug-Ins/VST/\""
 )
 
-target_include_directories (AU PRIVATE
+target_include_directories (VST3 PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
+    "/usr/local/include"
+    "/Applications/JUCE/modules/juce_audio_plugin_client"
+)
+
+target_compile_definitions (VST3 PRIVATE
+    "_NDEBUG=1"
+    "NDEBUG=1"
+    "JUCER_XCODE_MAC_F6D2F4CF=1"
+    "JUCE_APP_VERSION=1.0.0"
+    "JUCE_APP_VERSION_HEX=0x10000"
+    "JucePlugin_Build_VST=0"
+    "JucePlugin_Build_VST3=1"
+    "JucePlugin_Build_AU=0"
+    "JucePlugin_Build_AUv3=0"
+    "JucePlugin_Build_RTAS=0"
+    "JucePlugin_Build_AAX=0"
+    "JucePlugin_Build_Standalone=0"
+)
+
+target_compile_options (VST3 PRIVATE
+    -mmacosx-version-min=10.11
+    -O3
+    -flto
+)
+
+set_target_properties (VST3 PROPERTIES
+    OUTPUT_NAME "juicysfplugin"
+    CXX_STANDARD 14
+    CXX_EXTENSIONS OFF
+    XCODE_ATTRIBUTE_CLANG_LINK_OBJC_RUNTIME NO
+    XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES YES
+    XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "$(PROJECT_DIR)/build/$(CONFIGURATION)"
+    XCODE_ATTRIBUTE_DEAD_CODE_STRIPPING YES
+    XCODE_ATTRIBUTE_DEPLOYMENT_LOCATION YES
+    XCODE_ATTRIBUTE_DSTROOT /
+    XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS NO
+    XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN YES
+    XCODE_ATTRIBUTE_GCC_VERSION com.apple.compilers.llvm.clang.1_0
+    XCODE_ATTRIBUTE_GENERATE_PKGINFO_FILE YES
+    XCODE_ATTRIBUTE_INFOPLIST_FILE "/Users/birch/git/juicysfplugin/Builds/CLion/Release-Info-VST3.plist"
+    XCODE_ATTRIBUTE_INFOPLIST_PREPROCESS NO
+    XCODE_ATTRIBUTE_INSTALL_PATH "$(HOME)/Library/Audio/Plug-Ins/VST3/"
+    XCODE_ATTRIBUTE_LIBRARY_STYLE Bundle
+    XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET_ppc 10.4
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
+    XCODE_ATTRIBUTE_SDKROOT_ppc macosx10.5
+    XCODE_ATTRIBUTE_USE_HEADERMAP NO
+    XCODE_ATTRIBUTE_WRAPPER_EXTENSION vst3
+    MACOSX_BUNDLE_INFO_PLIST "/Users/birch/git/juicysfplugin/Builds/CLion/Release-Info-VST3.plist"
+    XCODE_ATTRIBUTE_PRODUCT_NAME "juicysfplugin"
+    BUNDLE TRUE
+    BUNDLE_EXTENSION vst3
+    XCODE_ATTRIBUTE_MACH_O_TYPE "mh_bundle"
+)
+
+target_link_libraries (VST3 PRIVATE
+    SHARED_CODE
+    "-L/usr/local/lib"
+    "-lfluidsynth"
+    "-framework Accelerate"
+    "-framework AudioToolbox"
+    "-framework AVFoundation"
+    "-framework AVKit"
+    "-framework Carbon"
+    "-framework Cocoa"
+    "-framework CoreAudio"
+    "-framework CoreMedia"
+    "-framework CoreMIDI"
+    "-framework DiscRecording"
+    "-framework IOKit"
+    "-framework OpenGL"
+    "-framework QuartzCore"
+    "-framework WebKit"
+)
+
+add_custom_command (TARGET VST3 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "$ENV{HOME}/Library/Audio/Plug-Ins/VST3/juicysfplugin.vst3"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_BINARY_DIR}/juicysfplugin.vst3" "$ENV{HOME}/Library/Audio/Plug-Ins/VST3/juicysfplugin.vst3"
+    COMMENT "Copying \"juicysfplugin.vst3\" to \"$ENV{HOME}/Library/Audio/Plug-Ins/VST3/\""
+)
+
+target_include_directories (AU PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "../../JuceLibraryCode"
+    "/Applications/JUCE/modules"
+    "/usr/local/include"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -3080,8 +3281,10 @@ if (RC_COMPILER)
     execute_process (COMMAND
         ${RC_COMPILER}
         -d ppc_$ppc -d i386_$i386 -d ppc64_$ppc64 -d x86_64_$x86_64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I "$(DEVELOPER_DIR)/Extras/CoreAudio/AudioUnits/AUPublic/AUBase"
+        -I "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
         -I "${PROJECT_SOURCE_DIR}/../../JuceLibraryCode"
         -I "/Applications/JUCE/modules"
+        -I "/usr/local/include"
         -I "/Applications/JUCE/modules/juce_audio_plugin_client"
         ${AU_REZ_SOURCES}
         -o ${AU_REZ_OUTPUT}
@@ -3111,7 +3314,7 @@ set_target_properties (AU PROPERTIES
     XCODE_ATTRIBUTE_INSTALL_PATH "$(HOME)/Library/Audio/Plug-Ins/Components/"
     XCODE_ATTRIBUTE_LIBRARY_STYLE Bundle
     XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET_ppc 10.4
-    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER com.yourcompany.juicysfplugin
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
     XCODE_ATTRIBUTE_SDKROOT_ppc macosx10.5
     XCODE_ATTRIBUTE_USE_HEADERMAP NO
     XCODE_ATTRIBUTE_WRAPPER_EXTENSION component
@@ -3124,6 +3327,8 @@ set_target_properties (AU PROPERTIES
 
 target_link_libraries (AU PRIVATE
     SHARED_CODE
+    "-L/usr/local/lib"
+    "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
     "-framework AudioUnit"
@@ -3149,8 +3354,10 @@ add_custom_command (TARGET AU POST_BUILD
 )
 
 target_include_directories (STANDALONE_PLUGIN PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
+    "/usr/local/include"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -3189,7 +3396,7 @@ set_target_properties (STANDALONE_PLUGIN PROPERTIES
     XCODE_ATTRIBUTE_INFOPLIST_FILE "/Users/birch/git/juicysfplugin/Builds/CLion/Release-Info-Standalone_Plugin.plist"
     XCODE_ATTRIBUTE_INFOPLIST_PREPROCESS NO
     XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET_ppc 10.4
-    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER com.yourcompany.juicysfplugin
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
     XCODE_ATTRIBUTE_SDKROOT_ppc macosx10.5
     XCODE_ATTRIBUTE_USE_HEADERMAP NO
     MACOSX_BUNDLE_INFO_PLIST "/Users/birch/git/juicysfplugin/Builds/CLion/Release-Info-Standalone_Plugin.plist"
@@ -3199,6 +3406,8 @@ set_target_properties (STANDALONE_PLUGIN PROPERTIES
 
 target_link_libraries (STANDALONE_PLUGIN PRIVATE
     SHARED_CODE
+    "-L/usr/local/lib"
+    "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
     "-framework AVFoundation"
@@ -3216,8 +3425,10 @@ target_link_libraries (STANDALONE_PLUGIN PRIVATE
 )
 
 target_include_directories (SHARED_CODE PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
+    "/usr/local/include"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -3228,9 +3439,9 @@ target_compile_definitions (SHARED_CODE PRIVATE
     "JUCE_APP_VERSION=1.0.0"
     "JUCE_APP_VERSION_HEX=0x10000"
     "JucePlugin_Build_VST=1"
-    "JucePlugin_Build_VST3=0"
+    "JucePlugin_Build_VST3=1"
     "JucePlugin_Build_AU=1"
-    "JucePlugin_Build_AUv3=0"
+    "JucePlugin_Build_AUv3=1"
     "JucePlugin_Build_RTAS=0"
     "JucePlugin_Build_AAX=0"
     "JucePlugin_Build_Standalone=1"
@@ -3256,12 +3467,14 @@ set_target_properties (SHARED_CODE PROPERTIES
     XCODE_ATTRIBUTE_GCC_VERSION com.apple.compilers.llvm.clang.1_0
     XCODE_ATTRIBUTE_INSTALL_PATH "@executable_path/../Frameworks"
     XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET_ppc 10.4
-    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER com.yourcompany.juicysfplugin
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
     XCODE_ATTRIBUTE_SDKROOT_ppc macosx10.5
     XCODE_ATTRIBUTE_USE_HEADERMAP NO
 )
 
 target_link_libraries (SHARED_CODE PRIVATE
+    "-L/usr/local/lib"
+    "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
     "-framework AVFoundation"

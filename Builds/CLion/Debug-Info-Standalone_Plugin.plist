@@ -8,7 +8,7 @@
     <key>CFBundleIconFile</key>
     <string/>
     <key>CFBundleIdentifier</key>
-    <string>com.yourcompany.juicysfplugin</string>
+    <string>uk.co.birchlabs.juicysfplugin</string>
     <key>CFBundleName</key>
     <string>juicysfplugin</string>
     <key>CFBundleDisplayName</key>

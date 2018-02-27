@@ -8,7 +8,7 @@
     <key>CFBundleIconFile</key>
     <string/>
     <key>CFBundleIdentifier</key>
-    <string>com.yourcompany.juicysfplugin</string>
+    <string>uk.co.birchlabs.juicysfplugin</string>
     <key>CFBundleName</key>
     <string>juicysfplugin</string>
     <key>CFBundleDisplayName</key>
@@ -29,17 +29,17 @@
     <array>
       <dict>
         <key>name</key>
-        <string>yourcompany: JUCE Project</string>
+        <string>birchlabs: JUCE Project</string>
         <key>description</key>
         <string>JUCE Project</string>
         <key>factoryFunction</key>
         <string>JUCEProjectAUFactory</string>
         <key>manufacturer</key>
-        <string>Manu</string>
+        <string>Blbs</string>
         <key>type</key>
-        <string>aufx</string>
+        <string>aumu</string>
         <key>subtype</key>
-        <string>Wyls</string>
+        <string>Jspf</string>
         <key>version</key>
         <integer>65536</integer>
       </dict>
