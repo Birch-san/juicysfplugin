@@ -131,7 +131,10 @@ void FluidSynthModel::onFileNameChanged(const string &absPath) {
 }
 
 void FluidSynthModel::unloadAndLoadFont(const string &absPath) {
-    fluid_synth_sfunload(synth, sfont_id, 1);
+    // in the base case, there is no font loaded
+    if (fluid_synth_sfcount(synth) > 0) {
+        fluid_synth_sfunload(synth, sfont_id, 1);
+    }
     loadFont(absPath);
 }
 
