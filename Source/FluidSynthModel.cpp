@@ -36,8 +36,7 @@ void FluidSynthModel::initialise() {
 
     synth = new_fluid_synth(settings);
 
-    sfont_id = 0;
-    loadFont("/Users/birch/Documents/soundfont/EarthBound.sf2");
+//    loadFont("/Users/birch/Documents/soundfont/EarthBound.sf2");
 
 
     fluid_synth_set_gain(synth, 2.0);
@@ -85,11 +84,23 @@ void FluidSynthModel::selectFirstPreset() {
 BanksToPresets FluidSynthModel::getBanks() {
     BanksToPresets banksToPresets;
 
+    int soundfontCount = fluid_synth_sfcount(synth);
+
+    if (soundfontCount == 0) {
+        // no soundfont selected
+        return banksToPresets;
+    }
+
     fluid_sfont_t* sfont = fluid_synth_get_sfont_by_id(synth, sfont_id);
+    if(sfont == nullptr) {
+        // no soundfont found by that ID
+        // the above guard (soundfontCount) protects us for the
+        // main case we're expecting. this guard is just defensive programming.
+        return banksToPresets;
+    }
 
     int offset = fluid_synth_get_bank_offset(synth, sfont_id);
 
-    jassert(sfont != nullptr);
     sfont->iteration_start(sfont);
 
     fluid_preset_t preset;

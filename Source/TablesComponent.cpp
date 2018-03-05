@@ -14,9 +14,13 @@ TablesComponent::TablesComponent(
     initialised(false)
 {
     fluid_preset_t* currentPreset = getCurrentPreset();
+    selectedBank = -1;
+    int selectedPreset = -1;
 
-    selectedBank = currentPreset->get_banknum(currentPreset);
-    int selectedPreset = currentPreset->get_num(currentPreset);
+    if (currentPreset != nullptr) {
+        selectedBank = currentPreset->get_banknum(currentPreset);
+        selectedPreset = currentPreset->get_num(currentPreset);
+    }
 
     auto rowToPresetMapper = [this](const vector<string> &row) {
         return stoi(row[0]);
@@ -29,7 +33,7 @@ TablesComponent::TablesComponent(
             {"Preset", "Name"},
             mapPresets(
                     banksToPresets,
-                    currentPreset->get_banknum(currentPreset)
+                    selectedBank
             ),
             [this](int preset){
                 this->onPresetSelected(preset);
@@ -71,7 +75,7 @@ Preset TablesComponent::getFirstPresetInBank(int bank) {
 }
 
 void TablesComponent::onBankSelected(int bank) {
-    if (!initialised) {
+    if (!initialised || bank == -1) {
         return;
     }
     cout << "Bank " << bank << endl;
@@ -99,7 +103,7 @@ int TablesComponent::presetToIndexMapper(int preset) {
 }
 
 void TablesComponent::onPresetSelected(int preset) {
-    if (!initialised) {
+    if (!initialised || preset == -1) {
         return;
     }
     cout << "Preset " << preset << endl;
