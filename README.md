@@ -2,8 +2,6 @@
 
 Latest release: https://github.com/Birch-san/juicysfplugin/releases
 
-<img src="https://github.com/Birch-san/juicysfplugin/raw/master/Juicy.png" width="128px">
-
 # What
 
 juicysfplugin is an Audio Plugin for playing MIDI music through a soundfont synthesizer.
