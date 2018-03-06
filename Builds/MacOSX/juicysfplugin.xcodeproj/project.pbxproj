@@ -95,7 +95,11 @@
 		35967471204E0EF800E16BD3 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF3DDC4B854DA1F16AD4564 /* OpenGL.framework */; };
 		35967472204E0EF800E16BD3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FB62D371AA3AB416FCB73CE /* QuartzCore.framework */; };
 		35967473204E0EF800E16BD3 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FD107636B29A49B998F03CA /* WebKit.framework */; };
-		3596747E204E141B00E16BD3 /* libfluidsynth.1.7.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3596747D204E141B00E16BD3 /* libfluidsynth.1.7.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35967480204E186800E16BD3 /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3596747F204E186800E16BD3 /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35967482204E188D00E16BD3 /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35967481204E188D00E16BD3 /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35967484204E189C00E16BD3 /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35967483204E189C00E16BD3 /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35967486204E18B900E16BD3 /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35967485204E18B900E16BD3 /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		3596748E204E1B3B00E16BD3 /* libfluidsynth.1.7.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3596748D204E1B3B00E16BD3 /* libfluidsynth.1.7.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		3758E5B3C2288245817A9ECD /* include_juce_audio_processors.mm in Sources */ = {isa = PBXBuildFile; fileRef = D83BE45225B0E49E077E5B87 /* include_juce_audio_processors.mm */; };
 		3BE4582C1A69CFFDC17790FE /* CoreAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB9DC0F378DBE6110579ABEB /* CoreAudioKit.framework */; };
 		4197FB69EAA917C1B9160B32 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86183C1237DA7A5F2CF41CC7 /* CoreAudio.framework */; };
@@ -191,13 +195,17 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		3596747A204E0F1100E16BD3 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3596747E204E141B00E16BD3 /* libfluidsynth.1.7.1.dylib in CopyFiles */,
+				3596748E204E1B3B00E16BD3 /* libfluidsynth.1.7.1.dylib in CopyFiles */,
+				35967486204E18B900E16BD3 /* libpcre.1.dylib in CopyFiles */,
+				35967484204E189C00E16BD3 /* libgthread-2.0.0.dylib in CopyFiles */,
+				35967482204E188D00E16BD3 /* libglib-2.0.0.dylib in CopyFiles */,
+				35967480204E186800E16BD3 /* libintl.8.dylib in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CDF6CC6582C75689BA673A10 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -226,8 +234,11 @@
 		2465FB46F4FBE888A5D785D5 /* include_juce_audio_plugin_client_utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = include_juce_audio_plugin_client_utils.cpp; path = ../../JuceLibraryCode/include_juce_audio_plugin_client_utils.cpp; sourceTree = SOURCE_ROOT; };
 		2FB62D371AA3AB416FCB73CE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		33B56FA30952FB33928A557F /* juicysfplugin.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = juicysfplugin.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		3596747B204E0F7F00E16BD3 /* libfluidsynth.1.7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfluidsynth.1.7.1.dylib; sourceTree = "<group>"; };
-		3596747D204E141B00E16BD3 /* libfluidsynth.1.7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfluidsynth.1.7.1.dylib; path = "../../../../../../usr/local/Cellar/fluid-synth/1.1.10/lib/libfluidsynth.1.7.1.dylib"; sourceTree = "<group>"; };
+		3596747F204E186800E16BD3 /* libintl.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libintl.8.dylib; sourceTree = "<group>"; };
+		35967481204E188D00E16BD3 /* libglib-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libglib-2.0.0.dylib"; sourceTree = "<group>"; };
+		35967483204E189C00E16BD3 /* libgthread-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libgthread-2.0.0.dylib"; sourceTree = "<group>"; };
+		35967485204E18B900E16BD3 /* libpcre.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpcre.1.dylib; sourceTree = "<group>"; };
+		3596748D204E1B3B00E16BD3 /* libfluidsynth.1.7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfluidsynth.1.7.1.dylib; path = "../../../../../../usr/local/Cellar/fluid-synth/1.1.10/lib/libfluidsynth.1.7.1.dylib"; sourceTree = "<group>"; };
 		379C84D5A55C1857A91CBC40 /* juce_audio_plugin_client */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_audio_plugin_client; path = /Applications/JUCE/modules/juce_audio_plugin_client; sourceTree = "<absolute>"; };
 		3B0BE48E8B34519259BA931D /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		3B1AE50061C46417C2C4E30D /* FluidSynthModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FluidSynthModel.h; path = ../../Source/FluidSynthModel.h; sourceTree = SOURCE_ROOT; };
@@ -570,8 +581,11 @@
 		FF6BE0B0C430808BA4FD975F /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				3596747B204E0F7F00E16BD3 /* libfluidsynth.1.7.1.dylib */,
-				3596747D204E141B00E16BD3 /* libfluidsynth.1.7.1.dylib */,
+				3596748D204E1B3B00E16BD3 /* libfluidsynth.1.7.1.dylib */,
+				35967485204E18B900E16BD3 /* libpcre.1.dylib */,
+				35967483204E189C00E16BD3 /* libgthread-2.0.0.dylib */,
+				35967481204E188D00E16BD3 /* libglib-2.0.0.dylib */,
+				3596747F204E186800E16BD3 /* libintl.8.dylib */,
 				48F8550CF03FCF8FD358D1C0 /* juicysfplugin.entitlements */,
 				0007E2E1FEE2BAEC9D55BA62 /* juicysfplugin */,
 				58957C3FD57D051F86CA1D6D /* JUCE Modules */,
