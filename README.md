@@ -13,8 +13,38 @@ We can rewrite this dynamic link like so:
 ```bash
 install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib @executable_path/../Frameworks/libfluidsynth.1.7.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/MacOS/juicysfplugin
 chmod +w /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/*
+# fluidsynth depends on self(?), glib, gthread, intl
 install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib @loader_path/../Frameworks/libfluidsynth.1.7.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
 install_name_tool -change /usr/local/opt/glib/lib/libglib-2.0.0.dylib @loader_path/../Frameworks/libglib-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
+install_name_tool -change /usr/local/opt/glib/lib/libgthread-2.0.0.dylib @loader_path/../Frameworks/libgthread-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
+install_name_tool -change /usr/local/opt/gettext/lib/libintl.8.dylib @loader_path/../Frameworks/libintl.8.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
+# glib depends on self(?) pcre, intl
+install_name_tool -change /usr/local/opt/glib/lib/libglib-2.0.0.dylib @loader_path/../Frameworks/libglib-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libglib-2.0.0.dylib
+install_name_tool -change /usr/local/opt/pcre/lib/libpcre.1.dylib @loader_path/../Frameworks/libpcre.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libglib-2.0.0.dylib
+install_name_tool -change /usr/local/opt/gettext/lib/libintl.8.dylib @loader_path/../Frameworks/libintl.8.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libglib-2.0.0.dylib
+# gthread depends on self(?) pcre, intl, glib
+# install_name_tool -change /usr/local/opt/glib/lib/libgthread-2.0.0.dylib @loader_path/../Frameworks/libgthread-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libgthread-2.0.0.dylib
+install_name_tool -change /usr/local/opt/pcre/lib/libpcre.1.dylib @loader_path/../Frameworks/libpcre.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libgthread-2.0.0.dylib
+install_name_tool -change /usr/local/opt/gettext/lib/libintl.8.dylib @loader_path/../Frameworks/libintl.8.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libgthread-2.0.0.dylib
+install_name_tool -change /usr/local/Cellar/glib/2.54.3/lib/libglib-2.0.0.dylib @loader_path/../Frameworks/libglib-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libgthread-2.0.0.dylib
+# intl depends on self(?)
+install_name_tool -change /usr/local/opt/gettext/lib/libintl.8.dylib @loader_path/../Frameworks/libintl.8.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libintl.8.dylib
+# pcre depends on self(?)
+install_name_tool -change /usr/local/opt/pcre/lib/libpcre.1.dylib @loader_path/../Frameworks/libpcre.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libpcre.1.dylib
+
+# install_name_tool -id @loader_path/../Frameworks/ libfluidsynth.1.dylib @loader_path/../Frameworks/libfluidsynth.1.7.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
+
+install_name_tool -id @loader_path/../Frameworks/libfluidsynth.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
+install_name_tool -id @loader_path/../Frameworks/libglib-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libglib-2.0.0.dylib
+install_name_tool -id @loader_path/../Frameworks/libgthread-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libgthread-2.0.0.dylib
+install_name_tool -id @loader_path/../Frameworks/libintl.8.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libintl.8.dylib
+install_name_tool -id @loader_path/../Frameworks/libpcre.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libpcre.1.dylib
+
+# /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libglib-2.0.0.dylib
+# /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libgthread-2.0.0.dylib
+# /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libintl.8.dylib
+# /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libpcre.1.dylib
+
 ```
 
 
