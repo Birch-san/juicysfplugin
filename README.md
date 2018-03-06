@@ -1,4 +1,14 @@
+<img src="https://github.com/Birch-san/juicysfplugin/raw/master/Juicy.png" width="128px">
+
+<img width="634" alt="image" src="https://user-images.githubusercontent.com/6141784/37062123-745e79f2-218d-11e8-8e30-30b3effeca70.png">
+
 # Making portable releases
+
+Building is trivial, but bundling to deploy on other people's computers is harder (they don't have fluidsynth, nor its dependencies).
+
+I've not automated this process.  
+It relies on the "copy" build steps which ensure our frameworks are bundled into the targets (e.g. libfluidsynth gets copied into the Frameworks folder of the .app target).  
+After that, I manually relink the .app to be portable. Here's how...
 
 Assuming your `juicysfplugin` repository lives in `~/git/juicysfplugin`, then by default it will be compiled will a dynamic link to the fluidsynth which brew installed into `/usr/local/opt`:
 
@@ -13,6 +23,8 @@ We can rewrite this dynamic link like so:
 ```bash
 # the executable depends on fluidsynth 1
 install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib @executable_path/../Frameworks/libfluidsynth.1.7.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/MacOS/juicysfplugin
+# the appex Plugin depends on fluidsynth 1. might have this slightly wrong.
+install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib @executable_path/../Frameworks/libfluidsynth.1.7.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/PlugIns/juicysfplugin.appex/Contents/MacOS/juicysfplugin
 chmod +w /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/*
 # fluidsynth depends on glib, gthread, intl
 # change its identity from 1.7.1 to just 1
@@ -57,17 +69,27 @@ I already added to XCode target "standalone plugin" a "copy files" build phase, 
 
 # Licenses
 
-## `libintl` LGPL
+## Framework
+
+Built upon JUCE framework under the GPL-v3 license:
+
+https://www.gnu.org/licenses/gpl-3.0.en.html
+
+## Libraries
+
+The following external libraries are bundled into this audio plugin and dynamically linked:
+
+### `libintl` LGPL
 
 https://www.gnu.org/software/gettext/manual/html_node/Licenses.html
 
 > either version 2.1 of the License, or (at your option) any later version.
 
-## `libglib` LGPL
+### `libglib` LGPL
 
 > either version 2.1 of the License, or (at your option) any later version.
 
-## `libgthread` LGPL
+### `libgthread` LGPL
 
 > either version 2.1 of the License, or (at your option) any later version.
 
@@ -75,9 +97,8 @@ https://www.gnu.org/software/gettext/manual/html_node/Licenses.html
 
 > Release 8 of PCRE is distributed under the terms of the "BSD" licence.
 
-## `libfluidsynth` LGPL
+### `libfluidsynth` LGPL
 
 https://github.com/FluidSynth/fluidsynth/blob/master/LICENSE
 
 > (This is the first released version of the Lesser GPL.  It also counts as the successor of the GNU Library Public License, version 2, hence the version number 2.1.)
-
