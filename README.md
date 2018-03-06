@@ -2,6 +2,8 @@
 
 <img width="634" alt="image" src="https://user-images.githubusercontent.com/6141784/37062123-745e79f2-218d-11e8-8e30-30b3effeca70.png">
 
+Latest release: https://github.com/Birch-san/juicysfplugin/releases
+
 # What
 
 juicysfplugin is an Audio Plugin for playing MIDI music through a soundfont synthesizer.
