@@ -23,7 +23,7 @@ I've not automated this process.
 It relies on the "copy" build steps which ensure our frameworks are bundled into the targets (e.g. libfluidsynth gets copied into the Frameworks folder of the .app target).  
 After that, I manually relink the .app to be portable. Here's how...
 
-Assuming your `juicysfplugin` repository lives in `~/git/juicysfplugin`, then by default it will be compiled will a dynamic link to the fluidsynth which brew installed into `/usr/local/opt`:
+Assuming your `juicysfplugin` repository lives in `~/git/juicysfplugin`, then by default it will be compiled with a dynamic link to the fluidsynth which brew installed into `/usr/local/opt`:
 
 ```bash
 otool -L /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/MacOS/juicysfplugin 
