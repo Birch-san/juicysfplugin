@@ -99,7 +99,7 @@
 		35967482204E188D00E16BD3 /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35967481204E188D00E16BD3 /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		35967484204E189C00E16BD3 /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35967483204E189C00E16BD3 /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		35967486204E18B900E16BD3 /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35967485204E18B900E16BD3 /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		3596748E204E1B3B00E16BD3 /* libfluidsynth.1.7.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3596748D204E1B3B00E16BD3 /* libfluidsynth.1.7.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35967490204E1FC100E16BD3 /* libfluidsynth.1.7.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3596748F204E1FC000E16BD3 /* libfluidsynth.1.7.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		3758E5B3C2288245817A9ECD /* include_juce_audio_processors.mm in Sources */ = {isa = PBXBuildFile; fileRef = D83BE45225B0E49E077E5B87 /* include_juce_audio_processors.mm */; };
 		3BE4582C1A69CFFDC17790FE /* CoreAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB9DC0F378DBE6110579ABEB /* CoreAudioKit.framework */; };
 		4197FB69EAA917C1B9160B32 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86183C1237DA7A5F2CF41CC7 /* CoreAudio.framework */; };
@@ -199,7 +199,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3596748E204E1B3B00E16BD3 /* libfluidsynth.1.7.1.dylib in CopyFiles */,
+				35967490204E1FC100E16BD3 /* libfluidsynth.1.7.1.dylib in CopyFiles */,
 				35967486204E18B900E16BD3 /* libpcre.1.dylib in CopyFiles */,
 				35967484204E189C00E16BD3 /* libgthread-2.0.0.dylib in CopyFiles */,
 				35967482204E188D00E16BD3 /* libglib-2.0.0.dylib in CopyFiles */,
@@ -239,6 +239,7 @@
 		35967483204E189C00E16BD3 /* libgthread-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libgthread-2.0.0.dylib"; sourceTree = "<group>"; };
 		35967485204E18B900E16BD3 /* libpcre.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpcre.1.dylib; sourceTree = "<group>"; };
 		3596748D204E1B3B00E16BD3 /* libfluidsynth.1.7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfluidsynth.1.7.1.dylib; path = "../../../../../../usr/local/Cellar/fluid-synth/1.1.10/lib/libfluidsynth.1.7.1.dylib"; sourceTree = "<group>"; };
+		3596748F204E1FC000E16BD3 /* libfluidsynth.1.7.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfluidsynth.1.7.1.dylib; sourceTree = "<group>"; };
 		379C84D5A55C1857A91CBC40 /* juce_audio_plugin_client */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_audio_plugin_client; path = /Applications/JUCE/modules/juce_audio_plugin_client; sourceTree = "<absolute>"; };
 		3B0BE48E8B34519259BA931D /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		3B1AE50061C46417C2C4E30D /* FluidSynthModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FluidSynthModel.h; path = ../../Source/FluidSynthModel.h; sourceTree = SOURCE_ROOT; };
@@ -582,6 +583,7 @@
 			isa = PBXGroup;
 			children = (
 				3596748D204E1B3B00E16BD3 /* libfluidsynth.1.7.1.dylib */,
+				3596748F204E1FC000E16BD3 /* libfluidsynth.1.7.1.dylib */,
 				35967485204E18B900E16BD3 /* libpcre.1.dylib */,
 				35967483204E189C00E16BD3 /* libgthread-2.0.0.dylib */,
 				35967481204E188D00E16BD3 /* libglib-2.0.0.dylib */,

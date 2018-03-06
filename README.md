@@ -11,7 +11,10 @@ otool -L /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugi
 We can rewrite this dynamic link like so:
 
 ```bash
-install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib @executable_path/../Frameworks/libfluidsynth.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/MacOS/juicysfplugin
+install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib @executable_path/../Frameworks/libfluidsynth.1.7.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/MacOS/juicysfplugin
+chmod +w /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/*
+install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib @loader_path/../Frameworks/libfluidsynth.1.7.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
+install_name_tool -change /usr/local/opt/glib/lib/libglib-2.0.0.dylib @loader_path/../Frameworks/libglib-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
 ```
 
 
@@ -21,7 +24,8 @@ We'll need:
 
 > glib and gthread, but also iconv and intl
 
-https://lists.nongnu.org/archive/html/fluid-dev/2012-03/msg00032.html
+https://lists.nongnu.org/archive/html/fluid-dev/2012-03/msg00032.html  
+https://lists.nongnu.org/archive/html/fluid-dev/2012-03/msg00033.html
 
 I already added to XCode target "standalone plugin" a "copy files" build phase, which copies the following into Frameworks:
 
