@@ -2,6 +2,17 @@
 
 <img width="634" alt="image" src="https://user-images.githubusercontent.com/6141784/37062123-745e79f2-218d-11e8-8e30-30b3effeca70.png">
 
+# What
+
+juicysfplugin is an Audio Plugin for playing MIDI music through a soundfont synthesizer.
+
+[JUCE](https://github.com/WeAreROLI/JUCE) is the framework for making audio plugins.  
+[fluidsynth](http://www.fluidsynth.org/) is the soundfont synthesizer.
+
+juicysfplugin works as a standalone application (for playing around). You can plugin your hardware MIDI keyboard, or play with the software MIDI keyboard. Or router MIDI messages into it from a virtual MIDI controller (e.g. the macOS IAC Bus).  
+
+juicysfplugin is also an Audio Plugin. VST, VST3, AU, AUv3.
+
 # Making portable releases
 
 Building is trivial, but bundling to deploy on other people's computers is harder (they don't have fluidsynth, nor its dependencies).
@@ -69,6 +80,10 @@ I already added to XCode target "standalone plugin" a "copy files" build phase, 
 
 # Licenses
 
+Tell me if I've missed anything.
+
+Overall, juicysfplugin is GPLv3.
+
 ## Framework
 
 Built upon JUCE framework under the GPL-v3 license:
@@ -102,3 +117,14 @@ https://www.gnu.org/software/gettext/manual/html_node/Licenses.html
 https://github.com/FluidSynth/fluidsynth/blob/master/LICENSE
 
 > (This is the first released version of the Lesser GPL.  It also counts as the successor of the GNU Library Public License, version 2, hence the version number 2.1.)
+
+## SDKs
+
+### Steinberg VST3
+
+The VST3 release is built against the Steinberg VST3 SDK.
+
+http://www.steinberg.net/sdklicenses_vst3
+
+> This Software Development Kit is licensed under the terms of the Steinberg VST3 License,
+or alternatively under the terms of the General Public License (GPL) Version 3.
