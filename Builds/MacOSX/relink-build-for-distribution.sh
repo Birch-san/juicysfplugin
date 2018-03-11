@@ -27,13 +27,12 @@ PLUGINNAME="juicysfplugin"
 
 declare -a BUILDS=("Debug" "Release")
 # .app is a special case which has a Plugins folder inside it, containing a .appex Plugin
-declare -a TARGETS=(\
-".app"\
-".appex"\
-".component"\
-".vst"\
-".vst3"\
-".app/Contents/PlugIns/$PLUGINNAME.appex"
+declare -a TARGETS=("app" \
+"appex" \
+"component" \
+"vst" \
+"vst3" \
+"app/Contents/PlugIns/$PLUGINNAME.appex"
 )
 
 echo "Known builds: ${BUILDS[*]}"
@@ -59,7 +58,7 @@ do
 		echo "Found $i build subdirectory. Iterating over targets."
 		for j in "${TARGETS[@]}"
 		do
-			CONTENTS="$BUILD/$PLUGINNAME$j/Contents"
+			CONTENTS="$BUILD/$PLUGINNAME.$j/Contents"
 			BINARY="$CONTENTS/MacOS/$PLUGINNAME"
 			if [ -f "$BINARY" ]; then
 
