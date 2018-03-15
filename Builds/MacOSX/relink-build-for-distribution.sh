@@ -48,7 +48,6 @@ GTHREAD="libgthread-2.0.0.dylib"
 INTL="libintl.8.dylib"
 PCRE="libpcre.1.dylib"
 
-FRAMEWORKEXEC="@executable_path/../Frameworks"
 FRAMEWORKLOAD="@loader_path/../Frameworks"
 
 for i in "${BUILDS[@]}"
@@ -75,7 +74,7 @@ chmod +w "$FRAMEWORKS/"*
 # we want to change this link to point to the fluidsynth library we copied into: Contents/MacOS/Frameworks/libfluidsynth.1.7.1.dylib
 # we tell it to look for it with a relative path: @executable_path/../Frameworks/libfluidsynth.1.7.1.dylib
 # and yes, it's fine to point it at our 1.7.1.dylib even though it expects 1.dylib. Because 1.dylib was always a symlink to the more specific version (1.7.1) anyway.
-install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib "$FRAMEWORKEXEC/$FLUIDSYNTH" "$BINARY"
+install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib "$FRAMEWORKLOAD/$FLUIDSYNTH" "$BINARY"
 
 # changes to our libfluidsynth (depends on glib, gthread, intl):
 # change our 1.7.1.dylib to identify itself as 1.dylib, to meet our targets' expectations
