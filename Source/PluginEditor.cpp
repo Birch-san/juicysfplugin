@@ -22,8 +22,9 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor&
     // set resize limits for this plug-in
     setResizeLimits (400, 300, 800, 600);
 
-    setSize (p.getLastUIWidth(),
-            p.getLastUIHeight());
+    setSize (400, 300);
+
+    processor.subscribeToStateChanges(this);
 
     midiKeyboard.setName ("MIDI Keyboard");
 
@@ -39,6 +40,19 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor&
 
 JuicySFAudioProcessorEditor::~JuicySFAudioProcessorEditor()
 {
+    processor.unsubscribeFromStateChanges(this);
+}
+
+void JuicySFAudioProcessorEditor::getStateInformation (XmlElement& xml) {
+    // save
+    xml.setAttribute ("uiWidth", getWidth());
+    xml.setAttribute ("uiHeight", getHeight());
+}
+
+void JuicySFAudioProcessorEditor::setStateInformation (XmlElement* xmlState) {
+    // load
+    setSize (xmlState->getIntAttribute ("uiWidth", getWidth()),
+            xmlState->getIntAttribute ("uiHeight", getHeight()));
 }
 
 //==============================================================================
@@ -81,9 +95,6 @@ void JuicySFAudioProcessorEditor::resized()
 //    r3.removeFromTop(filePickerHeight);
 //
 //    filePicker.setBounds(r3);
-
-    processor.setLastUIWidth(getWidth());
-    processor.setLastUIHeight(getHeight());
 }
 
 bool JuicySFAudioProcessorEditor::keyPressed(const KeyPress &key) {

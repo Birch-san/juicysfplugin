@@ -15,11 +15,13 @@
 #include "TablesComponent.h"
 #include "SurjectiveMidiKeyboardComponent.h"
 #include "FilePicker.h"
+#include "StateChangeSubscriber.h"
 
 //==============================================================================
 /**
 */
-class JuicySFAudioProcessorEditor  : public AudioProcessorEditor
+class JuicySFAudioProcessorEditor  : public AudioProcessorEditor,
+                                     public StateChangeSubscriber
 {
 public:
     JuicySFAudioProcessorEditor (JuicySFAudioProcessor&);
@@ -31,6 +33,9 @@ public:
 
     bool keyPressed(const KeyPress &key) override;
     bool keyStateChanged (bool isKeyDown) override;
+
+    void getStateInformation (XmlElement& xml) override;
+    void setStateInformation (XmlElement* xmlState) override;
 
 private:
     // This reference is provided as a quick way for your editor to

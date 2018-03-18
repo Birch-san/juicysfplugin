@@ -12,6 +12,10 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FluidSynthModel.h"
+#include "StateChangeSubscriber.h"
+#include <list>
+
+using namespace std;
 
 //==============================================================================
 /**
@@ -61,11 +65,8 @@ public:
 
     MidiKeyboardState keyboardState;
 
-    int getLastUIWidth();
-    int getLastUIHeight();
-
-    void setLastUIWidth(int width);
-    void setLastUIHeight(int height);
+    void subscribeToStateChanges(StateChangeSubscriber* subscriber);
+    void unsubscribeFromStateChanges(StateChangeSubscriber* subscriber);
 
 private:
     void initialiseSynth();
@@ -74,9 +75,9 @@ private:
     fluid_synth_t* fluidSynth;
     Synthesiser synth;
 
-    static BusesProperties getBusesProperties();
+    list<StateChangeSubscriber*> stateChangeSubscribers;
 
-    int lastUIWidth, lastUIHeight;
+    static BusesProperties getBusesProperties();
 
 //    Model* model;
     //==============================================================================

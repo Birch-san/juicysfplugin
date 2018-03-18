@@ -234,6 +234,7 @@
 		526AF36E1188174AB300DA7B /* Pills.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Pills.h; path = ../../Source/Pills.h; sourceTree = SOURCE_ROOT; };
 		560D40E30164CA9D05C6AC3B /* MyColours.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MyColours.h; path = ../../Source/MyColours.h; sourceTree = SOURCE_ROOT; };
 		571BC08FE42BABE3BAF364C8 /* Info-AUv3_AppExtension.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-AUv3_AppExtension.plist"; sourceTree = SOURCE_ROOT; };
+		596723D094319DA06FDDCDC6 /* StateChangeSubscriber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateChangeSubscriber.h; path = ../../Source/StateChangeSubscriber.h; sourceTree = "<group>"; };
 		5B3CBC48DAB08EDF53CEE609 /* include_juce_audio_plugin_client_VST3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = include_juce_audio_plugin_client_VST3.cpp; path = ../../JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp; sourceTree = SOURCE_ROOT; };
 		5BC90F629770BCF4193FABDD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		63942F8053F1E4E72C1BE98C /* FilePicker.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FilePicker.cpp; path = ../../Source/FilePicker.cpp; sourceTree = SOURCE_ROOT; };
@@ -553,6 +554,7 @@
 				4C295CB748DFF39857513207 /* PluginProcessor.h */,
 				457D4946B07CC4A74EB0FAE1 /* PluginEditor.cpp */,
 				B3E8D1BE528BBA1B6004672E /* PluginEditor.h */,
+				596723D094319DA06FDDCDC6 /* StateChangeSubscriber.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
