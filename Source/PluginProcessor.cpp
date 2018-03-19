@@ -19,9 +19,8 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 //==============================================================================
 JuicySFAudioProcessor::JuicySFAudioProcessor()
      : AudioProcessor (getBusesProperties()),
-       fluidSynthModel()/*,
-       lastUIWidth(400),
-       lastUIHeight(300)*/
+       state(*this),
+       fluidSynthModel()
 {
     initialiseSynth();
 }
@@ -32,6 +31,8 @@ JuicySFAudioProcessor::~JuicySFAudioProcessor()
 }
 
 void JuicySFAudioProcessor::initialiseSynth() {
+    subscribeToStateChanges(getState());
+
     fluidSynthModel.initialise();
 
     fluidSynth = fluidSynthModel.getSynth();
@@ -241,6 +242,10 @@ bool JuicySFAudioProcessor::supportsDoublePrecisionProcessing() const {
 
 FluidSynthModel* JuicySFAudioProcessor::getFluidSynthModel() {
     return &fluidSynthModel;
+}
+
+State* JuicySFAudioProcessor::getState() {
+    return &state;
 }
 
 //==============================================================================

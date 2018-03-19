@@ -13,6 +13,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FluidSynthModel.h"
 #include "StateChangeSubscriber.h"
+#include "StateChangeNotifier.h"
+#include "State.h"
 #include <list>
 
 using namespace std;
@@ -20,7 +22,8 @@ using namespace std;
 //==============================================================================
 /**
 */
-class JuicySFAudioProcessor  : public AudioProcessor
+class JuicySFAudioProcessor  : public AudioProcessor,
+public StateChangeNotifier
 {
 public:
     //==============================================================================
@@ -65,12 +68,15 @@ public:
 
     MidiKeyboardState keyboardState;
 
-    void subscribeToStateChanges(StateChangeSubscriber* subscriber);
-    void unsubscribeFromStateChanges(StateChangeSubscriber* subscriber);
+    void subscribeToStateChanges(StateChangeSubscriber* subscriber) override;
+    void unsubscribeFromStateChanges(StateChangeSubscriber* subscriber) override;
+
+    State* getState();
 
 private:
     void initialiseSynth();
 
+    State state;
     FluidSynthModel fluidSynthModel;
     fluid_synth_t* fluidSynth;
     Synthesiser synth;

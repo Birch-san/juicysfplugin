@@ -95,6 +95,9 @@ void JuicySFAudioProcessorEditor::resized()
 //    r3.removeFromTop(filePickerHeight);
 //
 //    filePicker.setBounds(r3);
+
+    processor.getState()->setLastUIWidth(getWidth());
+    processor.getState()->setLastUIHeight(getHeight());
 }
 
 bool JuicySFAudioProcessorEditor::keyPressed(const KeyPress &key) {

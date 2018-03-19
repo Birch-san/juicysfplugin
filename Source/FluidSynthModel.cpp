@@ -7,13 +7,13 @@
 
 using namespace std;
 
-FluidSynthModel::FluidSynthModel() {
-    initialised = false;
-    channel = 0;
-    sfont_id = 0;
-    settings = nullptr;
-    synth = nullptr;
-}
+FluidSynthModel::FluidSynthModel() :
+        synth(nullptr),
+        settings(nullptr),
+        initialised(false),
+        sfont_id(0),
+        channel(0)
+{}
 
 FluidSynthModel::~FluidSynthModel() {
     if (initialised) {

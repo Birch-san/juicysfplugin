@@ -103,6 +103,7 @@
 		4CA8C1CEB3C6978A36AF7B42 /* include_juce_graphics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 75A66C3558F366D3A8477EFE /* include_juce_graphics.mm */; };
 		4E15A26240490B6186AF5814 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FD107636B29A49B998F03CA /* WebKit.framework */; };
 		581AADF14FC0294CD5AE416C /* PluginProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E15CB0CA601DF22E4DA35DCF /* PluginProcessor.cpp */; };
+		596724D38FC950269530431D /* State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59672981B666AD9D7B129F98 /* State.cpp */; };
 		5A2C2B811EF05303FEE1BDFA /* include_juce_audio_devices.mm in Sources */ = {isa = PBXBuildFile; fileRef = CDEEF07090FA0F9AC13D71D4 /* include_juce_audio_devices.mm */; };
 		5B904523A612134477A304D3 /* include_juce_audio_utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 94643E589DC134352A87E8C0 /* include_juce_audio_utils.mm */; };
 		5BAAD34574683785C1346B4A /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 937D42F23D12C8F6AE8B7A74 /* CoreMedia.framework */; };
@@ -235,6 +236,9 @@
 		560D40E30164CA9D05C6AC3B /* MyColours.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MyColours.h; path = ../../Source/MyColours.h; sourceTree = SOURCE_ROOT; };
 		571BC08FE42BABE3BAF364C8 /* Info-AUv3_AppExtension.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-AUv3_AppExtension.plist"; sourceTree = SOURCE_ROOT; };
 		596723D094319DA06FDDCDC6 /* StateChangeSubscriber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateChangeSubscriber.h; path = ../../Source/StateChangeSubscriber.h; sourceTree = "<group>"; };
+		5967261453864DEC8A110ACC /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = State.h; path = ../../Source/State.h; sourceTree = "<group>"; };
+		59672981B666AD9D7B129F98 /* State.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = State.cpp; path = ../../Source/State.cpp; sourceTree = "<group>"; };
+		59672ED47FA0506D163EF52A /* StateChangeNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateChangeNotifier.h; path = ../../Source/StateChangeNotifier.h; sourceTree = "<group>"; };
 		5B3CBC48DAB08EDF53CEE609 /* include_juce_audio_plugin_client_VST3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = include_juce_audio_plugin_client_VST3.cpp; path = ../../JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp; sourceTree = SOURCE_ROOT; };
 		5BC90F629770BCF4193FABDD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		63942F8053F1E4E72C1BE98C /* FilePicker.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FilePicker.cpp; path = ../../Source/FilePicker.cpp; sourceTree = SOURCE_ROOT; };
@@ -555,6 +559,9 @@
 				457D4946B07CC4A74EB0FAE1 /* PluginEditor.cpp */,
 				B3E8D1BE528BBA1B6004672E /* PluginEditor.h */,
 				596723D094319DA06FDDCDC6 /* StateChangeSubscriber.h */,
+				59672ED47FA0506D163EF52A /* StateChangeNotifier.h */,
+				59672981B666AD9D7B129F98 /* State.cpp */,
+				5967261453864DEC8A110ACC /* State.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -945,6 +952,7 @@
 				6353630F2BB68A8804506084 /* include_juce_gui_extra.mm in Sources */,
 				906232DF8DDD023678AB78A3 /* include_juce_opengl.mm in Sources */,
 				B2B7F4D38157F527D17E0B44 /* include_juce_video.mm in Sources */,
+				596724D38FC950269530431D /* State.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
