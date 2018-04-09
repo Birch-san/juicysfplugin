@@ -27,7 +27,7 @@ public:
     void resized() override;
 
     bool keyPressed(const KeyPress &key) override;
-    void fontChanged(FluidSynthModel *) override;
+    void fontChanged(FluidSynthModel *, const string &) override;
 
 private:
     FluidSynthModel* fluidSynthModel;

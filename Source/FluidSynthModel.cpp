@@ -7,13 +7,15 @@
 
 using namespace std;
 
-FluidSynthModel::FluidSynthModel() {
-    initialised = false;
-    channel = 0;
-    sfont_id = 0;
-    settings = nullptr;
-    synth = nullptr;
-}
+FluidSynthModel::FluidSynthModel()
+        : processor(nullptr),
+          synth(nullptr),
+          settings(nullptr),
+          initialised(false),
+          sfont_id(0),
+          channel(0)
+
+{}
 
 FluidSynthModel::~FluidSynthModel() {
     if (initialised) {
@@ -25,7 +27,8 @@ FluidSynthModel::~FluidSynthModel() {
     }
 }
 
-void FluidSynthModel::initialise() {
+void FluidSynthModel::initialise(JuicySFAudioProcessor& p) {
+    processor = &p;
 //    if (initialised) {
 //        delete_fluid_synth(synth);
 //        delete_fluid_settings(settings);
@@ -36,8 +39,9 @@ void FluidSynthModel::initialise() {
 
     synth = new_fluid_synth(settings);
 
-//    loadFont("/Users/birch/Documents/soundfont/EarthBound.sf2");
-
+    if (processor->soundFontPath.isNotEmpty()) {
+        loadFont(processor->soundFontPath.toStdString());
+    }
 
     fluid_synth_set_gain(synth, 2.0);
 
@@ -127,7 +131,7 @@ fluid_synth_t* FluidSynthModel::getSynth() {
 
 void FluidSynthModel::onFileNameChanged(const string &absPath) {
     unloadAndLoadFont(absPath);
-    eventListeners.call(&FluidSynthModel::Listener::fontChanged, this);
+    eventListeners.call(&FluidSynthModel::Listener::fontChanged, this, absPath);
 }
 
 void FluidSynthModel::unloadAndLoadFont(const string &absPath) {
@@ -147,7 +151,10 @@ void FluidSynthModel::loadFont(const string &absPath) {
 FluidSynthModel::Listener::~Listener() {
 }
 
-void FluidSynthModel::Listener::fontChanged(FluidSynthModel *) {
+void FluidSynthModel::Listener::fontChanged(FluidSynthModel * model, const string &absPath) {
+    if (model->initialised) {
+        model->processor->soundFontPath = String(absPath);
+    }
 }
 
 //==============================================================================

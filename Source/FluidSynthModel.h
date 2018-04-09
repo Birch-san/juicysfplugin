@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "PluginProcessor.h"
 #include <fluidsynth.h>
 #include <memory>
 #include "PresetsToBanks.h"
@@ -19,7 +20,7 @@ public:
     ~FluidSynthModel();
 
     fluid_synth_t* getSynth();
-    void initialise();
+    void initialise(JuicySFAudioProcessor& p);
 
     BanksToPresets getBanks();
 
@@ -41,7 +42,7 @@ public:
         virtual ~Listener();
 
         /** Called when the button is clicked. */
-        virtual void fontChanged (FluidSynthModel*);
+        virtual void fontChanged (FluidSynthModel*, const string &absPath);
     };
 
     /** Registers a listener to receive events when this button's state changes.
@@ -56,6 +57,8 @@ public:
     void removeListener (Listener* listener);
 
 private:
+    JuicySFAudioProcessor* processor;
+
     fluid_synth_t* synth;
     fluid_settings_t* settings;
 //    fluid_audio_driver_t* driver;

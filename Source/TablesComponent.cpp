@@ -164,7 +164,7 @@ bool TablesComponent::keyPressed(const KeyPress &key) {
     return presetTable->keyPressed(key);
 }
 
-void TablesComponent::fontChanged(FluidSynthModel *) {
+void TablesComponent::fontChanged(FluidSynthModel *, const string &) {
     banksToPresets = fluidSynthModel->getBanks();
 
     fluid_preset_t* currentPreset = getCurrentPreset();

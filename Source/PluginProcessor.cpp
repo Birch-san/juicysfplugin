@@ -21,8 +21,8 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
      : AudioProcessor (getBusesProperties()),
        lastUIWidth(400),
        lastUIHeight(300),
-       fluidSynthModel(),
-       soundFontPath(String())
+       soundFontPath(String()),
+       fluidSynthModel()
 {
     initialiseSynth();
 }
@@ -33,7 +33,7 @@ JuicySFAudioProcessor::~JuicySFAudioProcessor()
 }
 
 void JuicySFAudioProcessor::initialiseSynth() {
-    fluidSynthModel.initialise();
+    fluidSynthModel.initialise(*this);
 
     fluidSynth = fluidSynthModel.getSynth();
 
@@ -191,6 +191,7 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
     // add some attributes to it..
     xml.setAttribute ("uiWidth", lastUIWidth);
     xml.setAttribute ("uiHeight", lastUIHeight);
+    xml.setAttribute ("soundFontPath", soundFontPath);
 
 //    list<StateChangeSubscriber*>::iterator p;
 //    for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
@@ -226,6 +227,7 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
             // ok, now pull out our last window size..
             lastUIWidth  = jmax (xmlState->getIntAttribute ("uiWidth", lastUIWidth), 400);
             lastUIHeight = jmax (xmlState->getIntAttribute ("uiHeight", lastUIHeight), 300);
+            soundFontPath = xmlState->getStringAttribute ("soundFontPath", soundFontPath);
 
             // Now reload our parameters..
             for (auto* param : getParameters())
