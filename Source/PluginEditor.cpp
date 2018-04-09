@@ -22,9 +22,9 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor&
     // set resize limits for this plug-in
     setResizeLimits (400, 300, 800, 600);
 
-    setSize (400, 300);
+    setSize (p.lastUIWidth, p.lastUIHeight);
 
-    processor.subscribeToStateChanges(this);
+//    processor.subscribeToStateChanges(this);
 
     midiKeyboard.setName ("MIDI Keyboard");
 
@@ -40,20 +40,20 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor&
 
 JuicySFAudioProcessorEditor::~JuicySFAudioProcessorEditor()
 {
-    processor.unsubscribeFromStateChanges(this);
+//    processor.unsubscribeFromStateChanges(this);
 }
 
-void JuicySFAudioProcessorEditor::getStateInformation (XmlElement& xml) {
-    // save
-    xml.setAttribute ("uiWidth", getWidth());
-    xml.setAttribute ("uiHeight", getHeight());
-}
-
-void JuicySFAudioProcessorEditor::setStateInformation (XmlElement* xmlState) {
-    // load
-    setSize (xmlState->getIntAttribute ("uiWidth", getWidth()),
-            xmlState->getIntAttribute ("uiHeight", getHeight()));
-}
+//void JuicySFAudioProcessorEditor::getStateInformation (XmlElement& xml) {
+//    // save
+//    xml.setAttribute ("uiWidth", getWidth());
+//    xml.setAttribute ("uiHeight", getHeight());
+//}
+//
+//void JuicySFAudioProcessorEditor::setStateInformation (XmlElement* xmlState) {
+//    // load
+//    setSize (xmlState->getIntAttribute ("uiWidth", getWidth()),
+//            xmlState->getIntAttribute ("uiHeight", getHeight()));
+//}
 
 //==============================================================================
 void JuicySFAudioProcessorEditor::paint (Graphics& g)
@@ -84,6 +84,9 @@ void JuicySFAudioProcessorEditor::resized()
     filePicker.setBounds(r.removeFromTop(filePickerHeight + padding).reduced(padding, 0).withTrimmedTop(padding));
     midiKeyboard.setBounds (r.removeFromBottom (pianoHeight).reduced(padding, 0));
     tablesComponent.setBounds(r.reduced(0, padding));
+
+    processor.lastUIWidth = getWidth();
+    processor.lastUIHeight = getHeight();
 
 //    Rectangle<int> r2 (getLocalBounds());
 //    r2.reduce(0, padding);

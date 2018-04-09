@@ -65,8 +65,11 @@ public:
 
     MidiKeyboardState keyboardState;
 
-    void subscribeToStateChanges(StateChangeSubscriber* subscriber);
-    void unsubscribeFromStateChanges(StateChangeSubscriber* subscriber);
+//    void subscribeToStateChanges(StateChangeSubscriber* subscriber);
+//    void unsubscribeFromStateChanges(StateChangeSubscriber* subscriber);
+
+    int lastUIWidth, lastUIHeight;
+    String soundFontPath;
 
 private:
     void initialiseSynth();
@@ -75,7 +78,7 @@ private:
     fluid_synth_t* fluidSynth;
     Synthesiser synth;
 
-    list<StateChangeSubscriber*> stateChangeSubscribers;
+//    list<StateChangeSubscriber*> stateChangeSubscribers;
 
     static BusesProperties getBusesProperties();
 

@@ -19,9 +19,10 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 //==============================================================================
 JuicySFAudioProcessor::JuicySFAudioProcessor()
      : AudioProcessor (getBusesProperties()),
-       fluidSynthModel()/*,
        lastUIWidth(400),
-       lastUIHeight(300)*/
+       lastUIHeight(300),
+       fluidSynthModel(),
+       soundFontPath(String())
 {
     initialiseSynth();
 }
@@ -187,10 +188,14 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
     // Create an outer XML element..
     XmlElement xml ("MYPLUGINSETTINGS");
 
-    list<StateChangeSubscriber*>::iterator p;
-    for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
-        (*p)->getStateInformation(xml);
-    }
+    // add some attributes to it..
+    xml.setAttribute ("uiWidth", lastUIWidth);
+    xml.setAttribute ("uiHeight", lastUIHeight);
+
+//    list<StateChangeSubscriber*>::iterator p;
+//    for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
+//        (*p)->getStateInformation(xml);
+//    }
 
     // Store the values of all our parameters, using their param ID as the XML attribute
     for (auto* param : getParameters())
@@ -213,10 +218,14 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
         // make sure that it's actually our type of XML object..
         if (xmlState->hasTagName ("MYPLUGINSETTINGS"))
         {
-            list<StateChangeSubscriber*>::iterator p;
-            for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
-                (*p)->setStateInformation(xmlState);
-            }
+//            list<StateChangeSubscriber*>::iterator p;
+//            for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
+//                (*p)->setStateInformation(xmlState);
+//            }
+
+            // ok, now pull out our last window size..
+            lastUIWidth  = jmax (xmlState->getIntAttribute ("uiWidth", lastUIWidth), 400);
+            lastUIHeight = jmax (xmlState->getIntAttribute ("uiHeight", lastUIHeight), 300);
 
             // Now reload our parameters..
             for (auto* param : getParameters())
@@ -226,13 +235,13 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
     }
 }
 
-void JuicySFAudioProcessor::subscribeToStateChanges(StateChangeSubscriber* subscriber) {
-    stateChangeSubscribers.push_back(subscriber);
-}
-
-void JuicySFAudioProcessor::unsubscribeFromStateChanges(StateChangeSubscriber* subscriber) {
-    stateChangeSubscribers.remove(subscriber);
-}
+//void JuicySFAudioProcessor::subscribeToStateChanges(StateChangeSubscriber* subscriber) {
+//    stateChangeSubscribers.push_back(subscriber);
+//}
+//
+//void JuicySFAudioProcessor::unsubscribeFromStateChanges(StateChangeSubscriber* subscriber) {
+//    stateChangeSubscribers.remove(subscriber);
+//}
 
 // FluidSynth only supports float in its process function, so that's all we can support.
 bool JuicySFAudioProcessor::supportsDoublePrecisionProcessing() const {
