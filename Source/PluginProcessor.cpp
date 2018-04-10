@@ -254,6 +254,14 @@ FluidSynthModel* JuicySFAudioProcessor::getFluidSynthModel() {
     return &fluidSynthModel;
 }
 
+void JuicySFAudioProcessor::setSoundFontPath(const String& value) {
+    soundFontPath = value;
+}
+
+String& JuicySFAudioProcessor::getSoundFontPath() {
+    return soundFontPath;
+}
+
 //==============================================================================
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()

@@ -5,7 +5,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "PluginProcessor.h"
+#include "SharesParams.h"
 #include <fluidsynth.h>
 #include <memory>
 #include "PresetsToBanks.h"
@@ -20,7 +20,7 @@ public:
     ~FluidSynthModel();
 
     fluid_synth_t* getSynth();
-    void initialise(JuicySFAudioProcessor& p);
+    void initialise(SharesParams& p);
 
     BanksToPresets getBanks();
 
@@ -57,7 +57,7 @@ public:
     void removeListener (Listener* listener);
 
 private:
-    JuicySFAudioProcessor* processor;
+    SharesParams* sharesParams;
 
     fluid_synth_t* synth;
     fluid_settings_t* settings;

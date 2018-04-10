@@ -13,6 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FluidSynthModel.h"
 #include "StateChangeSubscriber.h"
+#include "SharesParams.h"
 #include <list>
 
 using namespace std;
@@ -20,7 +21,8 @@ using namespace std;
 //==============================================================================
 /**
 */
-class JuicySFAudioProcessor  : public AudioProcessor
+class JuicySFAudioProcessor  : public AudioProcessor,
+                               public SharesParams
 {
 public:
     //==============================================================================
@@ -65,14 +67,18 @@ public:
 
     MidiKeyboardState keyboardState;
 
+    virtual void setSoundFontPath(const String& value) override;
+    virtual String& getSoundFontPath() override;
+
 //    void subscribeToStateChanges(StateChangeSubscriber* subscriber);
 //    void unsubscribeFromStateChanges(StateChangeSubscriber* subscriber);
 
     int lastUIWidth, lastUIHeight;
-    String soundFontPath;
 
 private:
     void initialiseSynth();
+
+    String soundFontPath;
 
     FluidSynthModel fluidSynthModel;
     fluid_synth_t* fluidSynth;

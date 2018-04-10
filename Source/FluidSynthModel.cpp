@@ -8,7 +8,7 @@
 using namespace std;
 
 FluidSynthModel::FluidSynthModel()
-        : processor(nullptr),
+        : sharesParams(nullptr),
           synth(nullptr),
           settings(nullptr),
           initialised(false),
@@ -27,8 +27,8 @@ FluidSynthModel::~FluidSynthModel() {
     }
 }
 
-void FluidSynthModel::initialise(JuicySFAudioProcessor& p) {
-    processor = &p;
+void FluidSynthModel::initialise(SharesParams& p) {
+    sharesParams = &p;
 //    if (initialised) {
 //        delete_fluid_synth(synth);
 //        delete_fluid_settings(settings);
@@ -39,8 +39,8 @@ void FluidSynthModel::initialise(JuicySFAudioProcessor& p) {
 
     synth = new_fluid_synth(settings);
 
-    if (processor->soundFontPath.isNotEmpty()) {
-        loadFont(processor->soundFontPath.toStdString());
+    if (sharesParams->getSoundFontPath().isNotEmpty()) {
+        loadFont(sharesParams->getSoundFontPath().toStdString());
     }
 
     fluid_synth_set_gain(synth, 2.0);
@@ -153,7 +153,7 @@ FluidSynthModel::Listener::~Listener() {
 
 void FluidSynthModel::Listener::fontChanged(FluidSynthModel * model, const string &absPath) {
     if (model->initialised) {
-        model->processor->soundFontPath = String(absPath);
+        model->sharesParams->setSoundFontPath(String(absPath));
     }
 }
 
