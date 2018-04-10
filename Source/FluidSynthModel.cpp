@@ -130,6 +130,7 @@ fluid_synth_t* FluidSynthModel::getSynth() {
 
 void FluidSynthModel::onFileNameChanged(const string &absPath) {
     unloadAndLoadFont(absPath);
+    sharesParams.setSoundFontPath(String(absPath));
     eventListeners.call(&FluidSynthModel::Listener::fontChanged, this, absPath);
 }
 
@@ -151,7 +152,6 @@ FluidSynthModel::Listener::~Listener() {
 }
 
 void FluidSynthModel::Listener::fontChanged(FluidSynthModel * model, const string &absPath) {
-    model->sharesParams.setSoundFontPath(String(absPath));
 }
 
 //==============================================================================
