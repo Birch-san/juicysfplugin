@@ -22,7 +22,7 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
        lastUIWidth(400),
        lastUIHeight(300),
        soundFontPath(String()),
-       fluidSynthModel()
+       fluidSynthModel(*this)
 {
     initialiseSynth();
 }
@@ -33,7 +33,7 @@ JuicySFAudioProcessor::~JuicySFAudioProcessor()
 }
 
 void JuicySFAudioProcessor::initialiseSynth() {
-    fluidSynthModel.initialise(*this);
+    fluidSynthModel.initialise();
 
     fluidSynth = fluidSynthModel.getSynth();
 

@@ -16,11 +16,11 @@ using std::shared_ptr;
 
 class FluidSynthModel {
 public:
-    FluidSynthModel();
+    FluidSynthModel(SharesParams& p);
     ~FluidSynthModel();
 
     fluid_synth_t* getSynth();
-    void initialise(SharesParams& p);
+    void initialise();
 
     BanksToPresets getBanks();
 
@@ -57,7 +57,7 @@ public:
     void removeListener (Listener* listener);
 
 private:
-    SharesParams* sharesParams;
+    SharesParams& sharesParams;
 
     fluid_synth_t* synth;
     fluid_settings_t* settings;

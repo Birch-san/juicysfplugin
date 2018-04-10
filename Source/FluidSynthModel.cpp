@@ -7,8 +7,8 @@
 
 using namespace std;
 
-FluidSynthModel::FluidSynthModel()
-        : sharesParams(nullptr),
+FluidSynthModel::FluidSynthModel(SharesParams& p)
+        : sharesParams(p),
           synth(nullptr),
           settings(nullptr),
           initialised(false),
@@ -27,8 +27,7 @@ FluidSynthModel::~FluidSynthModel() {
     }
 }
 
-void FluidSynthModel::initialise(SharesParams& p) {
-    sharesParams = &p;
+void FluidSynthModel::initialise() {
 //    if (initialised) {
 //        delete_fluid_synth(synth);
 //        delete_fluid_settings(settings);
@@ -39,8 +38,8 @@ void FluidSynthModel::initialise(SharesParams& p) {
 
     synth = new_fluid_synth(settings);
 
-    if (sharesParams->getSoundFontPath().isNotEmpty()) {
-        loadFont(sharesParams->getSoundFontPath().toStdString());
+    if (sharesParams.getSoundFontPath().isNotEmpty()) {
+        loadFont(sharesParams.getSoundFontPath().toStdString());
     }
 
     fluid_synth_set_gain(synth, 2.0);
@@ -152,9 +151,7 @@ FluidSynthModel::Listener::~Listener() {
 }
 
 void FluidSynthModel::Listener::fontChanged(FluidSynthModel * model, const string &absPath) {
-    if (model->initialised) {
-        model->sharesParams->setSoundFontPath(String(absPath));
-    }
+    model->sharesParams.setSoundFontPath(String(absPath));
 }
 
 //==============================================================================
