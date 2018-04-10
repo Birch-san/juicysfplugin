@@ -22,6 +22,11 @@ FilePicker::FilePicker(
     // faster (rounded edges introduce transparency)
     setOpaque (true);
 
+    const String& currentSoundFontAbsPath = fluidSynthModel->getCurrentSoundFontAbsPath();
+    if (currentSoundFontAbsPath.isNotEmpty()) {
+        fileChooser.setCurrentFile(File(currentSoundFontAbsPath), true, dontSendNotification);
+    }
+
     addAndMakeVisible (fileChooser);
     fileChooser.addListener (this);
 }

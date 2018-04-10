@@ -170,6 +170,10 @@ bool FluidSynthModel::shouldLoadFont(const String &absPath) {
 void FluidSynthModel::Listener::fontChanged(FluidSynthModel * model, const String &absPath) {
 }
 
+const String& FluidSynthModel::getCurrentSoundFontAbsPath() {
+    return currentSoundFontAbsPath;
+}
+
 //==============================================================================
 void FluidSynthModel::addListener (FluidSynthModel::Listener* const newListener)
 {

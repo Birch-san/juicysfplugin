@@ -56,6 +56,8 @@ public:
     */
     void removeListener (Listener* listener);
 
+    const String& getCurrentSoundFontAbsPath();
+
 private:
     SharesParams& sharesParams;
 

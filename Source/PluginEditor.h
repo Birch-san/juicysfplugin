@@ -37,6 +37,8 @@ public:
 //    void getStateInformation (XmlElement& xml) override;
 //    void setStateInformation (XmlElement* xmlState) override;
 
+    const FilePicker& getFilePicker();
+
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

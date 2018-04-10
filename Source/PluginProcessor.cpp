@@ -242,6 +242,11 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
             if (editor != nullptr) {
                 editor->setSize(lastUIWidth, lastUIHeight);
             }
+
+//            const String& currentSoundFontAbsPath = fluidSynthModel->getCurrentSoundFontAbsPath();
+//            if (currentSoundFontAbsPath.isNotEmpty()) {
+//                fileChooser.setCurrentFile(File(currentSoundFontAbsPath), true, dontSendNotification);
+//            }
         }
     }
 }
