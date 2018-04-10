@@ -84,6 +84,9 @@ private:
     fluid_synth_t* fluidSynth;
     Synthesiser synth;
 
+//    // just a raw pointer; we do not own
+//    AudioProcessorEditor* pluginEditor;
+
 //    list<StateChangeSubscriber*> stateChangeSubscribers;
 
     static BusesProperties getBusesProperties();

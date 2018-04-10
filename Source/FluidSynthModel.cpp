@@ -11,6 +11,7 @@ FluidSynthModel::FluidSynthModel(SharesParams& p)
         : sharesParams(p),
           synth(nullptr),
           settings(nullptr),
+          currentSoundFontAbsPath(),
           initialised(false),
           sfont_id(0),
           channel(0)
@@ -38,9 +39,7 @@ void FluidSynthModel::initialise() {
 
     synth = new_fluid_synth(settings);
 
-    if (sharesParams.getSoundFontPath().isNotEmpty()) {
-        loadFont(sharesParams.getSoundFontPath().toStdString());
-    }
+    loadFont(sharesParams.getSoundFontPath());
 
     fluid_synth_set_gain(synth, 2.0);
 
@@ -128,13 +127,16 @@ fluid_synth_t* FluidSynthModel::getSynth() {
     return synth;
 }
 
-void FluidSynthModel::onFileNameChanged(const string &absPath) {
+void FluidSynthModel::onFileNameChanged(const String &absPath) {
+    if (!shouldLoadFont(absPath)) {
+        return;
+    }
     unloadAndLoadFont(absPath);
-    sharesParams.setSoundFontPath(String(absPath));
+    sharesParams.setSoundFontPath(absPath);
     eventListeners.call(&FluidSynthModel::Listener::fontChanged, this, absPath);
 }
 
-void FluidSynthModel::unloadAndLoadFont(const string &absPath) {
+void FluidSynthModel::unloadAndLoadFont(const String &absPath) {
     // in the base case, there is no font loaded
     if (fluid_synth_sfcount(synth) > 0) {
         fluid_synth_sfunload(synth, sfont_id, 1);
@@ -142,16 +144,30 @@ void FluidSynthModel::unloadAndLoadFont(const string &absPath) {
     loadFont(absPath);
 }
 
-void FluidSynthModel::loadFont(const string &absPath) {
+void FluidSynthModel::loadFont(const String &absPath) {
+    if (!shouldLoadFont(absPath)) {
+        return;
+    }
+    currentSoundFontAbsPath = absPath;
     sfont_id++;
-    fluid_synth_sfload(synth, absPath.c_str(), 1);
+    fluid_synth_sfload(synth, absPath.toStdString().c_str(), 1);
     selectFirstPreset();
 }
 
 FluidSynthModel::Listener::~Listener() {
 }
 
-void FluidSynthModel::Listener::fontChanged(FluidSynthModel * model, const string &absPath) {
+bool FluidSynthModel::shouldLoadFont(const String &absPath) {
+    if (absPath.isEmpty()) {
+        return false;
+    }
+    if (absPath == currentSoundFontAbsPath) {
+        return false;
+    }
+    return true;
+}
+
+void FluidSynthModel::Listener::fontChanged(FluidSynthModel * model, const String &absPath) {
 }
 
 //==============================================================================

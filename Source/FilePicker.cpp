@@ -43,5 +43,5 @@ void FilePicker::paint(Graphics& g)
 }
 
 void FilePicker::filenameComponentChanged (FilenameComponent*) {
-    fluidSynthModel->onFileNameChanged(fileChooser.getCurrentFile().getFullPathName().toStdString());
+    fluidSynthModel->onFileNameChanged(fileChooser.getCurrentFile().getFullPathName());
 }

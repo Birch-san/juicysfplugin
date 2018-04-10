@@ -27,7 +27,7 @@ public:
     void changePreset(int bank, int preset);
     int getChannel();
 
-    void onFileNameChanged(const string &absPath);
+    void onFileNameChanged(const String &absPath);
 
     //==============================================================================
     /**
@@ -42,7 +42,7 @@ public:
         virtual ~Listener();
 
         /** Called when the button is clicked. */
-        virtual void fontChanged (FluidSynthModel*, const string &absPath);
+        virtual void fontChanged (FluidSynthModel*, const String &absPath);
     };
 
     /** Registers a listener to receive events when this button's state changes.
@@ -63,11 +63,14 @@ private:
     fluid_settings_t* settings;
 //    fluid_audio_driver_t* driver;
 
+    String currentSoundFontAbsPath;
+
     const fluid_preset_t getFirstPreset();
     void selectFirstPreset();
 
-    void unloadAndLoadFont(const string &absPath);
-    void loadFont(const string &absPath);
+    void unloadAndLoadFont(const String &absPath);
+    void loadFont(const String &absPath);
+    bool shouldLoadFont(const String &absPath);
 
     bool initialised;
     unsigned int sfont_id;

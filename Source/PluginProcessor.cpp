@@ -22,7 +22,8 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
        lastUIWidth(400),
        lastUIHeight(300),
        soundFontPath(String()),
-       fluidSynthModel(*this)
+       fluidSynthModel(*this)/*,
+       pluginEditor(nullptr)*/
 {
     initialiseSynth();
 }
@@ -175,7 +176,8 @@ bool JuicySFAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* JuicySFAudioProcessor::createEditor()
 {
-    return new JuicySFAudioProcessorEditor (*this);
+    // grab a raw pointer to it for our own use
+    return /*pluginEditor = */new JuicySFAudioProcessorEditor (*this);
 }
 
 //==============================================================================
@@ -233,6 +235,13 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
             for (auto* param : getParameters())
                 if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param))
                     p->setValue ((float) xmlState->getDoubleAttribute (p->paramID, p->getValue()));
+
+            fluidSynthModel.onFileNameChanged(soundFontPath);
+
+            AudioProcessorEditor* editor = getActiveEditor();
+            if (editor != nullptr) {
+                editor->setSize(lastUIWidth, lastUIHeight);
+            }
         }
     }
 }
