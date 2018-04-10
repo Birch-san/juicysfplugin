@@ -14,13 +14,16 @@
 #include "PluginProcessor.h"
 #include "TablesComponent.h"
 #include "SurjectiveMidiKeyboardComponent.h"
+#include "FilePickerFragment.h"
+#include "ExposesComponents.h"
 #include "FilePicker.h"
 #include "StateChangeSubscriber.h"
 
 //==============================================================================
 /**
 */
-class JuicySFAudioProcessorEditor  : public AudioProcessorEditor/*,
+class JuicySFAudioProcessorEditor  : public AudioProcessorEditor,
+                                     public ExposesComponents/*,
                                      public StateChangeSubscriber*/
 {
 public:
@@ -37,7 +40,7 @@ public:
 //    void getStateInformation (XmlElement& xml) override;
 //    void setStateInformation (XmlElement* xmlState) override;
 
-    const FilePicker& getFilePicker();
+    virtual FilePickerFragment& getFilePicker() override;
 
 private:
     // This reference is provided as a quick way for your editor to

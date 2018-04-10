@@ -135,6 +135,6 @@ bool JuicySFAudioProcessorEditor::keyStateChanged (bool isKeyDown) {
 //    return false;
 }
 
-const FilePicker& JuicySFAudioProcessorEditor::getFilePicker() {
-
+FilePickerFragment& JuicySFAudioProcessorEditor::getFilePicker() {
+    return filePicker;
 }

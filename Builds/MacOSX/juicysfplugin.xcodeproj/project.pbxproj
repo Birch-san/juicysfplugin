@@ -235,7 +235,9 @@
 		560D40E30164CA9D05C6AC3B /* MyColours.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MyColours.h; path = ../../Source/MyColours.h; sourceTree = SOURCE_ROOT; };
 		571BC08FE42BABE3BAF364C8 /* Info-AUv3_AppExtension.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-AUv3_AppExtension.plist"; sourceTree = SOURCE_ROOT; };
 		596723D094319DA06FDDCDC6 /* StateChangeSubscriber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateChangeSubscriber.h; path = ../../Source/StateChangeSubscriber.h; sourceTree = "<group>"; };
+		596725F7ACCE2D50FCEC1981 /* ExposesComponents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExposesComponents.h; path = ../../Source/ExposesComponents.h; sourceTree = "<group>"; };
 		59672C6315E5D06A21B4A2F2 /* SharesParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SharesParams.h; path = ../../Source/SharesParams.h; sourceTree = "<group>"; };
+		59672DE3D2595F1C3D7189CB /* FilePickerFragment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FilePickerFragment.h; path = ../../Source/FilePickerFragment.h; sourceTree = "<group>"; };
 		5B3CBC48DAB08EDF53CEE609 /* include_juce_audio_plugin_client_VST3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = include_juce_audio_plugin_client_VST3.cpp; path = ../../JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp; sourceTree = SOURCE_ROOT; };
 		5BC90F629770BCF4193FABDD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		63942F8053F1E4E72C1BE98C /* FilePicker.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FilePicker.cpp; path = ../../Source/FilePicker.cpp; sourceTree = SOURCE_ROOT; };
@@ -557,6 +559,8 @@
 				B3E8D1BE528BBA1B6004672E /* PluginEditor.h */,
 				596723D094319DA06FDDCDC6 /* StateChangeSubscriber.h */,
 				59672C6315E5D06A21B4A2F2 /* SharesParams.h */,
+				596725F7ACCE2D50FCEC1981 /* ExposesComponents.h */,
+				59672DE3D2595F1C3D7189CB /* FilePickerFragment.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";

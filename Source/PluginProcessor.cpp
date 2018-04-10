@@ -12,6 +12,7 @@
 #include "PluginEditor.h"
 #include "SoundfontSynthVoice.h"
 #include "SoundfontSynthSound.h"
+#include "ExposesComponents.h"
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
@@ -241,6 +242,10 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
             AudioProcessorEditor* editor = getActiveEditor();
             if (editor != nullptr) {
                 editor->setSize(lastUIWidth, lastUIHeight);
+
+                jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
+                ExposesComponents* exposesComponents = dynamic_cast<ExposesComponents*> (editor);
+                exposesComponents->getFilePicker().setDisplayedFilePath(soundFontPath);
             }
 
 //            const String& currentSoundFontAbsPath = fluidSynthModel->getCurrentSoundFontAbsPath();

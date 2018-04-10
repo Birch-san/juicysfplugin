@@ -18,14 +18,12 @@ FilePicker::FilePicker(
         String(),
         "Choose a Soundfont file to load into the synthesizer"
 ),
-  fluidSynthModel(fluidSynthModel) {
+  fluidSynthModel(fluidSynthModel),
+  currentPath() {
     // faster (rounded edges introduce transparency)
     setOpaque (true);
 
-    const String& currentSoundFontAbsPath = fluidSynthModel->getCurrentSoundFontAbsPath();
-    if (currentSoundFontAbsPath.isNotEmpty()) {
-        fileChooser.setCurrentFile(File(currentSoundFontAbsPath), true, dontSendNotification);
-    }
+    setDisplayedFilePath(fluidSynthModel->getCurrentSoundFontAbsPath());
 
     addAndMakeVisible (fileChooser);
     fileChooser.addListener (this);
@@ -48,5 +46,24 @@ void FilePicker::paint(Graphics& g)
 }
 
 void FilePicker::filenameComponentChanged (FilenameComponent*) {
+    currentPath = fileChooser.getCurrentFile().getFullPathName();
     fluidSynthModel->onFileNameChanged(fileChooser.getCurrentFile().getFullPathName());
+}
+
+void FilePicker::setDisplayedFilePath(const String& path) {
+    if (!shouldChangeDisplayedFilePath(path)) {
+        return;
+    }
+    currentPath = path;
+    fileChooser.setCurrentFile(File(path), true, dontSendNotification);
+}
+
+bool FilePicker::shouldChangeDisplayedFilePath(const String &path) {
+    if (path.isEmpty()) {
+        return false;
+    }
+    if (path == currentPath) {
+        return false;
+    }
+    return true;
 }
