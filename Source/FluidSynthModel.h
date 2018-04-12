@@ -74,6 +74,8 @@ private:
     void loadFont(const String &absPath);
     bool shouldLoadFont(const String &absPath);
 
+    void changePresetImpl(int bank, int preset);
+
     bool initialised;
     unsigned int sfont_id;
     unsigned int channel;

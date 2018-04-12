@@ -13,6 +13,10 @@ public:
 
     virtual void setSoundFontPath(const String& value) = 0;
     virtual String& getSoundFontPath() = 0;
+    virtual int getPreset() = 0;
+    virtual void setPreset(int preset) = 0;
+    virtual int getBank() = 0;
+    virtual void setBank(int bank) = 0;
 };
 
 

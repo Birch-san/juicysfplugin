@@ -69,6 +69,10 @@ public:
 
     virtual void setSoundFontPath(const String& value) override;
     virtual String& getSoundFontPath() override;
+    virtual int getPreset() override;
+    virtual void setPreset(int preset) override;
+    virtual int getBank() override;
+    virtual void setBank(int bank) override;
 
 //    void subscribeToStateChanges(StateChangeSubscriber* subscriber);
 //    void unsubscribeFromStateChanges(StateChangeSubscriber* subscriber);
@@ -79,6 +83,8 @@ private:
     void initialiseSynth();
 
     String soundFontPath;
+    int lastPreset;
+    int lastBank;
 
     FluidSynthModel fluidSynthModel;
     fluid_synth_t* fluidSynth;

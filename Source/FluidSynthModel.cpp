@@ -39,7 +39,14 @@ void FluidSynthModel::initialise() {
 
     synth = new_fluid_synth(settings);
 
-    loadFont(sharesParams.getSoundFontPath());
+    if (sharesParams.getSoundFontPath().isNotEmpty()) {
+        loadFont(sharesParams.getSoundFontPath());
+        if (sharesParams.getPreset() == -1 || sharesParams.getBank() == -1) {
+            changePreset(sharesParams.getBank(), sharesParams.getPreset());
+        } else {
+            selectFirstPreset();
+        }
+    }
 
     fluid_synth_set_gain(synth, 2.0);
 
@@ -59,6 +66,15 @@ int FluidSynthModel::getChannel() {
 }
 
 void FluidSynthModel::changePreset(int bank, int preset) {
+    if (bank == -1 || preset == -1) {
+        return;
+    }
+    changePresetImpl(bank, preset);
+    sharesParams.setPreset(preset);
+    sharesParams.setBank(bank);
+}
+
+void FluidSynthModel::changePresetImpl(int bank, int preset) {
     fluid_synth_program_select(synth, channel, sfont_id, static_cast<unsigned int>(bank), static_cast<unsigned int>(preset));
 }
 
@@ -142,16 +158,13 @@ void FluidSynthModel::unloadAndLoadFont(const String &absPath) {
         fluid_synth_sfunload(synth, sfont_id, 1);
     }
     loadFont(absPath);
+    selectFirstPreset();
 }
 
 void FluidSynthModel::loadFont(const String &absPath) {
-    if (!shouldLoadFont(absPath)) {
-        return;
-    }
     currentSoundFontAbsPath = absPath;
     sfont_id++;
     fluid_synth_sfload(synth, absPath.toStdString().c_str(), 1);
-    selectFirstPreset();
 }
 
 FluidSynthModel::Listener::~Listener() {

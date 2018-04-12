@@ -23,6 +23,8 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
        lastUIWidth(400),
        lastUIHeight(300),
        soundFontPath(String()),
+       lastPreset(-1),
+       lastBank(-1),
        fluidSynthModel(*this)/*,
        pluginEditor(nullptr)*/
 {
@@ -195,6 +197,8 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
     xml.setAttribute ("uiWidth", lastUIWidth);
     xml.setAttribute ("uiHeight", lastUIHeight);
     xml.setAttribute ("soundFontPath", soundFontPath);
+    xml.setAttribute ("preset", lastPreset);
+    xml.setAttribute ("bank", lastBank);
 
 //    list<StateChangeSubscriber*>::iterator p;
 //    for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
@@ -231,6 +235,8 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
             lastUIWidth  = jmax (xmlState->getIntAttribute ("uiWidth", lastUIWidth), 400);
             lastUIHeight = jmax (xmlState->getIntAttribute ("uiHeight", lastUIHeight), 300);
             soundFontPath = xmlState->getStringAttribute ("soundFontPath", soundFontPath);
+            lastPreset = xmlState->getIntAttribute ("preset", lastPreset);
+            lastBank = xmlState->getIntAttribute ("bank", lastBank);
 
             // Now reload our parameters..
             for (auto* param : getParameters())
@@ -238,6 +244,7 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
                     p->setValue ((float) xmlState->getDoubleAttribute (p->paramID, p->getValue()));
 
             fluidSynthModel.onFileNameChanged(soundFontPath);
+            fluidSynthModel.changePreset(lastBank, lastPreset);
 
             AudioProcessorEditor* editor = getActiveEditor();
             if (editor != nullptr) {
@@ -279,6 +286,18 @@ void JuicySFAudioProcessor::setSoundFontPath(const String& value) {
 
 String& JuicySFAudioProcessor::getSoundFontPath() {
     return soundFontPath;
+}
+int JuicySFAudioProcessor::getPreset() {
+    return lastPreset;
+}
+int JuicySFAudioProcessor::getBank() {
+    return lastBank;
+}
+void JuicySFAudioProcessor::setPreset(int preset) {
+    lastPreset = preset;
+}
+void JuicySFAudioProcessor::setBank(int bank) {
+    lastBank = bank;
 }
 
 //==============================================================================
