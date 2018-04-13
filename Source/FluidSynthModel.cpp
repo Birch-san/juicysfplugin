@@ -41,11 +41,7 @@ void FluidSynthModel::initialise() {
 
     if (sharesParams.getSoundFontPath().isNotEmpty()) {
         loadFont(sharesParams.getSoundFontPath());
-        if (sharesParams.getPreset() == -1 || sharesParams.getBank() == -1) {
-            changePreset(sharesParams.getBank(), sharesParams.getPreset());
-        } else {
-            selectFirstPreset();
-        }
+        changePreset(sharesParams.getBank(), sharesParams.getPreset());
     }
 
     fluid_synth_set_gain(synth, 2.0);
@@ -67,7 +63,9 @@ int FluidSynthModel::getChannel() {
 
 void FluidSynthModel::changePreset(int bank, int preset) {
     if (bank == -1 || preset == -1) {
-        return;
+        unique_ptr<BankAndPreset> bankAndPreset = getFirstBankAndPreset();
+        bank = bankAndPreset->getBank();
+        preset = bankAndPreset->getPreset();
     }
     changePresetImpl(bank, preset);
     sharesParams.setPreset(preset);
@@ -90,6 +88,14 @@ const fluid_preset_t FluidSynthModel::getFirstPreset() {
 
     return preset;
 }
+
+unique_ptr<BankAndPreset> FluidSynthModel::getFirstBankAndPreset() {
+    fluid_preset_t preset = getFirstPreset();
+
+    int offset = fluid_synth_get_bank_offset(synth, sfont_id);
+
+    return make_unique<BankAndPreset>(preset.get_banknum(&preset) + offset, preset.get_num(&preset));
+};
 
 void FluidSynthModel::selectFirstPreset() {
     fluid_preset_t preset = getFirstPreset();
@@ -143,11 +149,12 @@ fluid_synth_t* FluidSynthModel::getSynth() {
     return synth;
 }
 
-void FluidSynthModel::onFileNameChanged(const String &absPath) {
+void FluidSynthModel::onFileNameChanged(const String &absPath, int bank, int preset) {
     if (!shouldLoadFont(absPath)) {
         return;
     }
     unloadAndLoadFont(absPath);
+    changePreset(bank, preset);
     sharesParams.setSoundFontPath(absPath);
     eventListeners.call(&FluidSynthModel::Listener::fontChanged, this, absPath);
 }
@@ -158,7 +165,6 @@ void FluidSynthModel::unloadAndLoadFont(const String &absPath) {
         fluid_synth_sfunload(synth, sfont_id, 1);
     }
     loadFont(absPath);
-    selectFirstPreset();
 }
 
 void FluidSynthModel::loadFont(const String &absPath) {

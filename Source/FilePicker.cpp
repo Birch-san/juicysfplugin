@@ -47,7 +47,7 @@ void FilePicker::paint(Graphics& g)
 
 void FilePicker::filenameComponentChanged (FilenameComponent*) {
     currentPath = fileChooser.getCurrentFile().getFullPathName();
-    fluidSynthModel->onFileNameChanged(fileChooser.getCurrentFile().getFullPathName());
+    fluidSynthModel->onFileNameChanged(fileChooser.getCurrentFile().getFullPathName(), -1, -1);
 }
 
 void FilePicker::setDisplayedFilePath(const String& path) {

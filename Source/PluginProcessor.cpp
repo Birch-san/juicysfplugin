@@ -243,8 +243,7 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
                 if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param))
                     p->setValue ((float) xmlState->getDoubleAttribute (p->paramID, p->getValue()));
 
-            fluidSynthModel.onFileNameChanged(soundFontPath);
-            fluidSynthModel.changePreset(lastBank, lastPreset);
+            fluidSynthModel.onFileNameChanged(soundFontPath, lastBank, lastPreset);
 
             AudioProcessorEditor* editor = getActiveEditor();
             if (editor != nullptr) {

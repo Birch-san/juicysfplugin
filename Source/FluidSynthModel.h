@@ -8,11 +8,14 @@
 #include "SharesParams.h"
 #include <fluidsynth.h>
 #include <memory>
+#include "BankAndPreset.h"
 #include "PresetsToBanks.h"
 
 
 // https://stackoverflow.com/a/13446565/5257399
-using std::shared_ptr;
+//using std::shared_ptr;
+
+using namespace std;
 
 class FluidSynthModel {
 public:
@@ -27,7 +30,7 @@ public:
     void changePreset(int bank, int preset);
     int getChannel();
 
-    void onFileNameChanged(const String &absPath);
+    void onFileNameChanged(const String &absPath, int bank, int preset);
 
     //==============================================================================
     /**
@@ -69,6 +72,7 @@ private:
 
     const fluid_preset_t getFirstPreset();
     void selectFirstPreset();
+    unique_ptr<BankAndPreset> getFirstBankAndPreset();
 
     void unloadAndLoadFont(const String &absPath);
     void loadFont(const String &absPath);
