@@ -24,6 +24,7 @@ public:
 
     fluid_synth_t* getSynth();
     void initialise();
+    bool isInitialised();
 
     BanksToPresets getBanks();
 

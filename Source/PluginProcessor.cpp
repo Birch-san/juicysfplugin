@@ -28,7 +28,7 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
        fluidSynthModel(*this)/*,
        pluginEditor(nullptr)*/
 {
-    initialiseSynth();
+//    initialiseSynth();
 }
 
 JuicySFAudioProcessor::~JuicySFAudioProcessor()
@@ -148,6 +148,11 @@ AudioProcessor::BusesProperties JuicySFAudioProcessor::getBusesProperties() {
 
 void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
     jassert (!isUsingDoublePrecision());
+
+    if (!fluidSynthModel.isInitialised()) {
+        initialiseSynth();
+    }
+
     const int numSamples = buffer.getNumSamples();
 
     // Now pass any incoming midi messages to our keyboard state object, and let it

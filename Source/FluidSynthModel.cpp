@@ -34,6 +34,14 @@ void FluidSynthModel::initialise() {
 //        delete_fluid_synth(synth);
 //        delete_fluid_settings(settings);
 //    }
+    /*
+     * when our plugin is hosted inside certain DAWs (e.g. FL Studio and presumably LMMS)
+     * a mutex is held (by the DAW?) which prevents fluidsynth's AudioObjectGetPropertyDataSize from completing.
+     * this means
+     * https://gist.github.com/tresf/230b20f083403a11a3c7
+     * https://github.com/LMMS/lmms/issues/649
+     * http://fluidsynth.sourceforge.net/api/
+     */
     settings = new_fluid_settings();
     // https://sourceforge.net/p/fluidsynth/wiki/FluidSettings/
     fluid_settings_setstr(settings, "synth.verbose", "yes");
@@ -213,4 +221,8 @@ void FluidSynthModel::setSampleRate(float sampleRate) {
         return;
     }
     fluid_synth_set_sample_rate(synth, sampleRate);
+}
+
+bool FluidSynthModel::isInitialised() {
+    return initialised;
 }
