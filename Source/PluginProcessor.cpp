@@ -111,6 +111,7 @@ void JuicySFAudioProcessor::prepareToPlay (double sampleRate, int /*samplesPerBl
     // initialisation that you need..
     synth.setCurrentPlaybackSampleRate (sampleRate);
     keyboardState.reset();
+    fluidSynthModel.setSampleRate(static_cast<float>(sampleRate));
 
     reset();
 }

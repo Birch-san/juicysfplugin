@@ -59,6 +59,8 @@ public:
     */
     void removeListener (Listener* listener);
 
+    void setSampleRate(float sampleRate);
+
     const String& getCurrentSoundFontAbsPath();
 
 private:
@@ -69,6 +71,8 @@ private:
 //    fluid_audio_driver_t* driver;
 
     String currentSoundFontAbsPath;
+
+    float currentSampleRate;
 
     const fluid_preset_t getFirstPreset();
     void selectFirstPreset();

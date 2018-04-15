@@ -12,6 +12,7 @@ FluidSynthModel::FluidSynthModel(SharesParams& p)
           synth(nullptr),
           settings(nullptr),
           currentSoundFontAbsPath(),
+          currentSampleRate(44100),
           initialised(false),
           sfont_id(0),
           channel(0)
@@ -38,6 +39,7 @@ void FluidSynthModel::initialise() {
     fluid_settings_setstr(settings, "synth.verbose", "yes");
 
     synth = new_fluid_synth(settings);
+    fluid_synth_set_sample_rate(synth, currentSampleRate);
 
     if (sharesParams.getSoundFontPath().isNotEmpty()) {
         loadFont(sharesParams.getSoundFontPath());
@@ -202,4 +204,13 @@ void FluidSynthModel::addListener (FluidSynthModel::Listener* const newListener)
 void FluidSynthModel::removeListener (FluidSynthModel::Listener* const listener)
 {
     eventListeners.remove(listener);
+}
+
+void FluidSynthModel::setSampleRate(float sampleRate) {
+    currentSampleRate = sampleRate;
+    if (!initialised) {
+        // don't worry; we'll do this in initialise phase regardless
+        return;
+    }
+    fluid_synth_set_sample_rate(synth, sampleRate);
 }
