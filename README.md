@@ -43,11 +43,32 @@ juicysfplugin.vst -> ~/Library/Audio/Plug-Ins/VST/juicysfplugin.vst
 juicysfplugin.vst3 -> ~/Library/Audio/Plug-Ins/VST3/juicysfplugin.vst3
 ```
 
+**Load a soundfont**
+
+You can drag-and-drop a soundfont into the file picker.
+
+![image](https://user-images.githubusercontent.com/6141784/37062424-500bc91e-218e-11e8-9916-eae6d82ca566.png)
+
 Here's some soundfonts to get you started:
 
 - FlameStudios' GPL-licensed [guitar soundfonts](http://www.flamestudios.org/free/Soundfonts)
 
-I'll refrain from recommending specific General MIDI or videogame soundfonts, since the licensing is often unclear.
+I'll refrain from recommending specific General MIDI or videogame soundfonts, since the licensing and provenance are often unclear.
+
+## How do I setup the standalone .app
+
+**Options > Audio/MIDI settings**
+
+<img width="256px" alt="image" src="https://user-images.githubusercontent.com/6141784/37062230-bdb128b6-218d-11e8-985a-e9b2b5fd0bb2.png">
+
+**Set Output to Built-In Output**
+
+Or any output device that you can hear audio through.
+
+Input audio device doesn't matter. We only use MIDI as input.  
+Ignore the warning about feedback. There is no feedback loop (no audio is input).
+
+<img width="515" alt="image" src="https://user-images.githubusercontent.com/6141784/37062266-d723c984-218d-11e8-9ded-9dc5eb701199.png">
 
 # Building from source
 
