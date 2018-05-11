@@ -4,7 +4,7 @@ Latest release: https://github.com/Birch-san/juicysfplugin/releases
 
 # What
 
-juicysfplugin is an Audio Plugin for playing MIDI music through a soundfont synthesizer.
+juicysfplugin is a macOS audio plugin for playing MIDI music through a soundfont synthesizer.
 
 It's well-suited for making videogame music. If you find a soundfont of your favourite game, then you can write your own melodies with those instruments.
 
@@ -43,6 +43,11 @@ juicysfplugin.vst -> ~/Library/Audio/Plug-Ins/VST/juicysfplugin.vst
 juicysfplugin.vst3 -> ~/Library/Audio/Plug-Ins/VST3/juicysfplugin.vst3
 ```
 
+Now, you may do one of the following:
+
+- Open the standalone juicysfplugin.app (to play around)
+- Load the AU/VST/VST3 into your favourite DAW (e.g. GarageBand, FL Studio)
+
 **Load a soundfont**
 
 You can drag-and-drop a soundfont into the file picker.
@@ -55,7 +60,7 @@ Here's some soundfonts to get you started:
 
 I'll refrain from recommending specific General MIDI or videogame soundfonts, since the licensing and provenance are often unclear.
 
-## How do I setup the standalone .app
+### How do I setup the standalone .app
 
 **Options > Audio/MIDI settings**
 
