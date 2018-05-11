@@ -2,7 +2,7 @@
 
 Latest release: https://github.com/Birch-san/juicysfplugin/releases
 
-Demo track [mp3](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.mp3)|[FLAC](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.flac)|[FLAC+compressor](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track_soundgoodizer.flac)
+Demo track [mp3](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.mp3) [FLAC](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.flac) [FLAC+compressor](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track_soundgoodizer.flac)
 
 # What
 
