@@ -2,19 +2,27 @@
 
 Latest release: https://github.com/Birch-san/juicysfplugin/releases
 
+Demo track [mp3](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.mp3)|[FLAC](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.flac)|[FLAC+compressor](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track_soundgoodizer.flac)
+
 # What
 
 juicysfplugin is a macOS audio plugin for playing MIDI music through a soundfont synthesizer.
 
-It's well-suited for making videogame music. If you find a soundfont of your favourite game, then you can write your own melodies with those instruments.
+It's well-suited for making videogame music. If you have a soundfont of your favourite game, you can write your own melodies with its instruments.
 
 [JUCE](https://github.com/WeAreROLI/JUCE) is the framework for making audio plugins.  
 [fluidsynth](http://www.fluidsynth.org/) is the soundfont synthesizer.
 
-juicysfplugin works as a standalone application (for playing around). You can plugin your hardware MIDI keyboard, or play with the software MIDI keyboard. Or route MIDI messages into it from a virtual MIDI controller (e.g. the [macOS IAC Bus](http://re-compose.desk.com/customer/portal/articles/1382244-setting-up-the-iac-bus-on-a-mac)).  
+**Mode 1: standalone application**
 
-juicysfplugin is also an Audio Plugin. VST, VST3, AU, AUv3.  
-This means you can use it to generate sounds in GarageBand, FL Studio Mac, Sibelius, etc.
+juicysfplugin.app is a standalone application, for playing around.
+
+You can plugin your hardware MIDI keyboard, or play with the software MIDI keyboard. Or route MIDI messages into it from a virtual MIDI controller (e.g. the [macOS IAC Bus](http://re-compose.desk.com/customer/portal/articles/1382244-setting-up-the-iac-bus-on-a-mac)).  
+
+**Mode 2: audio plugin**
+
+juicysfplugin audio plugins are provided: VST, VST3, AU, AUv3.  
+This means you can host it inside your DAW (e.g. GarageBand, FL Studio Mac, Sibelius…) to record the sounds you make.
 
 # Why
 
@@ -45,7 +53,7 @@ juicysfplugin.vst3 -> ~/Library/Audio/Plug-Ins/VST3/juicysfplugin.vst3
 
 Now, you may do one of the following:
 
-- Open the standalone juicysfplugin.app (to play around)
+- Open the standalone juicysfplugin.app
 - Load the AU/VST/VST3 into your favourite DAW (e.g. GarageBand, FL Studio)
 
 **Load a soundfont**
