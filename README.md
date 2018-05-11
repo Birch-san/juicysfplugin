@@ -6,16 +6,48 @@ Latest release: https://github.com/Birch-san/juicysfplugin/releases
 
 juicysfplugin is an Audio Plugin for playing MIDI music through a soundfont synthesizer.
 
+It's well-suited for making videogame music. If you find a soundfont of your favourite game, then you can write your own melodies with those instruments.
+
 [JUCE](https://github.com/WeAreROLI/JUCE) is the framework for making audio plugins.  
 [fluidsynth](http://www.fluidsynth.org/) is the soundfont synthesizer.
 
-juicysfplugin works as a standalone application (for playing around). You can plugin your hardware MIDI keyboard, or play with the software MIDI keyboard. Or router MIDI messages into it from a virtual MIDI controller (e.g. the macOS IAC Bus).  
+juicysfplugin works as a standalone application (for playing around). You can plugin your hardware MIDI keyboard, or play with the software MIDI keyboard. Or route MIDI messages into it from a virtual MIDI controller (e.g. the [macOS IAC Bus](http://re-compose.desk.com/customer/portal/articles/1382244-setting-up-the-iac-bus-on-a-mac)).  
 
-juicysfplugin is also an Audio Plugin. VST, VST3, AU, AUv3.
+juicysfplugin is also an Audio Plugin. VST, VST3, AU, AUv3.  
+This means you can use it to generate sounds in GarageBand, FL Studio Mac, Sibelius, etc.
 
 # Why
 
 I couldn't find a _free_, _easy-to-use_ macOS audio plugin for making music with soundfonts.
+
+# Install
+
+Latest release: https://github.com/Birch-san/juicysfplugin/releases
+
+**Download Release.tar.xz, open it to unzip.**
+
+Release contains:
+
+```
+juicysfplugin.app  # standalone application, for playing around
+juicysfplugin.component  # AU plugin
+juicysfplugin.vst  # VST plugin
+juicysfplugin.vst3  # VST3 plugin
+```
+
+To install plugins, move them to the following folder:
+
+```
+juicysfplugin.component -> ~/Library/Audio/Plug-Ins/Components/juicysfplugin.component
+juicysfplugin.vst -> ~/Library/Audio/Plug-Ins/VST/juicysfplugin.vst
+juicysfplugin.vst3 -> ~/Library/Audio/Plug-Ins/VST3/juicysfplugin.vst3
+```
+
+Here's some soundfonts to get you started:
+
+- FlameStudios' GPL-licensed [guitar soundfonts](http://www.flamestudios.org/free/Soundfonts)
+
+I'll refrain from recommending specific General MIDI or videogame soundfonts, since the licensing is often unclear.
 
 # Building from source
 
@@ -149,3 +181,19 @@ http://www.steinberg.net/sdklicenses_vst3
 
 > This Software Development Kit is licensed under the terms of the Steinberg VST3 License,
 or alternatively under the terms of the General Public License (GPL) Version 3.
+
+# Questions
+
+## Windows/Linux/Android/iOS version?
+
+No _big_ barriers. The source code and all its dependencies are cross-platform. The main friction is setting up a dev environment, and learning how to link dynamic libraries on that OS (i.e. we need to link to libfluidsynth).
+
+Some thoughts that come to mind:
+
+- Bundling libraries portably is far easier on Windows than on macOS
+  - Just throw a dll next to the executable
+  - .NET assembly binding can be debugged using [fuslogvw](https://docs.microsoft.com/en-us/dotnet/framework/tools/fuslogvw-exe-assembly-binding-log-viewer)
+- Windows already has plenty of free, nice soundfont plugins
+- It's probably pretty hard to bundle fluidsynth into mobile apps
+- Bundling would be easier if I used static linking
+- Static linking is hard
