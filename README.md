@@ -113,7 +113,7 @@ I recommend building (e.g. with XCode) the simple Audio Plugin Host that comes w
 
 `/Applications/JUCE/extras/AudioPluginHost/Builds/MacOSX/AudioPluginHost.xcodeproj`
 
-Then symlink `/Applications/JUCE/AudioPluginHost.app` to it (simply because that's where I told the Run configuration to look for it):
+Then symlink `/Applications/JUCE/AudioPluginHost.app` to the built `AudioPluginHost.app` (because that's where I told the Run configuration to look for AudioPluginHost.app):
 
 ```bash
 ln -sf /Applications/JUCE/extras/AudioPluginHost/Builds/MacOSX/build/Debug/AudioPluginHost.app /Applications/JUCE/AudioPluginHost.app
