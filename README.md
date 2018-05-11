@@ -13,70 +13,91 @@ juicysfplugin works as a standalone application (for playing around). You can pl
 
 juicysfplugin is also an Audio Plugin. VST, VST3, AU, AUv3.
 
+# Why
+
+I couldn't find a _free_, _easy-to-use_ macOS audio plugin for making music with soundfonts.
+
+# Building from source
+
+Install XCode and XCode command line tools. Accept terms.
+
+Ensure [brew](https://brew.sh/) and `libfluidsynth` are installed:
+
+```bash
+brew install fluidsynth
+```
+
+Install [JUCE](https://shop.juce.com/get-juce) 5.3 in `/Applications`.  
+We expect to find JUCE headers in `/Applications/JUCE/modules`.
+
+(Optional) To target VST3, install Steinberg [VST3 Audio Plug-Ins SDK](https://www.steinberg.net/en/company/developers.html).  
+We expect to find a folder `~/SDKs/VST_SDK/VST3_SDK`.
+
+(Optional) Install IntelliJ AppCode if you prefer it to XCode.
+
+Open `juicysfplugin/Builds/MacOSX/juicysfplugin.xcodeproj` in XCode (or IntelliJ AppCode).
+
+Build & run the "juicysfplugin - Standalone Plugin" target.
+
+## Testing VST/AU plugins inside an audio plugin host
+
+You'll notice that the schemes for [VST, VST3, AU, AUv3] targets are configured such that "Run" launches the executable `AudioPluginHost.app`. This lets you run the audio plugin as though it were hosted inside a DAW.
+
+I recommend building (e.g. with XCode) the simple Audio Plugin Host that comes with JUCE Framework:
+
+`/Applications/JUCE/extras/AudioPluginHost/Builds/MacOSX/AudioPluginHost.xcodeproj`
+
+Then symlink `/Applications/JUCE/AudioPluginHost.app` to it (simply because that's where I told the Run configuration to look for it):
+
+```bash
+ln -sf /Applications/JUCE/extras/AudioPluginHost/Builds/MacOSX/build/Debug/AudioPluginHost.app /Applications/JUCE/AudioPluginHost.app
+```
+
+# Dependency versions
+
+Known working with:
+
+```
+macOS High Sierra 10.13
+XCode 9.3
+JUCE Framework 5.3
+VST3 Audio Plug-Ins SDK 3.6.9
+# brew:
+- fluidsynth --version 1.1.10
+- libraries in /usr/local/lib
+- headers in /usr/local/include
+libfluidsynth.1.7.1.dylib
+  ├─libglib-2.0.0.dylib
+  │   └─libpcre.1.dylib
+  ├─libgthread-2.0.0.dylib
+  └─libintl.8.dylib
+```
+
 # Making portable releases
 
-Building is trivial, but bundling to deploy on other people's computers is harder (they don't have fluidsynth, nor its dependencies).
+Follow the steps in [Building from source](#building-from-source) to output a product to the build folder.
 
-I've not automated this process.  
-It relies on the "copy" build steps which ensure our frameworks are bundled into the targets (e.g. libfluidsynth gets copied into the Frameworks folder of the .app target).  
-After that, I manually relink the .app to be portable. Here's how...
+The .app, .vst (and so on) that you build will only work on a computer that has brew fluidsynth installed.
 
-Assuming your `juicysfplugin` repository lives in `~/git/juicysfplugin`, then by default it will be compiled with a dynamic link to the fluidsynth which brew installed into `/usr/local/opt`:
+If you want to build a _truly portable release_, you'll need to _bundle libfluidsynth and all its dependencies_ into your product.
 
 ```bash
-otool -L /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/MacOS/juicysfplugin 
-/Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/MacOS/juicysfplugin:
-	/usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib (compatibility version 1.0.0, current version 1.7.1)
+cd juicysfplugin/Builds/MacOSX
+# first check that you have a Release or Debug product in the `build` directory
+
+# bundles `juicysfplugin/lib` libs into the products you created,
+# relinks your executables to use their bundled libs
+./relink-build-for-distribution.sh
+
+# follows symlinks, archives Release and Debug folders as tar.xz
+./archive-for-distribution.sh
 ```
 
-We can rewrite this dynamic link like so:
+Note: Release **and** Debug flavors _both_ output targets [VST, VST3, AU] to the same location:  `~/Library/Audio/Plug-Ins/$TARGET/juicysfplugin.$EXT`.  
+Whichever flavor you built _most recently_, wins.
 
-```bash
-# the executable depends on fluidsynth 1
-install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib @executable_path/../Frameworks/libfluidsynth.1.7.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/MacOS/juicysfplugin
-# the appex Plugin depends on fluidsynth 1. might have this slightly wrong.
-install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib @executable_path/../Frameworks/libfluidsynth.1.7.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/PlugIns/juicysfplugin.appex/Contents/MacOS/juicysfplugin
-chmod +w /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/*
-# fluidsynth depends on glib, gthread, intl
-# change its identity from 1.7.1 to just 1
-install_name_tool -id @loader_path/../Frameworks/libfluidsynth.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
-install_name_tool -change /usr/local/opt/glib/lib/libglib-2.0.0.dylib @loader_path/../Frameworks/libglib-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
-install_name_tool -change /usr/local/opt/glib/lib/libgthread-2.0.0.dylib @loader_path/../Frameworks/libgthread-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
-install_name_tool -change /usr/local/opt/gettext/lib/libintl.8.dylib @loader_path/../Frameworks/libintl.8.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libfluidsynth.1.7.1.dylib
-# glib depends on pcre, intl
-install_name_tool -id @loader_path/../Frameworks/libglib-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libglib-2.0.0.dylib
-install_name_tool -change /usr/local/opt/pcre/lib/libpcre.1.dylib @loader_path/../Frameworks/libpcre.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libglib-2.0.0.dylib
-install_name_tool -change /usr/local/opt/gettext/lib/libintl.8.dylib @loader_path/../Frameworks/libintl.8.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libglib-2.0.0.dylib
-# gthread depends on pcre, intl, glib
-install_name_tool -id @loader_path/../Frameworks/libgthread-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libgthread-2.0.0.dylib
-install_name_tool -change /usr/local/opt/pcre/lib/libpcre.1.dylib @loader_path/../Frameworks/libpcre.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libgthread-2.0.0.dylib
-install_name_tool -change /usr/local/opt/gettext/lib/libintl.8.dylib @loader_path/../Frameworks/libintl.8.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libgthread-2.0.0.dylib
-install_name_tool -change /usr/local/Cellar/glib/2.54.3/lib/libglib-2.0.0.dylib @loader_path/../Frameworks/libglib-2.0.0.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libgthread-2.0.0.dylib
-# intl
-install_name_tool -id @loader_path/../Frameworks/libintl.8.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libintl.8.dylib
-# pcre
-install_name_tool -id @loader_path/../Frameworks/libpcre.1.dylib /Users/birch/git/juicysfplugin/Builds/MacOSX/build/Release/juicysfplugin.app/Contents/Frameworks/libpcre.1.dylib
-```
-
-
-## dependencies
-
-We'll need:
-
-> glib and gthread, but also iconv and intl
-
-https://lists.nongnu.org/archive/html/fluid-dev/2012-03/msg00032.html  
-https://lists.nongnu.org/archive/html/fluid-dev/2012-03/msg00033.html
-
-I already added to XCode target "standalone plugin" a "copy files" build phase, which copies the following into Frameworks:
-
-```
-/usr/local/Cellar/glib/2.54.3/lib/libglib-2.0.0.dylib
-/usr/local/opt/glib/lib/libgthread-2.0.0.dylib
-/usr/local/opt/pcre/lib/libpcre.1.dylib
-/usr/local/opt/gettext/lib/libintl.8.dylib
-/usr/local/Cellar/fluid-synth/1.1.10/lib/libfluidsynth.1.7.1.dylib
-```
+The way I provide archives of _both_ build flavors is by archiving one, building next flavor, then archiving that (i.e. I build serially, not parallel).  
+But probably people only care about the Release flavor anyway.
 
 # Licenses
 
