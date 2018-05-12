@@ -106,7 +106,8 @@ Install XCode and XCode command line tools. Accept terms.
 Ensure [brew](https://brew.sh/) and `libfluidsynth` are installed:
 
 ```bash
-brew install fluidsynth
+# --with-libsndfile is optional; it adds support for SF3 format
+brew install fluidsynth --with-libsndfile
 ```
 
 Install [JUCE](https://shop.juce.com/get-juce) 5.3 in `/Applications`.  

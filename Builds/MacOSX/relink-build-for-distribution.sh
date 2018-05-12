@@ -42,11 +42,18 @@ echo "Build directory: $BUILDDIR"
 echo "Lib directory: $LIBDIR"
 
 
-FLUIDSYNTH="libfluidsynth.1.7.1.dylib"
+FLUIDSYNTH="libfluidsynth.1.7.2.dylib"
 GLIB="libglib-2.0.0.dylib"
 GTHREAD="libgthread-2.0.0.dylib"
 INTL="libintl.8.dylib"
 PCRE="libpcre.1.dylib"
+
+# all of the following are just for SF3 support...
+SNDFILE="libsndfile.1.dylib"
+FLAC="libFLAC.8.dylib"
+OGG="libogg.0.dylib"
+VORBIS="libvorbis.0.dylib"
+VORBISENC="libvorbisenc.2.dylib"
 
 FRAMEWORKLOAD="@loader_path/../Frameworks"
 
@@ -71,13 +78,13 @@ chmod +w "$FRAMEWORKS/"*
 
 # our $BINARY (Contents/MacOS/juicysfplugin) begins its life linked to a brew-installed fluidsynth library
 # which it expects to find at: /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib
-# we want to change this link to point to the fluidsynth library we copied into: Contents/MacOS/Frameworks/libfluidsynth.1.7.1.dylib
-# we tell it to look for it with a relative path: @executable_path/../Frameworks/libfluidsynth.1.7.1.dylib
-# and yes, it's fine to point it at our 1.7.1.dylib even though it expects 1.dylib. Because 1.dylib was always a symlink to the more specific version (1.7.1) anyway.
+# we want to change this link to point to the fluidsynth library we copied into: Contents/MacOS/Frameworks/libfluidsynth.1.7.2.dylib
+# we tell it to look for it with a relative path: @executable_path/../Frameworks/libfluidsynth.1.7.2.dylib
+# and yes, it's fine to point it at our 1.7.2.dylib even though it expects 1.dylib. Because 1.dylib was always a symlink to the more specific version (1.7.2) anyway.
 install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib "$FRAMEWORKLOAD/$FLUIDSYNTH" "$BINARY"
 
 # changes to our libfluidsynth (depends on glib, gthread, intl):
-# change our 1.7.1.dylib to identify itself as 1.dylib, to meet our targets' expectations
+# change our 1.7.2.dylib to identify itself as 1.dylib, to meet our targets' expectations
 install_name_tool -id "$FRAMEWORKLOAD/libfluidsynth.1.dylib" "$FRAMEWORKS/$FLUIDSYNTH"
 install_name_tool -change /usr/local/opt/glib/lib/libglib-2.0.0.dylib "$FRAMEWORKLOAD/$GLIB" "$FRAMEWORKS/$FLUIDSYNTH"
 install_name_tool -change /usr/local/opt/glib/lib/libgthread-2.0.0.dylib "$FRAMEWORKLOAD/$GTHREAD" "$FRAMEWORKS/$FLUIDSYNTH"
@@ -100,6 +107,29 @@ install_name_tool -id "$FRAMEWORKLOAD/$INTL" "$FRAMEWORKS/$INTL"
 
 # changes to our pcre:
 install_name_tool -id "$FRAMEWORKLOAD/$PCRE" "$FRAMEWORKS/$PCRE"
+
+# the following are just for SF3 support...
+# changes to our libsndfile (depends on FLAC, ogg, vorbis, vorbisenc):
+install_name_tool -id "$FRAMEWORKLOAD/$SNDFILE" "$FRAMEWORKS/$SNDFILE"
+install_name_tool -change /usr/local/opt/flac/lib/libFLAC.8.dylib "$FRAMEWORKLOAD/$FLAC" "$FRAMEWORKS/$SNDFILE"
+install_name_tool -change /usr/local/opt/libogg/lib/libogg.0.dylib "$FRAMEWORKLOAD/$OGG" "$FRAMEWORKS/$SNDFILE"
+install_name_tool -change /usr/local/opt/libvorbis/lib/libvorbis.0.dylib "$FRAMEWORKLOAD/$VORBIS" "$FRAMEWORKS/$SNDFILE"
+install_name_tool -change /usr/local/opt/libvorbis/lib/libvorbisenc.2.dylib "$FRAMEWORKLOAD/$VORBISENC" "$FRAMEWORKS/$SNDFILE"
+
+# changes to our FLAC:
+install_name_tool -id "$FRAMEWORKLOAD/$FLAC" "$FRAMEWORKS/$FLAC"
+
+# changes to our ogg:
+install_name_tool -id "$FRAMEWORKLOAD/$OGG" "$FRAMEWORKS/$OGG"
+
+# changes to our vorbis (depends on ogg):
+install_name_tool -id "$FRAMEWORKLOAD/$VORBIS" "$FRAMEWORKS/$VORBIS"
+install_name_tool -change /usr/local/opt/libogg/lib/libogg.0.dylib "$FRAMEWORKLOAD/$OGG" "$FRAMEWORKS/$VORBIS"
+
+# changes to our vorbisenc (depends on vorbis, ogg):
+install_name_tool -id "$FRAMEWORKLOAD/$VORBISENC" "$FRAMEWORKS/$VORBISENC"
+install_name_tool -change /usr/local/Cellar/libvorbis/1.3.6/lib/libvorbis.0.dylib "$FRAMEWORKLOAD/$VORBIS" "$FRAMEWORKS/$VORBISENC"
+install_name_tool -change /usr/local/opt/libogg/lib/libogg.0.dylib "$FRAMEWORKLOAD/$OGG" "$FRAMEWORKS/$VORBISENC"
 
 			else
 				echo "Missing $j; skipping."
