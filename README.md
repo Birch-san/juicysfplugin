@@ -13,6 +13,8 @@ It's well-suited for making videogame music. If you have a soundfont of your fav
 [JUCE](https://github.com/WeAreROLI/JUCE) is the framework for making audio plugins.  
 [fluidsynth](http://www.fluidsynth.org/) is the soundfont synthesizer.
 
+Supports SF2 and SF3 soundfont formats.
+
 **Mode 1: standalone application**
 
 juicysfplugin.app is a standalone application, for playing around.
@@ -69,7 +71,7 @@ Here's some soundfonts to get you started:
 - MuseScore's [recommended soundfonts](https://musescore.org/en/handbook/soundfonts-and-sfz-files#list) (includes MIT, GPL, other licenses)
 - FlameStudios' GPL-licensed [guitar soundfonts](http://www.flamestudios.org/free/Soundfonts)
 
-I'll refrain from recommending specific General MIDI or videogame soundfonts, since the licensing and provenance are often unclear.
+I'll refrain from recommending certain General MIDI or videogame soundfonts, since the licensing and provenance are often unclear.
 
 ## Keybindings
 
