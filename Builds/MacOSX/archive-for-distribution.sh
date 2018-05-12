@@ -27,6 +27,8 @@ do
 	if [ -d "$MYDIR/build/$BUILD" ]; then
 		echo "Found $BUILD; archiving targets to build/$BUILD.tar.xz:"
 		ls "$MYDIR/build/$BUILD"
+    \cp -rf ../../LICENSE.txt "$MYDIR/build/$BUILD/LICENSE.txt"
+    \cp -rf ../../licenses_of_dependencies "$MYDIR/build/$BUILD/licenses_of_dependencies"
 		tar -hczf "$MYDIR/build/$BUILD.tar.xz" -C "$MYDIR/build/$BUILD" .
 	else
 		echo "Missing $BUILD; skipping."
