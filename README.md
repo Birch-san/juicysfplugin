@@ -51,24 +51,41 @@ juicysfplugin.vst -> ~/Library/Audio/Plug-Ins/VST/juicysfplugin.vst
 juicysfplugin.vst3 -> ~/Library/Audio/Plug-Ins/VST3/juicysfplugin.vst3
 ```
 
+## Launch
+
 Now, you may do one of the following:
 
 - Open the standalone juicysfplugin.app
 - Load the AU/VST/VST3 into your favourite DAW (e.g. GarageBand, FL Studio)
 
-**Load a soundfont**
+# Usage
 
-You can drag-and-drop a soundfont into the file picker.
+You must drag-and-drop a soundfont into the file picker.
 
 ![image](https://user-images.githubusercontent.com/6141784/37062424-500bc91e-218e-11e8-9916-eae6d82ca566.png)
 
 Here's some soundfonts to get you started:
 
+- MuseScore's [recommended soundfonts](https://musescore.org/en/handbook/soundfonts-and-sfz-files#list) (includes MIT, GPL, other licenses)
 - FlameStudios' GPL-licensed [guitar soundfonts](http://www.flamestudios.org/free/Soundfonts)
 
 I'll refrain from recommending specific General MIDI or videogame soundfonts, since the licensing and provenance are often unclear.
 
-### How do I setup the standalone .app
+## Keybindings
+
+Gain keyboard focus by clicking the plugin's keyboard.
+
+- Up-down arrow keys to switch preset.
+- Left-right to switch bank.
+
+ASCII -> MIDI keybinding is the same as FL Studio's:
+
+<img width="256px" alt="image" src="http://s3.amazonaws.com/fl_resource/flkeychart.png">
+
+## Using the standalone .app
+
+Generally the .app will Just Work™, but if your audio setup is more bespoke, then you'll need to configure.  
+Ignore the yellow warning about feedback. There is no feedback loop (because no audio is input).
 
 **Options > Audio/MIDI settings**
 
@@ -78,8 +95,7 @@ I'll refrain from recommending specific General MIDI or videogame soundfonts, si
 
 Or any output device that you can hear audio through.
 
-Input audio device doesn't matter. We only use MIDI as input.  
-Ignore the warning about feedback. There is no feedback loop (no audio is input).
+Input audio device doesn't matter. We only use MIDI as input.
 
 <img width="515" alt="image" src="https://user-images.githubusercontent.com/6141784/37062266-d723c984-218d-11e8-9ded-9dc5eb701199.png">
 
