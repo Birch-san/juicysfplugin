@@ -86,6 +86,7 @@ install_name_tool -change /usr/local/opt/fluid-synth/lib/libfluidsynth.1.dylib "
 # changes to our libfluidsynth (depends on glib, gthread, intl):
 # change our 1.7.2.dylib to identify itself as 1.dylib, to meet our targets' expectations
 install_name_tool -id "$FRAMEWORKLOAD/libfluidsynth.1.dylib" "$FRAMEWORKS/$FLUIDSYNTH"
+install_name_tool -change /usr/local/opt/libsndfile/lib/libsndfile.1.dylib "$FRAMEWORKLOAD/$SNDFILE" "$FRAMEWORKS/$FLUIDSYNTH"
 install_name_tool -change /usr/local/opt/glib/lib/libglib-2.0.0.dylib "$FRAMEWORKLOAD/$GLIB" "$FRAMEWORKS/$FLUIDSYNTH"
 install_name_tool -change /usr/local/opt/glib/lib/libgthread-2.0.0.dylib "$FRAMEWORKLOAD/$GTHREAD" "$FRAMEWORKS/$FLUIDSYNTH"
 install_name_tool -change /usr/local/opt/gettext/lib/libintl.8.dylib "$FRAMEWORKLOAD/$INTL" "$FRAMEWORKS/$FLUIDSYNTH"
@@ -100,7 +101,7 @@ install_name_tool -change /usr/local/opt/gettext/lib/libintl.8.dylib "$FRAMEWORK
 install_name_tool -id "$FRAMEWORKLOAD/$GTHREAD" "$FRAMEWORKS/$GTHREAD"
 install_name_tool -change /usr/local/opt/pcre/lib/libpcre.1.dylib "$FRAMEWORKLOAD/$PCRE" "$FRAMEWORKS/$GTHREAD"
 install_name_tool -change /usr/local/opt/gettext/lib/libintl.8.dylib "$FRAMEWORKLOAD/$INTL" "$FRAMEWORKS/$GTHREAD"
-install_name_tool -change /usr/local/Cellar/glib/2.54.3/lib/libglib-2.0.0.dylib "$FRAMEWORKLOAD/$GLIB" "$FRAMEWORKS/$GTHREAD"
+install_name_tool -change /usr/local/Cellar/glib/2.56.1/lib/libglib-2.0.0.dylib "$FRAMEWORKLOAD/$GLIB" "$FRAMEWORKS/$GTHREAD"
 
 # changes to our intl:
 install_name_tool -id "$FRAMEWORKLOAD/$INTL" "$FRAMEWORKS/$INTL"
