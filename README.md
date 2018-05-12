@@ -140,21 +140,11 @@ ln -sf /Applications/JUCE/extras/AudioPluginHost/Builds/MacOSX/build/Debug/Audio
 
 Known working with:
 
-```
-macOS High Sierra 10.13
-XCode 9.3
-JUCE Framework 5.3
-VST3 Audio Plug-Ins SDK 3.6.9
-# brew:
-- fluidsynth --version 1.1.10
-- libraries in /usr/local/lib
-- headers in /usr/local/include
-libfluidsynth.1.7.1.dylib
-  ├─libglib-2.0.0.dylib
-  │   └─libpcre.1.dylib
-  ├─libgthread-2.0.0.dylib
-  └─libintl.8.dylib
-```
+- macOS High Sierra 10.13
+- XCode 9.3.1
+- JUCE Framework 5.3
+- VST3 Audio Plug-Ins SDK 3.6.9
+- fluidsynth 1.1.11
 
 # Making portable releases
 
@@ -184,54 +174,9 @@ But probably people only care about the Release flavor anyway.
 
 # Licenses
 
-Tell me if I've missed anything.
-
 Overall, juicysfplugin is GPLv3.
 
-## Framework
-
-Built upon JUCE framework under the GPL-v3 license:
-
-https://www.gnu.org/licenses/gpl-3.0.en.html
-
-## Libraries
-
-The following external libraries are bundled into this audio plugin and dynamically linked:
-
-### `libintl` LGPL
-
-https://www.gnu.org/software/gettext/manual/html_node/Licenses.html
-
-> either version 2.1 of the License, or (at your option) any later version.
-
-### `libglib` LGPL
-
-> either version 2.1 of the License, or (at your option) any later version.
-
-### `libgthread` LGPL
-
-> either version 2.1 of the License, or (at your option) any later version.
-
-## `libpcre` BSD
-
-> Release 8 of PCRE is distributed under the terms of the "BSD" licence.
-
-### `libfluidsynth` LGPL
-
-https://github.com/FluidSynth/fluidsynth/blob/master/LICENSE
-
-> (This is the first released version of the Lesser GPL.  It also counts as the successor of the GNU Library Public License, version 2, hence the version number 2.1.)
-
-## SDKs
-
-### Steinberg VST3
-
-The VST3 release is built against the Steinberg VST3 SDK.
-
-http://www.steinberg.net/sdklicenses_vst3
-
-> This Software Development Kit is licensed under the terms of the Steinberg VST3 License,
-or alternatively under the terms of the General Public License (GPL) Version 3.
+See [licenses for all libraries and frameworks](https://github.com/Birch-san/juicysfplugin/tree/master/licenses_of_dependencies).
 
 # Questions
 
