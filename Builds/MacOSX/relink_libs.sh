@@ -37,6 +37,8 @@ VORBISENC="libvorbisenc.2.dylib"
 IDPREFIX="@rpath/lib"
 FRAMEWORKLOAD="$IDPREFIX"
 
+FRAMEWORKS="$MYDIR/lib_relinked"
+
 # we're gonna relink these frameworks also, so make them writeable
 chmod +w "$FRAMEWORKS/"*
 
