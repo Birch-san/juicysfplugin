@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+# This script used to be used for manually copying 
+# libs into the target bundle and rewriting the dynamic
+# links, to make the bundle portable.
+# 
+# The script is (hopefully) no longer needed,
+# because now our builds are portable automatically.
+# 
+# We have a directory of already-linked
+# libraries (lib_relinked), which regular builds
+# link against and copy into the target bundle.
+#
+# The contents of lib_relinked were created by doing
+# a one-time run of relink_libs.sh upon some libs
+# copied out of brew.
+
 # Ascertain directory in which script lives; compatible with all UNIX
 # Thanks to kenorb
 # http://stackoverflow.com/a/17744637/5257399

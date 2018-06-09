@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+# This script does not need to be run in a general
+# workflow. I just ran it once upon some brew libs
+# that I'd copied into lib_relinked.
+#
+# As a result: lib_relinked now contains _relinked_
+# binaries, whose install names are relative to @rpath
+# (instead of an absolute path provided by brew).
+#
+# Thus, libraries in lib_relinked are portable, and
+# and executable which sets rpath correctly can
+# discover them.
+
 # Ascertain directory in which script lives; compatible with all UNIX
 # Thanks to kenorb
 # http://stackoverflow.com/a/17744637/5257399
