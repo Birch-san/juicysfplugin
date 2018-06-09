@@ -105,13 +105,6 @@ Input audio device doesn't matter. We only use MIDI as input.
 
 Install XCode and XCode command line tools. Accept terms.
 
-Ensure [brew](https://brew.sh/) and `libfluidsynth` are installed:
-
-```bash
-# --with-libsndfile is optional; it adds support for SF3 format
-brew install fluidsynth --with-libsndfile
-```
-
 Install [JUCE](https://shop.juce.com/get-juce) 5.3 in `/Applications`.  
 We expect to find JUCE headers in `/Applications/JUCE/modules`.
 
@@ -123,6 +116,9 @@ We expect to find a folder `~/SDKs/VST_SDK/VST3_SDK`.
 Open `juicysfplugin/Builds/MacOSX/juicysfplugin.xcodeproj` in XCode (or IntelliJ AppCode).
 
 Build & run the "juicysfplugin - Standalone Plugin" target.
+
+All the libs we link against are project-local (see `juicysfplugin/Builds/MacOSX/lib_relinked`).  
+I have used `install_name_tool` to give these libs relative install names. This ensures that any product you build will be portable.
 
 ## Testing VST/AU plugins inside an audio plugin host
 
@@ -148,21 +144,15 @@ Known working with:
 - VST3 Audio Plug-Ins SDK 3.6.9
 - fluidsynth 1.1.11
 
-# Making portable releases
+# Making releases
 
 Follow the steps in [Building from source](#building-from-source) to output a product to the build folder.
 
-The .app, .vst (and so on) that you build will only work on a computer that has brew fluidsynth installed.
-
-If you want to build a _truly portable release_, you'll need to _bundle libfluidsynth and all its dependencies_ into your product.
+Builds are automatically portable.
 
 ```bash
 cd juicysfplugin/Builds/MacOSX
 # first check that you have a Release or Debug product in the `build` directory
-
-# bundles `juicysfplugin/lib` libs into the products you created,
-# relinks your executables to use their bundled libs
-./relink-build-for-distribution.sh
 
 # follows symlinks, archives Release and Debug folders as tar.xz
 ./archive-for-distribution.sh
@@ -170,9 +160,6 @@ cd juicysfplugin/Builds/MacOSX
 
 Note: Release **and** Debug flavors _both_ output targets [VST, VST3, AU] to the same location:  `~/Library/Audio/Plug-Ins/$TARGET/juicysfplugin.$EXT`.  
 Whichever flavor you built _most recently_, wins.
-
-The way I provide archives of _both_ build flavors is by archiving one, building next flavor, then archiving that (i.e. I build serially, not parallel).  
-But probably people only care about the Release flavor anyway.
 
 # Licenses
 
