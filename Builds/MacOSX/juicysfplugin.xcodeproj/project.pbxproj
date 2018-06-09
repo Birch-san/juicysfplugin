@@ -96,6 +96,57 @@
 		3540730220556CA000DE1E04 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FB62D371AA3AB416FCB73CE /* QuartzCore.framework */; };
 		3540730320556CA000DE1E04 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FD107636B29A49B998F03CA /* WebKit.framework */; };
 		3540730B20557CC900DE1E04 /* Juicy.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3540730A20557C1500DE1E04 /* Juicy.icns */; };
+		35FD068420CC8D1300909568 /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067A20CC8D0B00909568 /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD068520CC8D1300909568 /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067B20CC8D0B00909568 /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD068620CC8D1300909568 /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067C20CC8D0B00909568 /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD068720CC8D1300909568 /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067D20CC8D0B00909568 /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD068820CC8D1300909568 /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067E20CC8D0B00909568 /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD068920CC8D1300909568 /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067F20CC8D0B00909568 /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD068A20CC8D1300909568 /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068020CC8D0B00909568 /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD068B20CC8D1300909568 /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068120CC8D0B00909568 /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD068C20CC8D1300909568 /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068220CC8D0B00909568 /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD068D20CC8D1300909568 /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068320CC8D0B00909568 /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD068F20CC8DBB00909568 /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067A20CC8D0B00909568 /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069020CC8DBB00909568 /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067B20CC8D0B00909568 /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069120CC8DBB00909568 /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067C20CC8D0B00909568 /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069220CC8DBB00909568 /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067D20CC8D0B00909568 /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069320CC8DBB00909568 /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067E20CC8D0B00909568 /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069420CC8DBB00909568 /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067F20CC8D0B00909568 /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069520CC8DBB00909568 /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068020CC8D0B00909568 /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069620CC8DBB00909568 /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068120CC8D0B00909568 /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069720CC8DBB00909568 /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068220CC8D0B00909568 /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069820CC8DBB00909568 /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068320CC8D0B00909568 /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069A20CC8DD100909568 /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067A20CC8D0B00909568 /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069B20CC8DD100909568 /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067B20CC8D0B00909568 /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069C20CC8DD100909568 /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067C20CC8D0B00909568 /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069D20CC8DD100909568 /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067D20CC8D0B00909568 /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069E20CC8DD100909568 /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067E20CC8D0B00909568 /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD069F20CC8DD100909568 /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067F20CC8D0B00909568 /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06A020CC8DD100909568 /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068020CC8D0B00909568 /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06A120CC8DD100909568 /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068120CC8D0B00909568 /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06A220CC8DD100909568 /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068220CC8D0B00909568 /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06A320CC8DD100909568 /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068320CC8D0B00909568 /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06A520CC8DE500909568 /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067A20CC8D0B00909568 /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06A620CC8DE500909568 /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067B20CC8D0B00909568 /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06A720CC8DE500909568 /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067C20CC8D0B00909568 /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06A820CC8DE500909568 /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067D20CC8D0B00909568 /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06A920CC8DE500909568 /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067E20CC8D0B00909568 /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06AA20CC8DE500909568 /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067F20CC8D0B00909568 /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06AB20CC8DE500909568 /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068020CC8D0B00909568 /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06AC20CC8DE500909568 /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068120CC8D0B00909568 /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06AD20CC8DE500909568 /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068220CC8D0B00909568 /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06AE20CC8DE500909568 /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068320CC8D0B00909568 /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06B020CC8DF400909568 /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067A20CC8D0B00909568 /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06B120CC8DF400909568 /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067B20CC8D0B00909568 /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06B220CC8DF400909568 /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067C20CC8D0B00909568 /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06B320CC8DF400909568 /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067D20CC8D0B00909568 /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06B420CC8DF400909568 /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067E20CC8D0B00909568 /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06B520CC8DF400909568 /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD067F20CC8D0B00909568 /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06B620CC8DF400909568 /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068020CC8D0B00909568 /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06B720CC8DF400909568 /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068120CC8D0B00909568 /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06B820CC8DF400909568 /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068220CC8D0B00909568 /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06B920CC8DF400909568 /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068320CC8D0B00909568 /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		35FD06BA20CC900C00909568 /* juicysfplugin.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 33B56FA30952FB33928A557F /* juicysfplugin.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3758E5B3C2288245817A9ECD /* include_juce_audio_processors.mm in Sources */ = {isa = PBXBuildFile; fileRef = D83BE45225B0E49E077E5B87 /* include_juce_audio_processors.mm */; };
 		3BE4582C1A69CFFDC17790FE /* CoreAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB9DC0F378DBE6110579ABEB /* CoreAudioKit.framework */; };
 		4197FB69EAA917C1B9160B32 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86183C1237DA7A5F2CF41CC7 /* CoreAudio.framework */; };
@@ -140,7 +191,6 @@
 		F74CC5452717B67C0B388588 /* FluidSynthModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86224165AC264294A5EC5D98 /* FluidSynthModel.cpp */; };
 		FAC9999439E8AB6152409026 /* include_juce_audio_plugin_client_VST3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5B3CBC48DAB08EDF53CEE609 /* include_juce_audio_plugin_client_VST3.cpp */; };
 		FB8CA3A0A9B7C681F105556B /* SoundfontSynthVoice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9C0E9C73E7079FCAB66498C4 /* SoundfontSynthVoice.cpp */; };
-		FC2507C6AC91F4440754877A /* juicysfplugin.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 33B56FA30952FB33928A557F /* juicysfplugin.appex */; };
 		FDD3DC9541150C738939668A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 674E72377F8F5CAB9A844A6A /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -190,13 +240,108 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		35FD067620CC8CBB00909568 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = ../lib;
+			dstSubfolderSpec = 6;
+			files = (
+				35FD068420CC8D1300909568 /* libpcre.1.dylib in CopyFiles */,
+				35FD068520CC8D1300909568 /* libvorbisenc.2.dylib in CopyFiles */,
+				35FD068620CC8D1300909568 /* libfluidsynth.dylib in CopyFiles */,
+				35FD068720CC8D1300909568 /* libglib-2.0.0.dylib in CopyFiles */,
+				35FD068820CC8D1300909568 /* libsndfile.1.dylib in CopyFiles */,
+				35FD068920CC8D1300909568 /* libintl.8.dylib in CopyFiles */,
+				35FD068A20CC8D1300909568 /* libvorbis.0.dylib in CopyFiles */,
+				35FD068B20CC8D1300909568 /* libgthread-2.0.0.dylib in CopyFiles */,
+				35FD068C20CC8D1300909568 /* libFLAC.8.dylib in CopyFiles */,
+				35FD068D20CC8D1300909568 /* libogg.0.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		35FD068E20CC8DAD00909568 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = ../lib;
+			dstSubfolderSpec = 6;
+			files = (
+				35FD068F20CC8DBB00909568 /* libpcre.1.dylib in CopyFiles */,
+				35FD069020CC8DBB00909568 /* libvorbisenc.2.dylib in CopyFiles */,
+				35FD069120CC8DBB00909568 /* libfluidsynth.dylib in CopyFiles */,
+				35FD069220CC8DBB00909568 /* libglib-2.0.0.dylib in CopyFiles */,
+				35FD069320CC8DBB00909568 /* libsndfile.1.dylib in CopyFiles */,
+				35FD069420CC8DBB00909568 /* libintl.8.dylib in CopyFiles */,
+				35FD069520CC8DBB00909568 /* libvorbis.0.dylib in CopyFiles */,
+				35FD069620CC8DBB00909568 /* libgthread-2.0.0.dylib in CopyFiles */,
+				35FD069720CC8DBB00909568 /* libFLAC.8.dylib in CopyFiles */,
+				35FD069820CC8DBB00909568 /* libogg.0.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		35FD069920CC8DC000909568 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = ../lib;
+			dstSubfolderSpec = 6;
+			files = (
+				35FD069A20CC8DD100909568 /* libpcre.1.dylib in CopyFiles */,
+				35FD069B20CC8DD100909568 /* libvorbisenc.2.dylib in CopyFiles */,
+				35FD069C20CC8DD100909568 /* libfluidsynth.dylib in CopyFiles */,
+				35FD069D20CC8DD100909568 /* libglib-2.0.0.dylib in CopyFiles */,
+				35FD069E20CC8DD100909568 /* libsndfile.1.dylib in CopyFiles */,
+				35FD069F20CC8DD100909568 /* libintl.8.dylib in CopyFiles */,
+				35FD06A020CC8DD100909568 /* libvorbis.0.dylib in CopyFiles */,
+				35FD06A120CC8DD100909568 /* libgthread-2.0.0.dylib in CopyFiles */,
+				35FD06A220CC8DD100909568 /* libFLAC.8.dylib in CopyFiles */,
+				35FD06A320CC8DD100909568 /* libogg.0.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		35FD06A420CC8DD600909568 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = ../lib;
+			dstSubfolderSpec = 6;
+			files = (
+				35FD06A520CC8DE500909568 /* libpcre.1.dylib in CopyFiles */,
+				35FD06A620CC8DE500909568 /* libvorbisenc.2.dylib in CopyFiles */,
+				35FD06A720CC8DE500909568 /* libfluidsynth.dylib in CopyFiles */,
+				35FD06A820CC8DE500909568 /* libglib-2.0.0.dylib in CopyFiles */,
+				35FD06A920CC8DE500909568 /* libsndfile.1.dylib in CopyFiles */,
+				35FD06AA20CC8DE500909568 /* libintl.8.dylib in CopyFiles */,
+				35FD06AB20CC8DE500909568 /* libvorbis.0.dylib in CopyFiles */,
+				35FD06AC20CC8DE500909568 /* libgthread-2.0.0.dylib in CopyFiles */,
+				35FD06AD20CC8DE500909568 /* libFLAC.8.dylib in CopyFiles */,
+				35FD06AE20CC8DE500909568 /* libogg.0.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		35FD06AF20CC8DE900909568 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = ../lib;
+			dstSubfolderSpec = 6;
+			files = (
+				35FD06B020CC8DF400909568 /* libpcre.1.dylib in CopyFiles */,
+				35FD06B120CC8DF400909568 /* libvorbisenc.2.dylib in CopyFiles */,
+				35FD06B220CC8DF400909568 /* libfluidsynth.dylib in CopyFiles */,
+				35FD06B320CC8DF400909568 /* libglib-2.0.0.dylib in CopyFiles */,
+				35FD06B420CC8DF400909568 /* libsndfile.1.dylib in CopyFiles */,
+				35FD06B520CC8DF400909568 /* libintl.8.dylib in CopyFiles */,
+				35FD06B620CC8DF400909568 /* libvorbis.0.dylib in CopyFiles */,
+				35FD06B720CC8DF400909568 /* libgthread-2.0.0.dylib in CopyFiles */,
+				35FD06B820CC8DF400909568 /* libFLAC.8.dylib in CopyFiles */,
+				35FD06B920CC8DF400909568 /* libogg.0.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CDF6CC6582C75689BA673A10 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				FC2507C6AC91F4440754877A /* juicysfplugin.appex in Embed App Extensions */,
+				35FD06BA20CC900C00909568 /* juicysfplugin.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -218,6 +363,16 @@
 		2FB62D371AA3AB416FCB73CE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		33B56FA30952FB33928A557F /* juicysfplugin.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = juicysfplugin.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		3540730A20557C1500DE1E04 /* Juicy.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Juicy.icns; sourceTree = "<group>"; };
+		35FD067A20CC8D0B00909568 /* libpcre.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpcre.1.dylib; sourceTree = "<group>"; };
+		35FD067B20CC8D0B00909568 /* libvorbisenc.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libvorbisenc.2.dylib; sourceTree = "<group>"; };
+		35FD067C20CC8D0B00909568 /* libfluidsynth.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfluidsynth.dylib; sourceTree = "<group>"; };
+		35FD067D20CC8D0B00909568 /* libglib-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libglib-2.0.0.dylib"; sourceTree = "<group>"; };
+		35FD067E20CC8D0B00909568 /* libsndfile.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsndfile.1.dylib; sourceTree = "<group>"; };
+		35FD067F20CC8D0B00909568 /* libintl.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libintl.8.dylib; sourceTree = "<group>"; };
+		35FD068020CC8D0B00909568 /* libvorbis.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libvorbis.0.dylib; sourceTree = "<group>"; };
+		35FD068120CC8D0B00909568 /* libgthread-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libgthread-2.0.0.dylib"; sourceTree = "<group>"; };
+		35FD068220CC8D0B00909568 /* libFLAC.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libFLAC.8.dylib; sourceTree = "<group>"; };
+		35FD068320CC8D0B00909568 /* libogg.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libogg.0.dylib; sourceTree = "<group>"; };
 		379C84D5A55C1857A91CBC40 /* juce_audio_plugin_client */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_audio_plugin_client; path = /Applications/JUCE/modules/juce_audio_plugin_client; sourceTree = "<absolute>"; };
 		3B0BE48E8B34519259BA931D /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		3B1AE50061C46417C2C4E30D /* FluidSynthModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FluidSynthModel.h; path = ../../Source/FluidSynthModel.h; sourceTree = SOURCE_ROOT; };
@@ -460,6 +615,23 @@
 			name = "JUCE Library Code";
 			sourceTree = "<group>";
 		};
+		35FD067920CC8D0B00909568 /* lib_relinked */ = {
+			isa = PBXGroup;
+			children = (
+				35FD067A20CC8D0B00909568 /* libpcre.1.dylib */,
+				35FD067B20CC8D0B00909568 /* libvorbisenc.2.dylib */,
+				35FD067C20CC8D0B00909568 /* libfluidsynth.dylib */,
+				35FD067D20CC8D0B00909568 /* libglib-2.0.0.dylib */,
+				35FD067E20CC8D0B00909568 /* libsndfile.1.dylib */,
+				35FD067F20CC8D0B00909568 /* libintl.8.dylib */,
+				35FD068020CC8D0B00909568 /* libvorbis.0.dylib */,
+				35FD068120CC8D0B00909568 /* libgthread-2.0.0.dylib */,
+				35FD068220CC8D0B00909568 /* libFLAC.8.dylib */,
+				35FD068320CC8D0B00909568 /* libogg.0.dylib */,
+			);
+			path = lib_relinked;
+			sourceTree = "<group>";
+		};
 		47D0B035A0E2E766A077672C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -573,6 +745,7 @@
 		FF6BE0B0C430808BA4FD975F /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				35FD067920CC8D0B00909568 /* lib_relinked */,
 				48F8550CF03FCF8FD358D1C0 /* juicysfplugin.entitlements */,
 				0007E2E1FEE2BAEC9D55BA62 /* juicysfplugin */,
 				58957C3FD57D051F86CA1D6D /* JUCE Modules */,
@@ -594,6 +767,7 @@
 				BD082BD9D8A8097895F06458 /* Resources */,
 				8B93D15052B181358678B2F0 /* Sources */,
 				F04A89DAE77B198C40247F96 /* Frameworks */,
+				35FD06A420CC8DD600909568 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -613,6 +787,7 @@
 				EB9CF58BE6299EE27218F5DF /* Sources */,
 				6D01433109BEB9E66FF3908C /* Frameworks */,
 				CDF6CC6582C75689BA673A10 /* Embed App Extensions */,
+				35FD067620CC8CBB00909568 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -633,6 +808,7 @@
 				DF2404D8328FD43648B42F71 /* Rez */,
 				70644D9432F31F4B0E05D44A /* Sources */,
 				96DA4C6322E884D364B58949 /* Frameworks */,
+				35FD069920CC8DC000909568 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -650,6 +826,7 @@
 			buildPhases = (
 				5C1433985BDA89A8E0CD3919 /* Sources */,
 				6E17FF39F1E4009F7E002512 /* Frameworks */,
+				35FD068E20CC8DAD00909568 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -683,6 +860,7 @@
 				CFB1F96B1314D47DB79A751C /* Resources */,
 				6241168704ADD024D490A603 /* Sources */,
 				DD68A9436BD372B7733D5A81 /* Frameworks */,
+				35FD06AF20CC8DE900909568 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -1055,7 +1233,7 @@
 					"$(inherited)",
 				);
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/..";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = "$(inherited)";
@@ -1102,6 +1280,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/include";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/..";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-L$(PROJECT_DIR)/lib_relinked",
@@ -1151,6 +1330,7 @@
 				INFOPLIST_FILE = "Info-VST.plist";
 				INFOPLIST_PREPROCESS = NO;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/VST/";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
@@ -1204,6 +1384,7 @@
 				INFOPLIST_FILE = "Info-AU.plist";
 				INFOPLIST_PREPROCESS = NO;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
@@ -1259,6 +1440,7 @@
 				INFOPLIST_FILE = "Info-AU.plist";
 				INFOPLIST_PREPROCESS = NO;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
@@ -1310,6 +1492,7 @@
 				);
 				INFOPLIST_FILE = "Info-Standalone_Plugin.plist";
 				INFOPLIST_PREPROCESS = NO;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = (
@@ -1358,6 +1541,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/include";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/..";
 				OTHER_LDFLAGS = (
 					"-L$(PROJECT_DIR)/lib_relinked",
 					"-lfluidsynth",
@@ -1417,7 +1601,7 @@
 					"$(inherited)",
 				);
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/..";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
@@ -1467,6 +1651,7 @@
 				INFOPLIST_FILE = "Info-VST.plist";
 				INFOPLIST_PREPROCESS = NO;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/VST/";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
@@ -1522,6 +1707,7 @@
 				INFOPLIST_FILE = "Info-VST3.plist";
 				INFOPLIST_PREPROCESS = NO;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/VST3/";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
@@ -1575,6 +1761,7 @@
 				);
 				INFOPLIST_FILE = "Info-AUv3_AppExtension.plist";
 				INFOPLIST_PREPROCESS = NO;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
@@ -1623,6 +1810,7 @@
 				);
 				INFOPLIST_FILE = "Info-Standalone_Plugin.plist";
 				INFOPLIST_PREPROCESS = NO;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
@@ -1674,6 +1862,7 @@
 				INFOPLIST_FILE = "Info-VST3.plist";
 				INFOPLIST_PREPROCESS = NO;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/VST3/";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
@@ -1725,6 +1914,7 @@
 				);
 				INFOPLIST_FILE = "Info-AUv3_AppExtension.plist";
 				INFOPLIST_PREPROCESS = NO;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = (
