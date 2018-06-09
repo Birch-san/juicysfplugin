@@ -16,7 +16,7 @@
 				35E67D8B160999DC5762A718 /* PBXTargetDependency */,
 				4F7FA910490CEB85F2DEE423 /* PBXTargetDependency */,
 				CD643E5DF535FFC28BC11487 /* PBXTargetDependency */,
-				A145B14B463F1035FFD675D5 /* PBXTargetDependency */,
+				/* A145B14B463F1035FFD675D5 removed PBXTargetDependency on AUv3 ,*/
 				1BC53243D785F6D5AC46D632 /* PBXTargetDependency */,
 				A8F35A2CDCAF8A699F82912B /* PBXTargetDependency */,
 			);
@@ -790,7 +790,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				A145B14B463F1035FFD675D5 /* PBXTargetDependency */,
+				/* A145B14B463F1035FFD675D5 removed PBXTargetDependency on AUv3 ,*/
 				A8F35A2CDCAF8A699F82912B /* PBXTargetDependency */,
 			);
 			name = "juicysfplugin - Standalone Plugin";
