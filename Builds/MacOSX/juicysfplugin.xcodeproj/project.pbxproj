@@ -146,7 +146,6 @@
 		35FD06B720CC8DF400909568 /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068120CC8D0B00909568 /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		35FD06B820CC8DF400909568 /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068220CC8D0B00909568 /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		35FD06B920CC8DF400909568 /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 35FD068320CC8D0B00909568 /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		35FD06BA20CC900C00909568 /* juicysfplugin.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 33B56FA30952FB33928A557F /* juicysfplugin.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3758E5B3C2288245817A9ECD /* include_juce_audio_processors.mm in Sources */ = {isa = PBXBuildFile; fileRef = D83BE45225B0E49E077E5B87 /* include_juce_audio_processors.mm */; };
 		3BE4582C1A69CFFDC17790FE /* CoreAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB9DC0F378DBE6110579ABEB /* CoreAudioKit.framework */; };
 		4197FB69EAA917C1B9160B32 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86183C1237DA7A5F2CF41CC7 /* CoreAudio.framework */; };
@@ -341,7 +340,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				35FD06BA20CC900C00909568 /* juicysfplugin.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
