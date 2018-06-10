@@ -24,12 +24,23 @@ trap 'error ${LINENO}' ERR
 declare -a BUILDS=("Debug" "Release")
 for BUILD in "${BUILDS[@]}"
 do
-	if [ -d "$MYDIR/build/$BUILD" ]; then
-		echo "Found $BUILD; archiving targets to build/$BUILD.tar.xz:"
-		ls "$MYDIR/build/$BUILD"
-    \cp -rf ../../LICENSE.txt "$MYDIR/build/$BUILD/LICENSE.txt"
-    \cp -rf ../../licenses_of_dependencies "$MYDIR/build/$BUILD/licenses_of_dependencies"
-		tar -hczf "$MYDIR/build/$BUILD.tar.xz" -C "$MYDIR/build/$BUILD" .
+  BUILDDIR="$MYDIR/build/$BUILD"
+	if [ -d "$BUILDDIR" ]; then
+    echo "Found build $BUILD"
+    if [[ -d "$BUILDDIR/juicysfplugin.app" \
+    && -d "$BUILDDIR/juicysfplugin.component" \
+    && -d "$BUILDDIR/juicysfplugin.vst" \
+    && -d "$BUILDDIR/juicysfplugin.vst3" ]]; then
+      echo "Found in $BUILD all targets: .app, .component, .vst, .vst3"
+      echo "Archiving $BUILD targets to build/$BUILD.tar.xz:"
+      ls "$BUILDDIR"
+      \cp -rf "$MYDIR/how to install.txt" "$BUILDDIR/how to install.txt"
+      \cp -rf "$MYDIR/../../LICENSE.txt" "$BUILDDIR/LICENSE.txt"
+      \cp -rf "$MYDIR/../../licenses_of_dependencies" "$BUILDDIR/."
+      tar -hczf "$BUILDDIR.tar.xz" --exclude="libjuicysfplugin.a" -C "$MYDIR/build/$BUILD" .
+    else
+      echo "Did not find in $BUILD all targets: .app, .component, .vst, .vst3; skipping."
+    fi
 	else
 		echo "Missing $BUILD; skipping."
 	fi
