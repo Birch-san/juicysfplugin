@@ -6,7 +6,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FluidSynthModel.h"
-#import "FilePickerFragment.h"
+#include "FilePickerFragment.h"
 
 class FilePicker: public Component,
                   public FilePickerFragment,
