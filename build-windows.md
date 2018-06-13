@@ -180,6 +180,10 @@ JUCE should be installed to C:\\Juce
 10) With Projucer, open juicysfplugin/juicysfplugin.jucer
 
 
+10) Install LLVM
+
+https://releases.llvm.org/download.html
+
 
 5.onsecondthoughtsdon't) Configure MSYS2 environment
 
