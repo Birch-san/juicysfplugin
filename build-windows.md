@@ -139,7 +139,31 @@ $ ldd /mingw64/bin/libfluidsynth-1.dll
         IMM32.DLL => /c/WINDOWS/System32/IMM32.DLL (0x7ffcc1560000)
 ```
 
-6) Install [VST3 Audio Plug-Ins SDK](https://www.steinberg.net/en/company/developers.html)
+6) Install CLion
+
+https://www.jetbrains.com/clion/nextversion/
+
+6) Install MinGW toolchain
+
+Required for CLion integration.
+
+https://stackoverflow.com/questions/36375081/how-to-run-clion-with-msys2-on-windows
+
+You don't need all the packages here (like Ada, Fortran, Objective-C...), but space is cheap so just install all.
+
+```bash
+pacman -S --needed mingw-w64-x86_64-toolchain
+```
+
+7) Configure CLion
+
+Add MinGW Toolchain:
+
+```
+C:\msys64\mingw64
+```
+
+8) Install [VST3 Audio Plug-Ins SDK](https://www.steinberg.net/en/company/developers.html)
 
 Such that this folder exists:
 
@@ -147,13 +171,13 @@ Such that this folder exists:
 C:\SDKs\VST_SDK\VST3_SDK
 ```
 
-7) Install JUCE and Projucer
+9) Install JUCE and Projucer
 
 https://shop.juce.com/get-juce
 
 JUCE should be installed to C:\\Juce
 
-7) With Projucer, open juicysfplugin/juicysfplugin.jucer
+10) With Projucer, open juicysfplugin/juicysfplugin.jucer
 
 
 
