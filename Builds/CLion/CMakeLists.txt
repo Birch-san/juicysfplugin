@@ -2745,7 +2745,7 @@ set_target_properties (VST PROPERTIES
 
 target_link_libraries (VST PRIVATE
     SHARED_CODE
-    "-L/usr/local/lib"
+    "-Llib_relinked"
     "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
@@ -2829,7 +2829,7 @@ set_target_properties (VST3 PROPERTIES
 
 target_link_libraries (VST3 PRIVATE
     SHARED_CODE
-    "-L/usr/local/lib"
+    "-Llib_relinked"
     "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
@@ -2905,7 +2905,7 @@ set_target_properties (STANDALONE_PLUGIN PROPERTIES
 
 target_link_libraries (STANDALONE_PLUGIN PRIVATE
     SHARED_CODE
-    "-L/usr/local/lib"
+    "-Llib_relinked"
     "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
@@ -2971,7 +2971,7 @@ set_target_properties (SHARED_CODE PROPERTIES
 )
 
 target_link_libraries (SHARED_CODE PRIVATE
-    "-L/usr/local/lib"
+    "-Llib_relinked"
     "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
@@ -3064,7 +3064,7 @@ set_target_properties (VST PROPERTIES
 
 target_link_libraries (VST PRIVATE
     SHARED_CODE
-    "-L/usr/local/lib"
+    "-Llib_relinked"
     "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
@@ -3150,7 +3150,7 @@ set_target_properties (VST3 PROPERTIES
 
 target_link_libraries (VST3 PRIVATE
     SHARED_CODE
-    "-L/usr/local/lib"
+    "-Llib_relinked"
     "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
@@ -3228,7 +3228,7 @@ set_target_properties (STANDALONE_PLUGIN PROPERTIES
 
 target_link_libraries (STANDALONE_PLUGIN PRIVATE
     SHARED_CODE
-    "-L/usr/local/lib"
+    "-Llib_relinked"
     "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"
@@ -3296,7 +3296,7 @@ set_target_properties (SHARED_CODE PROPERTIES
 )
 
 target_link_libraries (SHARED_CODE PRIVATE
-    "-L/usr/local/lib"
+    "-Llib_relinked"
     "-lfluidsynth"
     "-framework Accelerate"
     "-framework AudioToolbox"

@@ -63,7 +63,7 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" vst3Folder="" externalLibraries="fluidsynth"
-               extraLinkerFlags="-L/usr/local/lib">
+               extraLinkerFlags="-Llib_relinked">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" headerPath="../../include"/>
         <CONFIGURATION isDebug="0" name="Release" headerPath="../../include"/>

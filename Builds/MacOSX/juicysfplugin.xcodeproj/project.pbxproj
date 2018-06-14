@@ -299,7 +299,7 @@
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = "-bundle -ljuicysfplugin -L/usr/local/lib -lfluidsynth";
+				OTHER_LDFLAGS = "-bundle -ljuicysfplugin -Llib_relinked -lfluidsynth";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
 				SDKROOT_ppc = macosx10.5;
 				USE_HEADERMAP = NO;
@@ -339,7 +339,7 @@
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = "-bundle -ljuicysfplugin -L/usr/local/lib -lfluidsynth";
+				OTHER_LDFLAGS = "-bundle -ljuicysfplugin -Llib_relinked -lfluidsynth";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
 				SDKROOT_ppc = macosx10.5;
 				USE_HEADERMAP = NO;
@@ -377,7 +377,7 @@
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = "-bundle -ljuicysfplugin -L/usr/local/lib -lfluidsynth";
+				OTHER_LDFLAGS = "-bundle -ljuicysfplugin -Llib_relinked -lfluidsynth";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
 				SDKROOT_ppc = macosx10.5;
 				USE_HEADERMAP = NO;
@@ -417,7 +417,7 @@
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = "-bundle -ljuicysfplugin -L/usr/local/lib -lfluidsynth";
+				OTHER_LDFLAGS = "-bundle -ljuicysfplugin -Llib_relinked -lfluidsynth";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
 				SDKROOT_ppc = macosx10.5;
 				USE_HEADERMAP = NO;
@@ -452,7 +452,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = "-ljuicysfplugin -L/usr/local/lib -lfluidsynth";
+				OTHER_LDFLAGS = "-ljuicysfplugin -Llib_relinked -lfluidsynth";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin.juicysfpluginAUv3;
 				SDKROOT_ppc = macosx10.5;
 				USE_HEADERMAP = NO; }; name = Debug; };
@@ -488,7 +488,7 @@
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = "-ljuicysfplugin -L/usr/local/lib -lfluidsynth";
+				OTHER_LDFLAGS = "-ljuicysfplugin -Llib_relinked -lfluidsynth";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin.juicysfpluginAUv3;
 				SDKROOT_ppc = macosx10.5;
 				USE_HEADERMAP = NO; }; name = Release; };
@@ -520,7 +520,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = "-ljuicysfplugin -L/usr/local/lib -lfluidsynth";
+				OTHER_LDFLAGS = "-ljuicysfplugin -Llib_relinked -lfluidsynth";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
 				SDKROOT_ppc = macosx10.5;
 				USE_HEADERMAP = NO; }; name = Debug; };
@@ -554,7 +554,7 @@
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = "-ljuicysfplugin -L/usr/local/lib -lfluidsynth";
+				OTHER_LDFLAGS = "-ljuicysfplugin -Llib_relinked -lfluidsynth";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
 				SDKROOT_ppc = macosx10.5;
 				USE_HEADERMAP = NO; }; name = Release; };
@@ -586,7 +586,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = "-L/usr/local/lib -lfluidsynth";
+				OTHER_LDFLAGS = "-Llib_relinked -lfluidsynth";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
 				SDKROOT_ppc = macosx10.5;
 				USE_HEADERMAP = NO; }; name = Debug; };
@@ -620,7 +620,7 @@
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_LDFLAGS = "-L/usr/local/lib -lfluidsynth";
+				OTHER_LDFLAGS = "-Llib_relinked -lfluidsynth";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
 				SDKROOT_ppc = macosx10.5;
 				USE_HEADERMAP = NO; }; name = Release; };
