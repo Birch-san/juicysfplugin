@@ -2190,6 +2190,9 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_video.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\BankAndPreset.cpp">
+      <Filter>juicysfplugin\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\FilePicker.h">
@@ -4233,6 +4236,12 @@
       <Filter>JUCE Library Code</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\FilePickerFragment.h">
+      <Filter>juicysfplugin\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ExposesComponents.h">
+      <Filter>juicysfplugin\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\BankAndPreset.h">
       <Filter>juicysfplugin\Source</Filter>
     </ClInclude>
   </ItemGroup>

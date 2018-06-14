@@ -92,7 +92,9 @@
       <ProgramDatabaseFile>$(IntDir)\juicysfplugin.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>juicysfplugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>juicysfplugin.lib;libfluidsynth.dll.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\msys64\mingw64\lib;C:\msys64\mingw64\bin</AdditionalLibraryDirectories>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>

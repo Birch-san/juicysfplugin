@@ -139,6 +139,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\BankAndPreset.cpp" />
     <ClCompile Include="..\..\Source\FilePicker.cpp" />
     <ClCompile Include="..\..\Source\FluidSynthModel.cpp" />
     <ClCompile Include="..\..\Source\MyColours.cpp" />
@@ -1887,6 +1888,8 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_video.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\BankAndPreset.h" />
+    <ClInclude Include="..\..\Source\ExposesComponents.h" />
     <ClInclude Include="..\..\Source\FilePicker.h" />
     <ClInclude Include="..\..\Source\FilePickerFragment.h" />
     <ClInclude Include="..\..\Source\FluidSynthModel.h" />
