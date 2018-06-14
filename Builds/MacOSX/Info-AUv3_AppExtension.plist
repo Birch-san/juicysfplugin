@@ -28,7 +28,7 @@
     <key>NSExtension</key>
     <dict>
       <key>NSExtensionPrincipalClass</key>
-      <string>JUCEProjectAUFactoryAUv3</string>
+      <string>juicysfpluginAUFactoryAUv3</string>
       <key>NSExtensionPointIdentifier</key>
       <string>com.apple.AudioUnit-UI</string>
       <key>NSExtensionAttributes</key>
@@ -41,7 +41,7 @@
             <key>description</key>
             <string>Audio plugin to play soundfonts</string>
             <key>factoryFunction</key>
-            <string>JUCEProjectAUFactoryAUv3</string>
+            <string>juicysfpluginAUFactoryAUv3</string>
             <key>manufacturer</key>
             <string>Blbs</string>
             <key>type</key>
