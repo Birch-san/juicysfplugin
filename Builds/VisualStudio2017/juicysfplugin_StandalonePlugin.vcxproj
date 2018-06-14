@@ -156,51 +156,10 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_plugin_client_Standalone.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="lib\libFLAC-8.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libfluidsynth-1.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libglib-2.0-0.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libiconv-2.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libintl-8.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libogg-0.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libpcre-1.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libportaudio-2.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libreadline7.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libsndfile-1.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libspeex-1.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libtermcap-0.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libvorbis-0.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libvorbisenc-2.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="lib\libwinpthread-1.dll">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
+    <Content Include="lib\*.dll">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\resources.rc" />
