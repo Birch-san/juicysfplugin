@@ -2689,7 +2689,7 @@ target_include_directories (VST PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "$ENV{HOME}/JUCE/modules"
-    "/usr/local/include"
+    "../../include"
     "$ENV{HOME}/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -2773,7 +2773,7 @@ target_include_directories (VST3 PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "$ENV{HOME}/JUCE/modules"
-    "/usr/local/include"
+    "../../include"
     "$ENV{HOME}/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -2857,7 +2857,7 @@ target_include_directories (STANDALONE_PLUGIN PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "$ENV{HOME}/JUCE/modules"
-    "/usr/local/include"
+    "../../include"
     "$ENV{HOME}/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -2927,7 +2927,7 @@ target_include_directories (SHARED_CODE PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "$ENV{HOME}/JUCE/modules"
-    "/usr/local/include"
+    "../../include"
     "$ENV{HOME}/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -3006,7 +3006,7 @@ target_include_directories (VST PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "$ENV{HOME}/JUCE/modules"
-    "/usr/local/include"
+    "../../include"
     "$ENV{HOME}/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -3092,7 +3092,7 @@ target_include_directories (VST3 PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "$ENV{HOME}/JUCE/modules"
-    "/usr/local/include"
+    "../../include"
     "$ENV{HOME}/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -3178,7 +3178,7 @@ target_include_directories (STANDALONE_PLUGIN PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "$ENV{HOME}/JUCE/modules"
-    "/usr/local/include"
+    "../../include"
     "$ENV{HOME}/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -3250,7 +3250,7 @@ target_include_directories (SHARED_CODE PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "../../JuceLibraryCode"
     "$ENV{HOME}/JUCE/modules"
-    "/usr/local/include"
+    "../../include"
     "$ENV{HOME}/JUCE/modules/juce_audio_plugin_client"
 )
 
