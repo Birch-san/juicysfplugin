@@ -391,6 +391,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\BankAndPreset.cpp">
+      <Filter>juicysfplugin\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\FilePicker.cpp">
       <Filter>juicysfplugin\Source</Filter>
     </ClCompile>
@@ -398,9 +401,6 @@
       <Filter>juicysfplugin\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\MyColours.cpp">
-      <Filter>juicysfplugin\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Pill.cpp">
       <Filter>juicysfplugin\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Pills.cpp">
@@ -419,9 +419,6 @@
       <Filter>juicysfplugin\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\TableComponent.cpp">
-      <Filter>juicysfplugin\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\TableModel.cpp">
       <Filter>juicysfplugin\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\TablesComponent.cpp">
@@ -2325,6 +2322,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\BankAndPreset.h">
+      <Filter>juicysfplugin\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ExposesComponents.h">
+      <Filter>juicysfplugin\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\FilePickerFragment.h">
+      <Filter>juicysfplugin\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\FilePicker.h">
       <Filter>juicysfplugin\Source</Filter>
     </ClInclude>
@@ -2332,9 +2338,6 @@
       <Filter>juicysfplugin\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\MyColours.h">
-      <Filter>juicysfplugin\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Pill.h">
       <Filter>juicysfplugin\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Pills.h">
@@ -2356,9 +2359,6 @@
       <Filter>juicysfplugin\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\TableComponent.h">
-      <Filter>juicysfplugin\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\TableModel.h">
       <Filter>juicysfplugin\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\TablesComponent.h">

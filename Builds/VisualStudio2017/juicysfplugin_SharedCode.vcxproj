@@ -16,7 +16,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{81231CE9-96E4-09DA-53C7-714106FA6BD5}</ProjectGuid>
     <PlatformToolset>v141</PlatformToolset>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"
@@ -26,7 +26,7 @@
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <PlatformToolset>v141</PlatformToolset>
     <PlatformToolset>v141</PlatformToolset>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'"
                  Label="Configuration">
@@ -35,7 +35,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v141</PlatformToolset>
     <PlatformToolset>v141</PlatformToolset>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
   <ImportGroup Label="ExtensionSettings"/>
@@ -46,7 +46,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
     <PlatformToolset>v141</PlatformToolset>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
@@ -60,7 +60,7 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">juicysfplugin</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
     <PlatformToolset>v141</PlatformToolset>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
@@ -146,17 +146,16 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\BankAndPreset.cpp"/>
     <ClCompile Include="..\..\Source\FilePicker.cpp"/>
     <ClCompile Include="..\..\Source\FluidSynthModel.cpp"/>
     <ClCompile Include="..\..\Source\MyColours.cpp"/>
-    <ClCompile Include="..\..\Source\Pill.cpp"/>
     <ClCompile Include="..\..\Source\Pills.cpp"/>
     <ClCompile Include="..\..\Source\Preset.cpp"/>
     <ClCompile Include="..\..\Source\SoundfontSynthSound.cpp"/>
     <ClCompile Include="..\..\Source\SoundfontSynthVoice.cpp"/>
     <ClCompile Include="..\..\Source\SurjectiveMidiKeyboardComponent.cpp"/>
     <ClCompile Include="..\..\Source\TableComponent.cpp"/>
-    <ClCompile Include="..\..\Source\TableModel.cpp"/>
     <ClCompile Include="..\..\Source\TablesComponent.cpp"/>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\Source\PluginEditor.cpp"/>
@@ -1896,10 +1895,12 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_video.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\BankAndPreset.h"/>
+    <ClInclude Include="..\..\Source\ExposesComponents.h"/>
+    <ClInclude Include="..\..\Source\FilePickerFragment.h"/>
     <ClInclude Include="..\..\Source\FilePicker.h"/>
     <ClInclude Include="..\..\Source\FluidSynthModel.h"/>
     <ClInclude Include="..\..\Source\MyColours.h"/>
-    <ClInclude Include="..\..\Source\Pill.h"/>
     <ClInclude Include="..\..\Source\Pills.h"/>
     <ClInclude Include="..\..\Source\Preset.h"/>
     <ClInclude Include="..\..\Source\PresetsToBanks.h"/>
@@ -1907,7 +1908,6 @@
     <ClInclude Include="..\..\Source\SoundfontSynthVoice.h"/>
     <ClInclude Include="..\..\Source\SurjectiveMidiKeyboardComponent.h"/>
     <ClInclude Include="..\..\Source\TableComponent.h"/>
-    <ClInclude Include="..\..\Source\TableModel.h"/>
     <ClInclude Include="..\..\Source\TablesComponent.h"/>
     <ClInclude Include="..\..\Source\PluginProcessor.h"/>
     <ClInclude Include="..\..\Source\PluginEditor.h"/>
