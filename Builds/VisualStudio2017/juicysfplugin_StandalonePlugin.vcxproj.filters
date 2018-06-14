@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="JUCE Library Code">
@@ -11,7 +10,23 @@
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup/>
+  <ItemGroup>
+    <None Include="lib\libFLAC-8.dll" />
+    <None Include="lib\libfluidsynth-1.dll" />
+    <None Include="lib\libglib-2.0-0.dll" />
+    <None Include="lib\libiconv-2.dll" />
+    <None Include="lib\libintl-8.dll" />
+    <None Include="lib\libogg-0.dll" />
+    <None Include="lib\libpcre-1.dll" />
+    <None Include="lib\libportaudio-2.dll" />
+    <None Include="lib\libreadline7.dll" />
+    <None Include="lib\libsndfile-1.dll" />
+    <None Include="lib\libspeex-1.dll" />
+    <None Include="lib\libtermcap-0.dll" />
+    <None Include="lib\libvorbis-0.dll" />
+    <None Include="lib\libvorbisenc-2.dll" />
+    <None Include="lib\libwinpthread-1.dll" />
+  </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\resources.rc">
       <Filter>JUCE Library Code</Filter>
