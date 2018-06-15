@@ -189,6 +189,8 @@ If you encounter "Unrecoverable build error" when building juicysfplugin's setup
 regsvr32 "C:\Program Files (x86)\Common Files\Microsoft Shared\MSI Tools\MergeMod.dll"
 ```
 
+You may also need to run Visual Studio itself as Administrator.
+
 
 10) Install LLVM
 
