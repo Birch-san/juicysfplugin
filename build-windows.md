@@ -179,6 +179,16 @@ JUCE should be installed to C:\\Juce
 
 10) With Projucer, open juicysfplugin/juicysfplugin.jucer
 
+11) Register MergeMod.dll
+
+https://stackoverflow.com/questions/42624572/unrecoverable-build-error-whilst-trying-to-build-setup-on-vs2015
+
+If you encounter "Unrecoverable build error" when building juicysfplugin's setup.exe installer, you need to open an administrator prompt and register MergeMod.dll:
+
+```bash
+regsvr32 "C:\Program Files (x86)\Common Files\Microsoft Shared\MSI Tools\MergeMod.dll"
+```
+
 
 10) Install LLVM
 
