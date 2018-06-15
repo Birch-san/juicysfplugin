@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_02FC303530AB48A9963396C506E0E6FC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0356628CA6F8424AB7FB5CF4649314ED"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -39,7 +45,37 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1C77D5F849F04B2F95B640D7A38F9489"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_286E18673C4A4A37A3CAF96362CCF10E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_29AE77D21E804BF0BF57411B7DF9AF3F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2D376483C1684E14AA1AD2509C825176"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2FD8962A288E46E1A41AB24BF41B60BF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3052F50F02ED4C96B88A80DFBA61F1D0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -57,7 +93,37 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3C29F39F3B2C4827B3D7F7FCA3BA9D0F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_49082A31240941F0ABED04AF61C5804D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_5CAB6A9AECD642F38A4526A5145321C1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5F47D0A4297748F5842D0B42369A7CF2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_78090579889B47CBA29DE54EC9321442"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7B64601FC963450689C48413B71423E0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -99,13 +165,73 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_9B3EE5F1B8A242BDA31188404FE86F39"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A0921278E58842C7894E8D79C7517FFB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
+        "MsmKey" = "8:_AEF416F3F1BD4E8CA031368DD83E0210"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B7751AA610AB442D81C041B4B7B9C577"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C5FFF722A89B44498C2B24D83E8A509F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C8639D931EE442ECA3812C3A665A684B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D4EE6D56A48C463385E7A475DAB5C40C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E47837A2461E4974A7AA2DA9400D8BD4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E9969B7299674103A15687D0A8B4B12A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EABB8271AE9D41FCAF922D0AC412471B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EF05A3D6E2B745E7ABD95661F03BE001"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FFAEEF2E3F9F40E6A7109F3703329346"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -196,6 +322,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_02FC303530AB48A9963396C506E0E6FC"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libtermcap_LGPL_2.1.txt"
+            "TargetName" = "8:libtermcap_LGPL_2.1.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0356628CA6F8424AB7FB5CF4649314ED"
             {
             "SourcePath" = "8:..\\VisualStudio2017\\lib\\libvorbisenc-2.dll"
@@ -276,12 +422,112 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1C77D5F849F04B2F95B640D7A38F9489"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libogg_New_BSD.txt"
+            "TargetName" = "8:libogg_New_BSD.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_286E18673C4A4A37A3CAF96362CCF10E"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libportaudio_bespoke.txt"
+            "TargetName" = "8:libportaudio_bespoke.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_29AE77D21E804BF0BF57411B7DF9AF3F"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libgthread_LGPL_2.1.txt"
+            "TargetName" = "8:libgthread_LGPL_2.1.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2D376483C1684E14AA1AD2509C825176"
             {
             "SourcePath" = "8:..\\VisualStudio2017\\lib\\libtermcap-0.dll"
             "TargetName" = "8:libtermcap-0.dll"
             "Tag" = "8:"
             "Folder" = "8:_9357678F21A9486EBA4E682B714FFD21"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2FD8962A288E46E1A41AB24BF41B60BF"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libpcre_BSD.txt"
+            "TargetName" = "8:libpcre_BSD.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3052F50F02ED4C96B88A80DFBA61F1D0"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\license_concatenated.rtf"
+            "TargetName" = "8:license_concatenated.rtf"
+            "Tag" = "8:"
+            "Folder" = "8:_B6EB33B285DA438C99D1AE8C5F73EBBE"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -336,12 +582,112 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3C29F39F3B2C4827B3D7F7FCA3BA9D0F"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libsndfile_LGPL_2.1.txt"
+            "TargetName" = "8:libsndfile_LGPL_2.1.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_49082A31240941F0ABED04AF61C5804D"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libiconv_LGPL_2.1.txt"
+            "TargetName" = "8:libiconv_LGPL_2.1.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5CAB6A9AECD642F38A4526A5145321C1"
             {
             "SourcePath" = "8:..\\VisualStudio2017\\lib\\libsndfile-1.dll"
             "TargetName" = "8:libsndfile-1.dll"
             "Tag" = "8:"
             "Folder" = "8:_9357678F21A9486EBA4E682B714FFD21"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5F47D0A4297748F5842D0B42369A7CF2"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libvorbisenc_New_BSD.txt"
+            "TargetName" = "8:libvorbisenc_New_BSD.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_78090579889B47CBA29DE54EC9321442"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libglib_LGPL_2.1.txt"
+            "TargetName" = "8:libglib_LGPL_2.1.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7B64601FC963450689C48413B71423E0"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libvorbis_New_BSD.txt"
+            "TargetName" = "8:libvorbis_New_BSD.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -456,12 +802,72 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9B3EE5F1B8A242BDA31188404FE86F39"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\Steinberg-VST3_GPL3.txt"
+            "TargetName" = "8:Steinberg-VST3_GPL3.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A0921278E58842C7894E8D79C7517FFB"
             {
             "SourcePath" = "8:..\\VisualStudio2017\\lib\\libintl-8.dll"
             "TargetName" = "8:libintl-8.dll"
             "Tag" = "8:"
             "Folder" = "8:_9357678F21A9486EBA4E682B714FFD21"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AEF416F3F1BD4E8CA031368DD83E0210"
+            {
+            "SourcePath" = "8:..\\..\\LICENSE.txt"
+            "TargetName" = "8:LICENSE.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_B6EB33B285DA438C99D1AE8C5F73EBBE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B7751AA610AB442D81C041B4B7B9C577"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libreadline_GPL3.txt"
+            "TargetName" = "8:libreadline_GPL3.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -496,23 +902,152 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C8639D931EE442ECA3812C3A665A684B"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\JUCE-framework_GPL3.txt"
+            "TargetName" = "8:JUCE-framework_GPL3.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D4EE6D56A48C463385E7A475DAB5C40C"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\license_concatenated.txt"
+            "TargetName" = "8:license_concatenated.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_B6EB33B285DA438C99D1AE8C5F73EBBE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E47837A2461E4974A7AA2DA9400D8BD4"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libfluidsynth_LGPL_2.1.txt"
+            "TargetName" = "8:libfluidsynth_LGPL_2.1.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E9969B7299674103A15687D0A8B4B12A"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libwinpthreads_BSD_and_MIT.txt"
+            "TargetName" = "8:libwinpthreads_BSD_and_MIT.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EABB8271AE9D41FCAF922D0AC412471B"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libflac_New_BSD.txt"
+            "TargetName" = "8:libflac_New_BSD.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EF05A3D6E2B745E7ABD95661F03BE001"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libspeex_revised_BSD.txt"
+            "TargetName" = "8:libspeex_revised_BSD.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FFAEEF2E3F9F40E6A7109F3703329346"
+            {
+            "SourcePath" = "8:..\\VisualStudio2017\\licenses_of_dependencies\\libintl_LGPL_2.1.txt"
+            "TargetName" = "8:libintl_LGPL_2.1.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_583BEFDD18D44147B15CA38062E358A7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
         }
         "Folder"
         {
-            "{1525181F-901A-416C-8A58-119130FE478E}:_6701AC1F1FBF49CB887870C99F588958"
-            {
-            "Name" = "8:#1916"
-            "AlwaysCreate" = "11:FALSE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Property" = "8:DesktopFolder"
-                "Folders"
-                {
-                }
-            }
             "{1525181F-901A-416C-8A58-119130FE478E}:_8EC1C69A1D31458A8627579211EA573D"
             {
             "Name" = "8:#1937"
@@ -567,6 +1102,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_583BEFDD18D44147B15CA38062E358A7"
+                    {
+                    "Name" = "8:licenses_of_dependencies"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_98995FD807BE4388AB1BF74D5DAFC25C"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_BFDCB68C774B4BADAB5D6A5BA098936A"
@@ -608,7 +1154,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:juicysfplugin"
         "ProductCode" = "8:{B086EE8B-6AAB-4400-9D0E-943088F47D50}"
-        "PackageCode" = "8:{A513DD83-04A0-408E-8862-DE9DB3DFAE29}"
+        "PackageCode" = "8:{77CD8B20-5432-4A86-8B49-684EC38095F7}"
         "UpgradeCode" = "8:{3830CA77-DDCD-4045-85C4-47E9992B3579}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -972,6 +1518,53 @@
             "Attributes" = "3:1"
                 "Dialogs"
                 {
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_334B6708D6B64A2BA74DFCBD750EC649"
+                    {
+                    "Sequence" = "3:400"
+                    "DisplayName" = "8:License Agreement"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdLicenseDlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "EulaText"
+                            {
+                            "Name" = "8:EulaText"
+                            "DisplayName" = "8:#1008"
+                            "Description" = "8:#1108"
+                            "Type" = "3:6"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:_3052F50F02ED4C96B88A80DFBA61F1D0"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Sunken"
+                            {
+                            "Name" = "8:Sunken"
+                            "DisplayName" = "8:#1007"
+                            "Description" = "8:#1107"
+                            "Type" = "3:5"
+                            "ContextData" = "8:4;True=4;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:4"
+                            "DefaultValue" = "3:4"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_736CD34C665A421DB0FECC922373CE75"
                     {
                     "Sequence" = "3:200"
