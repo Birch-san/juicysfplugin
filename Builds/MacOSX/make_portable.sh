@@ -66,6 +66,7 @@ get_env_specific_dependencies_recursive () {
 DEP_PATHS=$(get_env_specific_dependencies_recursive "$BINARY")
 
 mkdir -p "$LIB"
+# copy each distinct dylib in the dependency tree into our lib folder
 echo "$DEP_PATHS" \
 | xargs -n1 realpath \
 | sort \
