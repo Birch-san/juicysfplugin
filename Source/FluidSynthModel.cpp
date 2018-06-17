@@ -83,33 +83,29 @@ void FluidSynthModel::changePresetImpl(int bank, int preset) {
     fluid_synth_program_select(synth, channel, sfont_id, static_cast<unsigned int>(bank), static_cast<unsigned int>(preset));
 }
 
-const fluid_preset_t FluidSynthModel::getFirstPreset() {
+fluid_preset_t* FluidSynthModel::getFirstPreset() {
     fluid_sfont_t* sfont = fluid_synth_get_sfont_by_id(synth, sfont_id);
 
     jassert(sfont != nullptr);
-    sfont->iteration_start(sfont);
+    fluid_sfont_iteration_start(sfont);
 
-    fluid_preset_t preset;
-
-    sfont->iteration_next(sfont, &preset);
-
-    return preset;
+    return fluid_sfont_iteration_next(sfont);
 }
 
 unique_ptr<BankAndPreset> FluidSynthModel::getFirstBankAndPreset() {
-    fluid_preset_t preset = getFirstPreset();
+    fluid_preset_t* preset = getFirstPreset();
 
     int offset = fluid_synth_get_bank_offset(synth, sfont_id);
 
-    return make_unique<BankAndPreset>(preset.get_banknum(&preset) + offset, preset.get_num(&preset));
+    return make_unique<BankAndPreset>(fluid_preset_get_banknum(preset) + offset, fluid_preset_get_num(preset));
 };
 
 void FluidSynthModel::selectFirstPreset() {
-    fluid_preset_t preset = getFirstPreset();
+    fluid_preset_t* preset = getFirstPreset();
 
     int offset = fluid_synth_get_bank_offset(synth, sfont_id);
 
-    changePreset(preset.get_banknum(&preset) + offset, preset.get_num(&preset));
+    changePreset(fluid_preset_get_banknum(preset) + offset, fluid_preset_get_num(preset));
 }
 
 BanksToPresets FluidSynthModel::getBanks() {
@@ -132,16 +128,16 @@ BanksToPresets FluidSynthModel::getBanks() {
 
     int offset = fluid_synth_get_bank_offset(synth, sfont_id);
 
-    sfont->iteration_start(sfont);
+    fluid_sfont_iteration_start(sfont);
 
-    fluid_preset_t preset;
-
-    while(sfont->iteration_next(sfont, &preset)) {
+    for(fluid_preset_t* preset = fluid_sfont_iteration_next(sfont);
+    preset != nullptr;
+    preset = fluid_sfont_iteration_next(sfont)) {
         banksToPresets.insert(BanksToPresets::value_type(
-                preset.get_banknum(&preset) + offset,
+                fluid_preset_get_banknum(preset) + offset,
                 *new Preset(
-                        preset.get_num(&preset),
-                        preset.get_name(&preset)
+                        fluid_preset_get_num(preset),
+                        fluid_preset_get_name(preset)
                 )
         ));
     }

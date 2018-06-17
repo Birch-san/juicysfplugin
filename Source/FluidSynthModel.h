@@ -74,7 +74,7 @@ private:
 
     float currentSampleRate;
 
-    const fluid_preset_t getFirstPreset();
+    fluid_preset_t* getFirstPreset();
     void selectFirstPreset();
     unique_ptr<BankAndPreset> getFirstBankAndPreset();
 

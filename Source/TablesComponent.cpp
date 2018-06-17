@@ -18,8 +18,8 @@ TablesComponent::TablesComponent(
     int selectedPreset = -1;
 
     if (currentPreset != nullptr) {
-        selectedBank = currentPreset->get_banknum(currentPreset);
-        selectedPreset = currentPreset->get_num(currentPreset);
+        selectedBank = fluid_preset_get_banknum(currentPreset);
+        selectedPreset = fluid_preset_get_num(currentPreset);
     }
 
     auto rowToPresetMapper = [this](const vector<string> &row) {
@@ -169,8 +169,8 @@ void TablesComponent::fontChanged(FluidSynthModel *, const String &) {
 
     fluid_preset_t* currentPreset = getCurrentPreset();
 
-    selectedBank = currentPreset->get_banknum(currentPreset);
-    int selectedPreset = currentPreset->get_num(currentPreset);
+    selectedBank = fluid_preset_get_banknum(currentPreset);
+    int selectedPreset = fluid_preset_get_num(currentPreset);
 
     presetTable->setRows(
             mapPresets(
