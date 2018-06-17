@@ -70,6 +70,7 @@ void TableComponent::setRows(const vector<vector<string>>& rows, int initiallySe
     table.updateContent();
     table.getHeader().setSortColumnId(0, true);
     table.selectRow(initiallySelectedRow);
+    table.repaint();
 }
 
 // This is overloaded from TableListBoxModel, and must return the total number of rows in our table
