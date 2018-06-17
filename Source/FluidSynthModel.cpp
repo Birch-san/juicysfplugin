@@ -41,7 +41,7 @@ void FluidSynthModel::initialise() {
 
     settings = new_fluid_settings();
     // https://sourceforge.net/p/fluidsynth/wiki/FluidSettings/
-//    fluid_settings_setstr(settings, "synth.verbose", "yes");
+//    fluid_settings_setint(settings, "synth.verbose", 1);
 
     synth = new_fluid_synth(settings);
     fluid_synth_set_sample_rate(synth, currentSampleRate);
