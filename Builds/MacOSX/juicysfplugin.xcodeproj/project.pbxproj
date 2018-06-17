@@ -395,7 +395,7 @@
 		276B008B7925AD1E743A0CB3 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				3529165320D68B9200DD4185 /* lib_relinked */,
+				3529165320D68B9200DD4185 /* lib */,
 				663ACFA11DCEC0D411B8497E /* juicysfplugin.entitlements */,
 				DCBD5E00523105542B51AC58 /* juicysfplugin */,
 				800C5A6C86E6F156E7B0C0BD /* JUCE Modules */,
@@ -435,7 +435,7 @@
 			name = "JUCE Library Code";
 			sourceTree = "<group>";
 		};
-		3529165320D68B9200DD4185 /* lib_relinked */ = {
+		3529165320D68B9200DD4185 /* lib */ = {
 			isa = PBXGroup;
 			children = (
 				3529165420D68B9200DD4185 /* libpcre.1.dylib */,
@@ -449,7 +449,7 @@
 				3529165C20D68B9200DD4185 /* libFLAC.8.dylib */,
 				3529165D20D68B9200DD4185 /* libogg.0.dylib */,
 			);
-			path = lib_relinked;
+			path = lib;
 			sourceTree = "<group>";
 		};
 		37BFAE2AAC731604C623487A /* Frameworks */ = {
@@ -972,7 +972,7 @@
 				OTHER_LDFLAGS = (
 					"-bundle",
 					"-ljuicysfplugin",
-					"-Llib_relinked",
+					"-Llib",
 					"-lfluidsynth",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
@@ -1023,7 +1023,7 @@
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = (
 					"-ljuicysfplugin",
-					"-Llib_relinked",
+					"-Llib",
 					"-lfluidsynth",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
@@ -1081,7 +1081,7 @@
 				OTHER_LDFLAGS = (
 					"-bundle",
 					"-ljuicysfplugin",
-					"-Llib_relinked",
+					"-Llib",
 					"-lfluidsynth",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
@@ -1134,7 +1134,7 @@
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = (
 					"-ljuicysfplugin",
-					"-Llib_relinked",
+					"-Llib",
 					"-lfluidsynth",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
@@ -1227,7 +1227,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = (
-					"-Llib_relinked",
+					"-Llib",
 					"-lfluidsynth",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
@@ -1278,7 +1278,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = (
-					"-Llib_relinked",
+					"-Llib",
 					"-lfluidsynth",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
@@ -1343,7 +1343,7 @@
 				OTHER_LDFLAGS = (
 					"-bundle",
 					"-ljuicysfplugin",
-					"-Llib_relinked",
+					"-Llib",
 					"-lfluidsynth",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
@@ -1400,7 +1400,7 @@
 				OTHER_LDFLAGS = (
 					"-bundle",
 					"-ljuicysfplugin",
-					"-Llib_relinked",
+					"-Llib",
 					"-lfluidsynth",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.birchlabs.juicysfplugin;
