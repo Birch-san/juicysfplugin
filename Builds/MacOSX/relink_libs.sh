@@ -34,6 +34,7 @@ trap 'error ${LINENO}' ERR
 ####
 
 FLUIDSYNTH="libfluidsynth.1.7.2.dylib"
+FLUIDSYNTHNOVER="libfluidsynth.dylib"
 GLIB="libglib-2.0.0.dylib"
 GTHREAD="libgthread-2.0.0.dylib"
 INTL="libintl.8.dylib"
@@ -46,21 +47,26 @@ OGG="libogg.0.dylib"
 VORBIS="libvorbis.0.dylib"
 VORBISENC="libvorbisenc.2.dylib"
 
-IDPREFIX="@rpath/lib"
+IDPREFIX="@rpath"
 FRAMEWORKLOAD="$IDPREFIX"
 
 FRAMEWORKS="$MYDIR/lib_relinked"
 
+cp "$MYDIR/lib"/*.dylib "$FRAMEWORKS/"
+
 # we're gonna relink these frameworks also, so make them writeable
-chmod +w "$FRAMEWORKS/"*
+chmod +w "$FRAMEWORKS/"*.dylib
 
 # changes to our libfluidsynth (depends on glib, gthread, intl):
-# change our 1.7.2.dylib to identify itself as 1.dylib, to meet our targets' expectations
-install_name_tool -id "$IDPREFIX/libfluidsynth.1.dylib" "$FRAMEWORKS/$FLUIDSYNTH"
+# change our x.1.7.2.dylib to identify itself as x.dylib, to meet our targets' expectations
+install_name_tool -id "$IDPREFIX/$FLUIDSYNTHNOVER" "$FRAMEWORKS/$FLUIDSYNTH"
 install_name_tool -change /usr/local/opt/libsndfile/lib/libsndfile.1.dylib "$FRAMEWORKLOAD/$SNDFILE" "$FRAMEWORKS/$FLUIDSYNTH"
 install_name_tool -change /usr/local/opt/glib/lib/libglib-2.0.0.dylib "$FRAMEWORKLOAD/$GLIB" "$FRAMEWORKS/$FLUIDSYNTH"
 install_name_tool -change /usr/local/opt/glib/lib/libgthread-2.0.0.dylib "$FRAMEWORKLOAD/$GTHREAD" "$FRAMEWORKS/$FLUIDSYNTH"
 install_name_tool -change /usr/local/opt/gettext/lib/libintl.8.dylib "$FRAMEWORKLOAD/$INTL" "$FRAMEWORKS/$FLUIDSYNTH"
+
+# our linker option -lfluidsynth expects a dylib to exist with no version number in its filename
+[ ! -L "$FRAMEWORKS/$FLUIDSYNTHNOVER" ] && ln -s "$FLUIDSYNTH" "$FRAMEWORKS/$FLUIDSYNTHNOVER"
 
 # changes to our glib (depends on pcre, intl):
 install_name_tool -id "$IDPREFIX/$GLIB" "$FRAMEWORKS/$GLIB"
