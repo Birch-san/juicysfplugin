@@ -67,7 +67,10 @@ DEP_PATHS=$(get_env_specific_dependencies_recursive "$BINARY")
 
 mkdir -p "$LIB"
 echo "$DEP_PATHS" \
-| xargs -n 1 -I'{}' cp {} "$LIB/"
+| xargs -n1 realpath \
+| sort \
+| uniq \
+| xargs -I'{}' cp {} "$LIB/"
 
 chmod +w "$LIB"/*.dylib
 
