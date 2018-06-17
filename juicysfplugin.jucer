@@ -6,7 +6,7 @@
               companyWebsite="https://birchlabs.co.uk" bundleIdentifier="uk.co.birchlabs.juicysfplugin"
               pluginManufacturer="birchlabs" pluginCode="Jspf" pluginManufacturerCode="Blbs"
               pluginName="Juicy SF" pluginDesc="Audio plugin to play soundfonts"
-              id="ptvVfg" pluginFormats="buildStandalone,buildVST,buildVST3"
+              id="ptvVfg" pluginFormats="buildVST,buildVST3,buildStandalone"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn,pluginEditorRequiresKeys"
               buildVST="1" buildAU="0" buildRTAS="0" buildAAX="0" enableIAA="0">
   <MAINGROUP id="rCqBG3" name="juicysfplugin">
@@ -63,7 +63,7 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" vst3Folder="" externalLibraries="fluidsynth"
-               extraLinkerFlags="-Llib_relinked">
+               extraLinkerFlags="-Llib">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" headerPath="../../include&#10;../../modules"/>
         <CONFIGURATION isDebug="0" name="Release" headerPath="../../include&#10;../../modules"/>
