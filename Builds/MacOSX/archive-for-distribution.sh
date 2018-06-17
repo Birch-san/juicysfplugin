@@ -36,7 +36,7 @@ do
       ls "$BUILDDIR"
       \cp -rf "$MYDIR/how to install.txt" "$BUILDDIR/how to install.txt"
       \cp -rf "$MYDIR/../../LICENSE.txt" "$BUILDDIR/LICENSE.txt"
-      \cp -rf "$MYDIR/../../licenses_of_dependencies" "$BUILDDIR/."
+      \cp -rf "$MYDIR/licenses_of_dependencies" "$BUILDDIR/."
       tar -hczf "$BUILDDIR.tar.xz" --exclude="libjuicysfplugin.a" -C "$MYDIR/build/$BUILD" .
     else
       echo "Did not find in $BUILD all targets: .app, .component, .vst, .vst3; skipping."
