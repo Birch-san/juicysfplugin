@@ -30,28 +30,6 @@ extern "C" {
  * @brief SoundFont modulator functions and constants.
  */
 
-#define FLUID_NUM_MOD           64      /**< Maximum number of modulators in a voice */
-
-/**
- * Modulator structure.  See SoundFont 2.04 PDF section 8.2.
- * 
- * @deprecated To be removed from the public API.
- */
-struct _fluid_mod_t
-{
-  unsigned char dest;           /**< Destination generator to control */
-  unsigned char src1;           /**< Source controller 1 */
-  unsigned char flags1;         /**< Source controller 1 flags */
-  unsigned char src2;           /**< Source controller 2 */
-  unsigned char flags2;         /**< Source controller 2 flags */
-  double amount;                /**< Multiplier amount */
-  /* The 'next' field allows to link modulators into a list.  It is
-   * not used in fluid_voice.c, there each voice allocates memory for a
-   * fixed number of modulators.  Since there may be a huge number of
-   * different zones, this is more efficient.
-   */
-  fluid_mod_t * next;
-};
 
 /**
  * Flags defining the polarity, mapping function and type of a modulator source.
@@ -71,7 +49,9 @@ enum fluid_mod_flags
   FLUID_MOD_CONVEX = 8,         /**< Convex mapping function */
   FLUID_MOD_SWITCH = 12,        /**< Switch (on/off) mapping function */
   FLUID_MOD_GC = 0,             /**< General controller source type (#fluid_mod_src) */
-  FLUID_MOD_CC = 16             /**< MIDI CC controller (source will be a MIDI CC number) */
+  FLUID_MOD_CC = 16,             /**< MIDI CC controller (source will be a MIDI CC number) */
+    
+  FLUID_MOD_SIN = 0x80,            /**< Custom non-standard sinus mapping function */
 };
 
 /**
@@ -89,23 +69,27 @@ enum fluid_mod_src
   FLUID_MOD_PITCHWHEELSENS = 16         /**< Pitch wheel sensitivity */
 };
 
-FLUIDSYNTH_API fluid_mod_t* fluid_mod_new(void);
-FLUIDSYNTH_API void fluid_mod_delete(fluid_mod_t * mod);
+FLUIDSYNTH_API fluid_mod_t* new_fluid_mod(void);
+FLUIDSYNTH_API void delete_fluid_mod(fluid_mod_t * mod);
+FLUIDSYNTH_API size_t fluid_mod_sizeof(void);
 
 FLUIDSYNTH_API void fluid_mod_set_source1(fluid_mod_t* mod, int src, int flags); 
 FLUIDSYNTH_API void fluid_mod_set_source2(fluid_mod_t* mod, int src, int flags); 
 FLUIDSYNTH_API void fluid_mod_set_dest(fluid_mod_t* mod, int dst); 
 FLUIDSYNTH_API void fluid_mod_set_amount(fluid_mod_t* mod, double amount); 
 
-FLUIDSYNTH_API int fluid_mod_get_source1(fluid_mod_t* mod);
-FLUIDSYNTH_API int fluid_mod_get_flags1(fluid_mod_t* mod);
-FLUIDSYNTH_API int fluid_mod_get_source2(fluid_mod_t* mod);
-FLUIDSYNTH_API int fluid_mod_get_flags2(fluid_mod_t* mod);
-FLUIDSYNTH_API int fluid_mod_get_dest(fluid_mod_t* mod);
-FLUIDSYNTH_API double fluid_mod_get_amount(fluid_mod_t* mod);
+FLUIDSYNTH_API int fluid_mod_get_source1(const fluid_mod_t* mod);
+FLUIDSYNTH_API int fluid_mod_get_flags1(const fluid_mod_t* mod);
+FLUIDSYNTH_API int fluid_mod_get_source2(const fluid_mod_t* mod);
+FLUIDSYNTH_API int fluid_mod_get_flags2(const fluid_mod_t* mod);
+FLUIDSYNTH_API int fluid_mod_get_dest(const fluid_mod_t* mod);
+FLUIDSYNTH_API double fluid_mod_get_amount(const fluid_mod_t* mod);
 
-FLUIDSYNTH_API int fluid_mod_test_identity(fluid_mod_t * mod1, fluid_mod_t * mod2);
+FLUIDSYNTH_API int fluid_mod_test_identity(const fluid_mod_t * mod1, const fluid_mod_t * mod2);
+FLUIDSYNTH_API int fluid_mod_has_source(const fluid_mod_t * mod, int cc, int ctrl);
+FLUIDSYNTH_API int fluid_mod_has_dest(const fluid_mod_t * mod, int gen);
 
+FLUIDSYNTH_API void fluid_mod_clone(fluid_mod_t* mod, const fluid_mod_t* src);
 
 #ifdef __cplusplus
 }

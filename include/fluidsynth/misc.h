@@ -36,7 +36,7 @@ extern "C" {
  * Value that indicates success, used by most libfluidsynth functions.
  * @since 1.1.0
  *
- * NOTE: This was not publicly defined prior to libfluidsynth 1.1.0.  When
+ * @note This was not publicly defined prior to libfluidsynth 1.1.0.  When
  * writing code which should also be compatible with older versions, something
  * like the following can be used:
  *
@@ -55,19 +55,13 @@ extern "C" {
  * Value that indicates failure, used by most libfluidsynth functions.
  * @since 1.1.0
  *
- * NOTE: See #FLUID_OK for more details.
+ * @note See #FLUID_OK for more details.
  */
 #define FLUID_FAILED    (-1)
 
 
 FLUIDSYNTH_API int fluid_is_soundfont (const char *filename);
 FLUIDSYNTH_API int fluid_is_midifile (const char *filename);
-
-
-#ifdef WIN32
-FLUIDSYNTH_API FLUID_DEPRECATED void* fluid_get_hinstance(void);
-FLUIDSYNTH_API FLUID_DEPRECATED void fluid_set_hinstance(void* hinstance);
-#endif
 
 
 #ifdef __cplusplus

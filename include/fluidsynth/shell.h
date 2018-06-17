@@ -42,32 +42,11 @@ FLUIDSYNTH_API fluid_ostream_t fluid_get_stdout(void);
 FLUIDSYNTH_API char* fluid_get_userconf(char* buf, int len);
 FLUIDSYNTH_API char* fluid_get_sysconf(char* buf, int len);
 
-/**
- * Command handler function prototype.
- * @param data User defined data
- * @param ac Argument count
- * @param av Array of string arguments
- * @param out Output stream to send response to
- * @return Should return #FLUID_OK on success, #FLUID_FAILED otherwise
- */
-typedef int (*fluid_cmd_func_t)(void* data, int ac, char** av, fluid_ostream_t out);  
-
-/**
- * Shell command information structure.
- */
-typedef struct {
-  char* name;                           /**< The name of the command, as typed in the shell */
-  char* topic;                          /**< The help topic group of this command */ 
-  fluid_cmd_func_t handler;             /**< Pointer to the handler for this command */
-  void* data;                           /**< User data passed to the handler */
-  char* help;                           /**< A help string */
-} fluid_cmd_t;
-
 
 /* The command handler */
 
 FLUIDSYNTH_API 
-fluid_cmd_handler_t* new_fluid_cmd_handler(fluid_synth_t* synth);
+fluid_cmd_handler_t* new_fluid_cmd_handler(fluid_synth_t* synth, fluid_midi_router_t* router);
 
 FLUIDSYNTH_API 
 void delete_fluid_cmd_handler(fluid_cmd_handler_t* handler);
@@ -75,11 +54,6 @@ void delete_fluid_cmd_handler(fluid_cmd_handler_t* handler);
 FLUIDSYNTH_API 
 void fluid_cmd_handler_set_synth(fluid_cmd_handler_t* handler, fluid_synth_t* synth);
 
-FLUIDSYNTH_API 
-int fluid_cmd_handler_register(fluid_cmd_handler_t* handler, fluid_cmd_t* cmd);
-
-FLUIDSYNTH_API 
-int fluid_cmd_handler_unregister(fluid_cmd_handler_t* handler, const char *cmd);
 
 
 /* Command function */
@@ -106,18 +80,10 @@ FLUIDSYNTH_API void delete_fluid_shell(fluid_shell_t* shell);
 
 /* TCP/IP server */
 
-/**
- * Callback function which is executed for new server connections.
- * @param data User defined data supplied in call to new_fluid_server()
- * @param addr The IP address of the client (can be NULL)
- * @return Should return a new command handler for the connection (new_fluid_cmd_handler()).
- */
-typedef fluid_cmd_handler_t* (*fluid_server_newclient_func_t)(void* data, char* addr);
 
 FLUIDSYNTH_API 
-fluid_server_t* new_fluid_server(fluid_settings_t* settings, 
-			       fluid_server_newclient_func_t func,
-			       void* data);
+fluid_server_t* new_fluid_server(fluid_settings_t* settings,
+		fluid_synth_t* synth, fluid_midi_router_t* router);
 
 FLUIDSYNTH_API void delete_fluid_server(fluid_server_t* server);
 

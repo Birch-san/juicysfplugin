@@ -43,26 +43,20 @@ FLUIDSYNTH_API fluid_sfont_t* fluid_ramsfont_create_sfont(void);
 FLUIDSYNTH_API int fluid_ramsfont_set_name(fluid_ramsfont_t* sfont, const char *name);
 FLUIDSYNTH_API 
 int fluid_ramsfont_add_izone(fluid_ramsfont_t* sfont,
-				unsigned int bank, unsigned int num, fluid_sample_t* sample,
+				int bank, int num, fluid_sample_t* sample,
 				int lokey, int hikey);
 FLUIDSYNTH_API
 int fluid_ramsfont_remove_izone(fluid_ramsfont_t* sfont,
-				unsigned int bank, unsigned int num, fluid_sample_t* sample);
+				int bank, int num, fluid_sample_t* sample);
 FLUIDSYNTH_API
 int fluid_ramsfont_izone_set_gen(fluid_ramsfont_t* sfont,
-				unsigned int bank, unsigned int num, fluid_sample_t* sample,
+				int bank, int num, fluid_sample_t* sample,
 				int gen_type, float value);
 FLUIDSYNTH_API
 int fluid_ramsfont_izone_set_loop(fluid_ramsfont_t* sfont,
-				unsigned int bank, unsigned int num, fluid_sample_t* sample,
+				int bank, int num, fluid_sample_t* sample,
 				int on, float loopstart, float loopend);
 
-FLUIDSYNTH_API fluid_sample_t* new_fluid_ramsample(void);
-FLUIDSYNTH_API int delete_fluid_ramsample(fluid_sample_t* sample);
-FLUIDSYNTH_API int fluid_sample_set_name(fluid_sample_t* sample, const char *name);
-FLUIDSYNTH_API 
-int fluid_sample_set_sound_data(fluid_sample_t* sample, short *data, 
-			       unsigned int nbframes, short copy_data, int rootkey);
 
 
 #ifdef __cplusplus
