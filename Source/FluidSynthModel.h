@@ -88,6 +88,8 @@ private:
     unsigned int sfont_id;
     unsigned int channel;
 
+    fluid_mod_t* mod;
+
     ListenerList<Listener> eventListeners;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FluidSynthModel)

@@ -15,7 +15,8 @@ FluidSynthModel::FluidSynthModel(SharesParams& p)
           currentSampleRate(44100),
           initialised(false),
           sfont_id(0),
-          channel(0)
+          channel(0),
+          mod(nullptr)
 
 {}
 
@@ -26,6 +27,7 @@ FluidSynthModel::~FluidSynthModel() {
         delete_fluid_settings(settings);
 //        delete driver;
 //        delete settings;
+        delete_fluid_mod(mod);
     }
 }
 
@@ -60,6 +62,33 @@ void FluidSynthModel::initialise() {
 //    driver = new_fluid_audio_driver(settings, synth);
 
 //    changePreset(128, 13);
+
+    mod = new_fluid_mod();
+
+    // modulator's primary source controller and flags
+    // fluid_mod_src:
+    // https://github.com/FluidSynth/fluidsynth/blob/master/include/fluidsynth/mod.h#L61
+    // fluid_mod_flags:
+    // https://github.com/FluidSynth/fluidsynth/blob/master/include/fluidsynth/mod.h#L41
+    // diagrams showing what negative and concave mean:
+    // https://musescore.org/en/user/527826/blog/2016/05/23/volume-fluidsynth
+    // fluid_gen_type:
+    // https://github.com/FluidSynth/fluidsynth/blob/master/include/fluidsynth/gen.h#L36
+    // https://github.com/FluidSynth/fluidsynth/blob/master/src/synth/fluid_gen.c#L27
+    fluid_mod_set_source1(mod,
+            FLUID_MOD_KEYPRESSURE,
+            FLUID_MOD_CC |
+                    FLUID_MOD_POSITIVE |
+                    FLUID_MOD_UNIPOLAR |
+                    FLUID_MOD_CONCAVE);
+    // modulator's secondary source controller and flags
+    // MIDI CC 74
+    fluid_mod_set_source2(mod, 74, FLUID_MOD_CC);
+    // generator for filter cutoff
+    fluid_mod_set_dest(mod, GEN_FILTERFC);
+    fluid_mod_set_amount(mod, 13500.0f);
+
+    fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
 
     initialised = true;
 }
