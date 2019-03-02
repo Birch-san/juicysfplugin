@@ -4,7 +4,7 @@ Latest stable release:
 
 - macOS [1.0.6](https://github.com/Birch-san/juicysfplugin/releases/tag/1.0.6)
 - Windows x64 [1.0.8](https://github.com/Birch-san/juicysfplugin/releases/tag/1.0.8)
-- Linux is [supported as of 1.0.8](https://github.com/Birch-san/juicysfplugin/commit/db7d6003de97d7af8eb634191ac3260f0e0b4804), but you will need to build from source
+- Linux is [supported as of 1.0.8](https://github.com/Birch-san/juicysfplugin/pull/3), but you will need to build from source
 
 Demo track: [mp3](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.mp3), [FLAC](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.flac), [FLAC +Soundgoodizer](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track_soundgoodizer.flac)
 
