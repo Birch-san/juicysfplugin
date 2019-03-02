@@ -32,6 +32,8 @@ If you cannot open juicysfplugin.app, try _right-clicking_ it, and choose Open f
 
 Here's some soundfonts to get you started:
 
+- Fatboy (no specific license stated, but described as "free")
+  - https://fatboy.site/
 - MuseScore's recommended soundfonts (includes MIT, GPL, other licenses)
   - https://musescore.org/en/handbook/soundfonts-and-sfz-files#list
 - FlameStudios' guitar soundfonts (GPL-licensed)

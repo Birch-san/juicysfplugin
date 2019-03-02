@@ -1,7 +1,7 @@
 A lot of thrashing was involved.
 
 So first I'll list the steps that I _know_ are necessary.  
-Then after that I'll list the steps which were problem unnecessary.
+Then after that I'll list the steps which were probably unnecessary.
 
 # Definitely necessary
 
@@ -21,7 +21,7 @@ C:\SDKs\VST_SDK\VST3_SDK
 
 https://shop.juce.com/get-juce
 
-JUCE should be installed to `C:\\Juce`
+JUCE should be installed to `C:\Juce`
 
 _Note: the only thing we actually need from here is `C:\Juce\modules`. I've copied that into the repository now, so soon I'll be able to make that step skippable._
 
@@ -110,6 +110,8 @@ $ ldd /mingw64/bin/libfluidsynth-1.dll
         libsndfile-1.dll => /mingw64/bin/libsndfile-1.dll (0x70440000)
         …
 ```
+
+Side-note: [fuslogvw](https://docs.microsoft.com/en-us/dotnet/framework/tools/fuslogvw-exe-assembly-binding-log-viewer) helps you debug .NET's run-time linker. Not relevant to juicysfplugin (because it's not managed code), but it's a useful tool for Windows developers to know about.
 
 # Prefer CLion?
 

@@ -1,12 +1,16 @@
 <img width="436" alt="image" src="https://user-images.githubusercontent.com/6141784/40509932-f424abb4-5f92-11e8-85ae-61050955dc97.png">
 
-Latest release: https://github.com/Birch-san/juicysfplugin/releases
+Latest stable release:
+
+- macOS [1.0.6](https://github.com/Birch-san/juicysfplugin/releases/tag/1.0.6)
+- Windows x64 [1.0.8](https://github.com/Birch-san/juicysfplugin/releases/tag/1.0.8)
+- Linux is [supported as of 1.0.8](https://github.com/Birch-san/juicysfplugin/commit/db7d6003de97d7af8eb634191ac3260f0e0b4804), but you will need to build from source
 
 Demo track: [mp3](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.mp3), [FLAC](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.flac), [FLAC +Soundgoodizer](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track_soundgoodizer.flac)
 
 # What
 
-juicysfplugin is a macOS audio plugin for playing MIDI music through a soundfont synthesizer.
+juicysfplugin is a cross-platform audio plugin for playing MIDI music through a soundfont synthesizer.
 
 It's well-suited for making videogame music. If you have a soundfont of your favourite game, you can write your own melodies with its instruments.
 
@@ -17,7 +21,7 @@ Supports SF2 and SF3 soundfont formats.
 
 **Mode 1: standalone application**
 
-juicysfplugin.app is a standalone application, for playing around.
+juicysfplugin.app (or .exe on Windows) is a standalone application, for playing around.
 
 You can plugin your hardware MIDI keyboard, or play with the software MIDI keyboard. Or route MIDI messages into it from a virtual MIDI controller (e.g. the [macOS IAC Bus](http://re-compose.desk.com/customer/portal/articles/1382244-setting-up-the-iac-bus-on-a-mac)).  
 
@@ -68,6 +72,7 @@ You must drag-and-drop a soundfont into the file picker.
 
 Here's some soundfonts to get you started:
 
+- [Fatboy](https://fatboy.site/) (no specific license stated, but described as "free")
 - MuseScore's [recommended soundfonts](https://musescore.org/en/handbook/soundfonts-and-sfz-files#list) (includes MIT, GPL, other licenses)
 - FlameStudios' GPL-licensed [guitar soundfonts](http://www.flamestudios.org/free/Soundfonts)
 
@@ -101,7 +106,7 @@ Input audio device doesn't matter. We only use MIDI as input.
 
 <img width="515" alt="image" src="https://user-images.githubusercontent.com/6141784/37062266-d723c984-218d-11e8-9ded-9dc5eb701199.png">
 
-# Building from source
+# Building from source (macOS)
 
 Install XCode and XCode command line tools. Accept terms.
 
@@ -119,6 +124,8 @@ Build & run the "juicysfplugin - Standalone Plugin" target.
 
 All the libs we link against are project-local (see `juicysfplugin/Builds/MacOSX/lib_relinked`).  
 I have used `install_name_tool` to give these libs relative install names. This ensures that any product you build will be portable.
+
+See my [blog post](https://birchlabs.co.uk/blog/alex/juicysfplugin/synth/cpp/2019/01/05/a-soundfont-vst-for-macos.html) for a deeper explanation as to how juicysfplugin is linked for portable distribution on macOS.
 
 ## Testing VST/AU plugins inside an audio plugin host
 
@@ -144,6 +151,8 @@ Known working with:
 - VST3 Audio Plug-Ins SDK 3.6.9
 - fluidsynth 1.1.11
 
+There is a [fluidsynth 2](https://github.com/Birch-san/juicysfplugin/tree/fluidsynth2) branch. It works, but there's no strong reason to justify switching to it – we have no burning need for any FS2 features (well, except perhaps the [modluators API](https://github.com/Birch-san/juicysfplugin/issues/2#issuecomment-397872150)), and it'd generate some extra work to get the Windows release to parity.
+
 # Making releases
 
 Follow the steps in [Building from source](#building-from-source) to output a product to the build folder.
@@ -166,19 +175,3 @@ Whichever flavor you built _most recently_, wins.
 Overall, juicysfplugin is GPLv3.
 
 See [licenses for all libraries and frameworks](https://github.com/Birch-san/juicysfplugin/tree/master/licenses_of_dependencies).
-
-# Questions
-
-## Windows/Linux/Android/iOS version?
-
-No _big_ barriers. The source code and all its dependencies are cross-platform. The main friction is setting up a dev environment, and learning how to link dynamic libraries on that OS (i.e. we need to link to libfluidsynth).
-
-Some thoughts that come to mind:
-
-- Bundling libraries portably is far easier on Windows than on macOS
-  - Just throw a dll next to the executable
-  - .NET assembly binding can be debugged using [fuslogvw](https://docs.microsoft.com/en-us/dotnet/framework/tools/fuslogvw-exe-assembly-binding-log-viewer)
-- Windows already has plenty of free, nice soundfont plugins
-- It's probably pretty hard to bundle fluidsynth into mobile apps
-- Bundling would be easier if I used static linking
-- Static linking is hard
