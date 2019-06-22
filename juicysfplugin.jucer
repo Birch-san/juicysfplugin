@@ -9,7 +9,7 @@
               id="ptvVfg" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn,pluginEditorRequiresKeys"
               buildVST="1" buildAU="1" buildRTAS="0" buildAAX="0" enableIAA="0"
-              projectLineFeed="&#10;" cppLanguageStandard="17">
+              projectLineFeed="&#10;" cppLanguageStandard="17" pluginAUIsSandboxSafe="1">
   <MAINGROUP id="rCqBG3" name="juicysfplugin">
     <GROUP id="{ED7E27E3-B67D-383C-F819-F05289E08A33}" name="Source">
       <FILE id="EiukEj" name="BankAndPreset.cpp" compile="1" resource="0"

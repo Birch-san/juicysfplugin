@@ -34,79 +34,79 @@
 		2918F46AFD2AB89F9FA847DC /* include_juce_events.mm in Sources */ = {isa = PBXBuildFile; fileRef = 373EF982A53046CE00BECE68 /* include_juce_events.mm */; };
 		2E77C6FAF1BCDB9EB29D20B9 /* PluginProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53CAB963D5051C786D3A52D /* PluginProcessor.cpp */; };
 		305606C42BB0F2A12D382D34 /* SoundfontSynthVoice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B5A057FEC371053E83A73E47 /* SoundfontSynthVoice.cpp */; };
-		358E452D22BED9BF0087ED8D /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 78CC5234CCFE3B170585DDAD /* RecentFilesMenuTemplate.nib */; };
-		358E452E22BED9BF0087ED8D /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1616112041466F7324D7E19 /* Accelerate.framework */; };
-		358E452F22BED9BF0087ED8D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28CA077CDD21D0FEC66FC290 /* AudioToolbox.framework */; };
-		358E453022BED9BF0087ED8D /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3F34CA8987524139971E29 /* Carbon.framework */; };
-		358E453122BED9BF0087ED8D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D94DCB335360BDC7B3673BF /* Cocoa.framework */; };
-		358E453222BED9BF0087ED8D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5896415135C635B1EB2DC202 /* CoreAudio.framework */; };
-		358E453322BED9BF0087ED8D /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26949DA45B5FE0F3A0355733 /* CoreMIDI.framework */; };
-		358E453422BED9BF0087ED8D /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1123436C7C18DDA8D4AC3BFA /* DiscRecording.framework */; };
-		358E453522BED9BF0087ED8D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1910B48593DA5FACC7E122 /* IOKit.framework */; };
-		358E453622BED9BF0087ED8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11295BAED9825695A4DEAB8 /* QuartzCore.framework */; };
-		358E453722BED9BF0087ED8D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C481A535CF8A4CBC3E594003 /* WebKit.framework */; };
-		358E453822BED9BF0087ED8D /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 78CC5234CCFE3B170585DDAD /* RecentFilesMenuTemplate.nib */; };
-		358E453922BED9BF0087ED8D /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1616112041466F7324D7E19 /* Accelerate.framework */; };
-		358E453A22BED9BF0087ED8D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28CA077CDD21D0FEC66FC290 /* AudioToolbox.framework */; };
-		358E453B22BED9BF0087ED8D /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3F34CA8987524139971E29 /* Carbon.framework */; };
-		358E453C22BED9BF0087ED8D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D94DCB335360BDC7B3673BF /* Cocoa.framework */; };
-		358E453D22BED9BF0087ED8D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5896415135C635B1EB2DC202 /* CoreAudio.framework */; };
-		358E453E22BED9BF0087ED8D /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26949DA45B5FE0F3A0355733 /* CoreMIDI.framework */; };
-		358E453F22BED9BF0087ED8D /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1123436C7C18DDA8D4AC3BFA /* DiscRecording.framework */; };
-		358E454022BED9BF0087ED8D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1910B48593DA5FACC7E122 /* IOKit.framework */; };
-		358E454122BED9BF0087ED8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11295BAED9825695A4DEAB8 /* QuartzCore.framework */; };
-		358E454222BED9BF0087ED8D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C481A535CF8A4CBC3E594003 /* WebKit.framework */; };
-		358E454322BED9BF0087ED8D /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 78CC5234CCFE3B170585DDAD /* RecentFilesMenuTemplate.nib */; };
-		358E454422BED9BF0087ED8D /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1616112041466F7324D7E19 /* Accelerate.framework */; };
-		358E454522BED9BF0087ED8D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28CA077CDD21D0FEC66FC290 /* AudioToolbox.framework */; };
-		358E454622BED9BF0087ED8D /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3F34CA8987524139971E29 /* Carbon.framework */; };
-		358E454722BED9BF0087ED8D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D94DCB335360BDC7B3673BF /* Cocoa.framework */; };
-		358E454822BED9BF0087ED8D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5896415135C635B1EB2DC202 /* CoreAudio.framework */; };
-		358E454922BED9BF0087ED8D /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26949DA45B5FE0F3A0355733 /* CoreMIDI.framework */; };
-		358E454A22BED9BF0087ED8D /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1123436C7C18DDA8D4AC3BFA /* DiscRecording.framework */; };
-		358E454B22BED9BF0087ED8D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1910B48593DA5FACC7E122 /* IOKit.framework */; };
-		358E454C22BED9BF0087ED8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11295BAED9825695A4DEAB8 /* QuartzCore.framework */; };
-		358E454D22BED9BF0087ED8D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C481A535CF8A4CBC3E594003 /* WebKit.framework */; };
-		358E455F22BED9D80087ED8D /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455522BED9D30087ED8D /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456022BED9D80087ED8D /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455622BED9D30087ED8D /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456122BED9D80087ED8D /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455722BED9D30087ED8D /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456222BED9D80087ED8D /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455822BED9D30087ED8D /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456322BED9D80087ED8D /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455922BED9D30087ED8D /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456422BED9D80087ED8D /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455A22BED9D30087ED8D /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456522BED9D80087ED8D /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455B22BED9D30087ED8D /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456622BED9D80087ED8D /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455C22BED9D30087ED8D /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456722BED9D80087ED8D /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455D22BED9D30087ED8D /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456822BED9D80087ED8D /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455E22BED9D30087ED8D /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456A22BED9F10087ED8D /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455522BED9D30087ED8D /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456B22BED9F10087ED8D /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455622BED9D30087ED8D /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456C22BED9F10087ED8D /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455722BED9D30087ED8D /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456D22BED9F10087ED8D /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455822BED9D30087ED8D /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456E22BED9F10087ED8D /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455922BED9D30087ED8D /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E456F22BED9F10087ED8D /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455A22BED9D30087ED8D /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457022BED9F10087ED8D /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455B22BED9D30087ED8D /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457122BED9F10087ED8D /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455C22BED9D30087ED8D /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457222BED9F10087ED8D /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455D22BED9D30087ED8D /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457322BED9F10087ED8D /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455E22BED9D30087ED8D /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457522BEDA140087ED8D /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455522BED9D30087ED8D /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457622BEDA140087ED8D /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455622BED9D30087ED8D /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457722BEDA140087ED8D /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455722BED9D30087ED8D /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457822BEDA140087ED8D /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455822BED9D30087ED8D /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457922BEDA140087ED8D /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455922BED9D30087ED8D /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457A22BEDA140087ED8D /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455A22BED9D30087ED8D /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457B22BEDA140087ED8D /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455B22BED9D30087ED8D /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457C22BEDA140087ED8D /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455C22BED9D30087ED8D /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457D22BEDA140087ED8D /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455D22BED9D30087ED8D /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E457E22BEDA140087ED8D /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455E22BED9D30087ED8D /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E458022BEDA210087ED8D /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455522BED9D30087ED8D /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E458122BEDA210087ED8D /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455622BED9D30087ED8D /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E458222BEDA210087ED8D /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455722BED9D30087ED8D /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E458322BEDA210087ED8D /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455822BED9D30087ED8D /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E458422BEDA210087ED8D /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455922BED9D30087ED8D /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E458522BEDA210087ED8D /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455A22BED9D30087ED8D /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E458622BEDA210087ED8D /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455B22BED9D30087ED8D /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E458722BEDA210087ED8D /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455C22BED9D30087ED8D /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E458822BEDA210087ED8D /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455D22BED9D30087ED8D /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		358E458922BEDA210087ED8D /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E455E22BED9D30087ED8D /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E458C22BEE5090087ED8D /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 78CC5234CCFE3B170585DDAD /* RecentFilesMenuTemplate.nib */; };
+		358E458D22BEE5090087ED8D /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1616112041466F7324D7E19 /* Accelerate.framework */; };
+		358E458E22BEE5090087ED8D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28CA077CDD21D0FEC66FC290 /* AudioToolbox.framework */; };
+		358E458F22BEE5090087ED8D /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3F34CA8987524139971E29 /* Carbon.framework */; };
+		358E459022BEE5090087ED8D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D94DCB335360BDC7B3673BF /* Cocoa.framework */; };
+		358E459122BEE5090087ED8D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5896415135C635B1EB2DC202 /* CoreAudio.framework */; };
+		358E459222BEE5090087ED8D /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26949DA45B5FE0F3A0355733 /* CoreMIDI.framework */; };
+		358E459322BEE5090087ED8D /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1123436C7C18DDA8D4AC3BFA /* DiscRecording.framework */; };
+		358E459422BEE5090087ED8D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1910B48593DA5FACC7E122 /* IOKit.framework */; };
+		358E459522BEE5090087ED8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11295BAED9825695A4DEAB8 /* QuartzCore.framework */; };
+		358E459622BEE5090087ED8D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C481A535CF8A4CBC3E594003 /* WebKit.framework */; };
+		358E459722BEE5090087ED8D /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 78CC5234CCFE3B170585DDAD /* RecentFilesMenuTemplate.nib */; };
+		358E459822BEE5090087ED8D /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1616112041466F7324D7E19 /* Accelerate.framework */; };
+		358E459922BEE5090087ED8D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28CA077CDD21D0FEC66FC290 /* AudioToolbox.framework */; };
+		358E459A22BEE5090087ED8D /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3F34CA8987524139971E29 /* Carbon.framework */; };
+		358E459B22BEE5090087ED8D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D94DCB335360BDC7B3673BF /* Cocoa.framework */; };
+		358E459C22BEE5090087ED8D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5896415135C635B1EB2DC202 /* CoreAudio.framework */; };
+		358E459D22BEE5090087ED8D /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26949DA45B5FE0F3A0355733 /* CoreMIDI.framework */; };
+		358E459E22BEE5090087ED8D /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1123436C7C18DDA8D4AC3BFA /* DiscRecording.framework */; };
+		358E459F22BEE5090087ED8D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1910B48593DA5FACC7E122 /* IOKit.framework */; };
+		358E45A022BEE5090087ED8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11295BAED9825695A4DEAB8 /* QuartzCore.framework */; };
+		358E45A122BEE5090087ED8D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C481A535CF8A4CBC3E594003 /* WebKit.framework */; };
+		358E45A222BEE5090087ED8D /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 78CC5234CCFE3B170585DDAD /* RecentFilesMenuTemplate.nib */; };
+		358E45A322BEE5090087ED8D /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1616112041466F7324D7E19 /* Accelerate.framework */; };
+		358E45A422BEE5090087ED8D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28CA077CDD21D0FEC66FC290 /* AudioToolbox.framework */; };
+		358E45A522BEE5090087ED8D /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3F34CA8987524139971E29 /* Carbon.framework */; };
+		358E45A622BEE5090087ED8D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D94DCB335360BDC7B3673BF /* Cocoa.framework */; };
+		358E45A722BEE5090087ED8D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5896415135C635B1EB2DC202 /* CoreAudio.framework */; };
+		358E45A822BEE5090087ED8D /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26949DA45B5FE0F3A0355733 /* CoreMIDI.framework */; };
+		358E45A922BEE5090087ED8D /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1123436C7C18DDA8D4AC3BFA /* DiscRecording.framework */; };
+		358E45AA22BEE5090087ED8D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1910B48593DA5FACC7E122 /* IOKit.framework */; };
+		358E45AB22BEE5090087ED8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D11295BAED9825695A4DEAB8 /* QuartzCore.framework */; };
+		358E45AC22BEE5090087ED8D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C481A535CF8A4CBC3E594003 /* WebKit.framework */; };
+		358E45C922BEE5900087ED8D /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B422BEE53A0087ED8D /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45CA22BEE5900087ED8D /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B522BEE53A0087ED8D /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45CB22BEE5900087ED8D /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B622BEE53A0087ED8D /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45CC22BEE5900087ED8D /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B722BEE53A0087ED8D /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45CD22BEE5900087ED8D /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B822BEE53A0087ED8D /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45CE22BEE5900087ED8D /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B922BEE53A0087ED8D /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45CF22BEE5900087ED8D /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BA22BEE53A0087ED8D /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45D022BEE5900087ED8D /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BB22BEE53A0087ED8D /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45D122BEE5900087ED8D /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BC22BEE53A0087ED8D /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45D222BEE5900087ED8D /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BD22BEE53A0087ED8D /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45D422BEE5A40087ED8D /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B422BEE53A0087ED8D /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45D522BEE5A40087ED8D /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B522BEE53A0087ED8D /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45D622BEE5A40087ED8D /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B622BEE53A0087ED8D /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45D722BEE5A40087ED8D /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B722BEE53A0087ED8D /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45D822BEE5A40087ED8D /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B822BEE53A0087ED8D /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45D922BEE5A40087ED8D /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B922BEE53A0087ED8D /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45DA22BEE5A40087ED8D /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BA22BEE53A0087ED8D /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45DB22BEE5A40087ED8D /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BB22BEE53A0087ED8D /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45DC22BEE5A40087ED8D /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BC22BEE53A0087ED8D /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45DD22BEE5A40087ED8D /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BD22BEE53A0087ED8D /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45DF22BEE5B60087ED8D /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B422BEE53A0087ED8D /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45E022BEE5B60087ED8D /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B522BEE53A0087ED8D /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45E122BEE5B60087ED8D /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B622BEE53A0087ED8D /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45E222BEE5B60087ED8D /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B722BEE53A0087ED8D /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45E322BEE5B60087ED8D /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B822BEE53A0087ED8D /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45E422BEE5B60087ED8D /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B922BEE53A0087ED8D /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45E522BEE5B60087ED8D /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BA22BEE53A0087ED8D /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45E622BEE5B60087ED8D /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BB22BEE53A0087ED8D /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45E722BEE5B60087ED8D /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BC22BEE53A0087ED8D /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45E822BEE5B60087ED8D /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BD22BEE53A0087ED8D /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45EA22BEE5CE0087ED8D /* libpcre.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B422BEE53A0087ED8D /* libpcre.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45EB22BEE5CE0087ED8D /* libvorbisenc.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B522BEE53A0087ED8D /* libvorbisenc.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45EC22BEE5CE0087ED8D /* libfluidsynth.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B622BEE53A0087ED8D /* libfluidsynth.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45ED22BEE5CE0087ED8D /* libglib-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B722BEE53A0087ED8D /* libglib-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45EE22BEE5CE0087ED8D /* libsndfile.1.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B822BEE53A0087ED8D /* libsndfile.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45EF22BEE5CE0087ED8D /* libintl.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45B922BEE53A0087ED8D /* libintl.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45F022BEE5CE0087ED8D /* libvorbis.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BA22BEE53A0087ED8D /* libvorbis.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45F122BEE5CE0087ED8D /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BB22BEE53A0087ED8D /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45F222BEE5CE0087ED8D /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BC22BEE53A0087ED8D /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45F322BEE5CE0087ED8D /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BD22BEE53A0087ED8D /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		3793A7D5AC25576FAC8583E6 /* include_juce_graphics.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6BC2528C1717DDC2B66215E /* include_juce_graphics.mm */; };
 		42542EDC02B3DE845BCC21FE /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1616112041466F7324D7E19 /* Accelerate.framework */; };
 		458D25AB7460484F90B37A2F /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1910B48593DA5FACC7E122 /* IOKit.framework */; };
@@ -146,35 +146,35 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		358E454E22BED9C00087ED8D /* PBXContainerItemProxy */ = {
+		358E45AD22BEE5090087ED8D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 670D2A085D103184C902462F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 146121DEAF4D97C27E67B85E;
 			remoteInfo = "juicysfplugin - Shared Code";
 		};
-		358E454F22BED9C00087ED8D /* PBXContainerItemProxy */ = {
+		358E45AE22BEE5090087ED8D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 670D2A085D103184C902462F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 48A570326AA09CE818BE1901;
 			remoteInfo = "juicysfplugin - VST";
 		};
-		358E455022BED9C00087ED8D /* PBXContainerItemProxy */ = {
+		358E45AF22BEE5090087ED8D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 670D2A085D103184C902462F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 1AD8392A4CF90A2094A07A34;
 			remoteInfo = "juicysfplugin - VST3";
 		};
-		358E455122BED9C00087ED8D /* PBXContainerItemProxy */ = {
+		358E45B022BEE5090087ED8D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 670D2A085D103184C902462F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 345302E3C02BBFCDACE98BE7;
 			remoteInfo = "juicysfplugin - AU";
 		};
-		358E455222BED9C00087ED8D /* PBXContainerItemProxy */ = {
+		358E45B122BEE5090087ED8D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 670D2A085D103184C902462F /* Project object */;
 			proxyType = 1;
@@ -184,79 +184,79 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		358E455322BED9C60087ED8D /* CopyFiles */ = {
+		358E45C822BEE5800087ED8D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = Contents/lib;
 			dstSubfolderSpec = 1;
 			files = (
-				358E455F22BED9D80087ED8D /* libpcre.1.dylib in CopyFiles */,
-				358E456022BED9D80087ED8D /* libvorbisenc.2.dylib in CopyFiles */,
-				358E456122BED9D80087ED8D /* libfluidsynth.dylib in CopyFiles */,
-				358E456222BED9D80087ED8D /* libglib-2.0.0.dylib in CopyFiles */,
-				358E456322BED9D80087ED8D /* libsndfile.1.dylib in CopyFiles */,
-				358E456422BED9D80087ED8D /* libintl.8.dylib in CopyFiles */,
-				358E456522BED9D80087ED8D /* libvorbis.0.dylib in CopyFiles */,
-				358E456622BED9D80087ED8D /* libgthread-2.0.0.dylib in CopyFiles */,
-				358E456722BED9D80087ED8D /* libFLAC.8.dylib in CopyFiles */,
-				358E456822BED9D80087ED8D /* libogg.0.dylib in CopyFiles */,
+				358E45C922BEE5900087ED8D /* libpcre.1.dylib in CopyFiles */,
+				358E45CA22BEE5900087ED8D /* libvorbisenc.2.dylib in CopyFiles */,
+				358E45CB22BEE5900087ED8D /* libfluidsynth.dylib in CopyFiles */,
+				358E45CC22BEE5900087ED8D /* libglib-2.0.0.dylib in CopyFiles */,
+				358E45CD22BEE5900087ED8D /* libsndfile.1.dylib in CopyFiles */,
+				358E45CE22BEE5900087ED8D /* libintl.8.dylib in CopyFiles */,
+				358E45CF22BEE5900087ED8D /* libvorbis.0.dylib in CopyFiles */,
+				358E45D022BEE5900087ED8D /* libgthread-2.0.0.dylib in CopyFiles */,
+				358E45D122BEE5900087ED8D /* libFLAC.8.dylib in CopyFiles */,
+				358E45D222BEE5900087ED8D /* libogg.0.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		358E456922BED9E80087ED8D /* CopyFiles */ = {
+		358E45D322BEE5970087ED8D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = Contents/lib;
 			dstSubfolderSpec = 1;
 			files = (
-				358E456A22BED9F10087ED8D /* libpcre.1.dylib in CopyFiles */,
-				358E456B22BED9F10087ED8D /* libvorbisenc.2.dylib in CopyFiles */,
-				358E456C22BED9F10087ED8D /* libfluidsynth.dylib in CopyFiles */,
-				358E456D22BED9F10087ED8D /* libglib-2.0.0.dylib in CopyFiles */,
-				358E456E22BED9F10087ED8D /* libsndfile.1.dylib in CopyFiles */,
-				358E456F22BED9F10087ED8D /* libintl.8.dylib in CopyFiles */,
-				358E457022BED9F10087ED8D /* libvorbis.0.dylib in CopyFiles */,
-				358E457122BED9F10087ED8D /* libgthread-2.0.0.dylib in CopyFiles */,
-				358E457222BED9F10087ED8D /* libFLAC.8.dylib in CopyFiles */,
-				358E457322BED9F10087ED8D /* libogg.0.dylib in CopyFiles */,
+				358E45D422BEE5A40087ED8D /* libpcre.1.dylib in CopyFiles */,
+				358E45D522BEE5A40087ED8D /* libvorbisenc.2.dylib in CopyFiles */,
+				358E45D622BEE5A40087ED8D /* libfluidsynth.dylib in CopyFiles */,
+				358E45D722BEE5A40087ED8D /* libglib-2.0.0.dylib in CopyFiles */,
+				358E45D822BEE5A40087ED8D /* libsndfile.1.dylib in CopyFiles */,
+				358E45D922BEE5A40087ED8D /* libintl.8.dylib in CopyFiles */,
+				358E45DA22BEE5A40087ED8D /* libvorbis.0.dylib in CopyFiles */,
+				358E45DB22BEE5A40087ED8D /* libgthread-2.0.0.dylib in CopyFiles */,
+				358E45DC22BEE5A40087ED8D /* libFLAC.8.dylib in CopyFiles */,
+				358E45DD22BEE5A40087ED8D /* libogg.0.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		358E457422BEDA060087ED8D /* CopyFiles */ = {
+		358E45DE22BEE5AD0087ED8D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = Contents/lib;
 			dstSubfolderSpec = 1;
 			files = (
-				358E457522BEDA140087ED8D /* libpcre.1.dylib in CopyFiles */,
-				358E457622BEDA140087ED8D /* libvorbisenc.2.dylib in CopyFiles */,
-				358E457722BEDA140087ED8D /* libfluidsynth.dylib in CopyFiles */,
-				358E457822BEDA140087ED8D /* libglib-2.0.0.dylib in CopyFiles */,
-				358E457922BEDA140087ED8D /* libsndfile.1.dylib in CopyFiles */,
-				358E457A22BEDA140087ED8D /* libintl.8.dylib in CopyFiles */,
-				358E457B22BEDA140087ED8D /* libvorbis.0.dylib in CopyFiles */,
-				358E457C22BEDA140087ED8D /* libgthread-2.0.0.dylib in CopyFiles */,
-				358E457D22BEDA140087ED8D /* libFLAC.8.dylib in CopyFiles */,
-				358E457E22BEDA140087ED8D /* libogg.0.dylib in CopyFiles */,
+				358E45DF22BEE5B60087ED8D /* libpcre.1.dylib in CopyFiles */,
+				358E45E022BEE5B60087ED8D /* libvorbisenc.2.dylib in CopyFiles */,
+				358E45E122BEE5B60087ED8D /* libfluidsynth.dylib in CopyFiles */,
+				358E45E222BEE5B60087ED8D /* libglib-2.0.0.dylib in CopyFiles */,
+				358E45E322BEE5B60087ED8D /* libsndfile.1.dylib in CopyFiles */,
+				358E45E422BEE5B60087ED8D /* libintl.8.dylib in CopyFiles */,
+				358E45E522BEE5B60087ED8D /* libvorbis.0.dylib in CopyFiles */,
+				358E45E622BEE5B60087ED8D /* libgthread-2.0.0.dylib in CopyFiles */,
+				358E45E722BEE5B60087ED8D /* libFLAC.8.dylib in CopyFiles */,
+				358E45E822BEE5B60087ED8D /* libogg.0.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		358E457F22BEDA180087ED8D /* CopyFiles */ = {
+		358E45E922BEE5C30087ED8D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = Contents/lib;
 			dstSubfolderSpec = 1;
 			files = (
-				358E458022BEDA210087ED8D /* libpcre.1.dylib in CopyFiles */,
-				358E458122BEDA210087ED8D /* libvorbisenc.2.dylib in CopyFiles */,
-				358E458222BEDA210087ED8D /* libfluidsynth.dylib in CopyFiles */,
-				358E458322BEDA210087ED8D /* libglib-2.0.0.dylib in CopyFiles */,
-				358E458422BEDA210087ED8D /* libsndfile.1.dylib in CopyFiles */,
-				358E458522BEDA210087ED8D /* libintl.8.dylib in CopyFiles */,
-				358E458622BEDA210087ED8D /* libvorbis.0.dylib in CopyFiles */,
-				358E458722BEDA210087ED8D /* libgthread-2.0.0.dylib in CopyFiles */,
-				358E458822BEDA210087ED8D /* libFLAC.8.dylib in CopyFiles */,
-				358E458922BEDA210087ED8D /* libogg.0.dylib in CopyFiles */,
+				358E45EA22BEE5CE0087ED8D /* libpcre.1.dylib in CopyFiles */,
+				358E45EB22BEE5CE0087ED8D /* libvorbisenc.2.dylib in CopyFiles */,
+				358E45EC22BEE5CE0087ED8D /* libfluidsynth.dylib in CopyFiles */,
+				358E45ED22BEE5CE0087ED8D /* libglib-2.0.0.dylib in CopyFiles */,
+				358E45EE22BEE5CE0087ED8D /* libsndfile.1.dylib in CopyFiles */,
+				358E45EF22BEE5CE0087ED8D /* libintl.8.dylib in CopyFiles */,
+				358E45F022BEE5CE0087ED8D /* libvorbis.0.dylib in CopyFiles */,
+				358E45F122BEE5CE0087ED8D /* libgthread-2.0.0.dylib in CopyFiles */,
+				358E45F222BEE5CE0087ED8D /* libFLAC.8.dylib in CopyFiles */,
+				358E45F322BEE5CE0087ED8D /* libogg.0.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,16 +284,16 @@
 		2C66D01D1DD9006E77E2E260 /* include_juce_data_structures.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_data_structures.mm; path = ../../JuceLibraryCode/include_juce_data_structures.mm; sourceTree = SOURCE_ROOT; };
 		307CB49DF900DE4A612FF98E /* FluidSynthModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FluidSynthModel.h; path = ../../Source/FluidSynthModel.h; sourceTree = SOURCE_ROOT; };
 		35880F58CB540AD30D1B0ED3 /* TablesComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TablesComponent.h; path = ../../Source/TablesComponent.h; sourceTree = SOURCE_ROOT; };
-		358E455522BED9D30087ED8D /* libpcre.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpcre.1.dylib; sourceTree = "<group>"; };
-		358E455622BED9D30087ED8D /* libvorbisenc.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libvorbisenc.2.dylib; sourceTree = "<group>"; };
-		358E455722BED9D30087ED8D /* libfluidsynth.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfluidsynth.dylib; sourceTree = "<group>"; };
-		358E455822BED9D30087ED8D /* libglib-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libglib-2.0.0.dylib"; sourceTree = "<group>"; };
-		358E455922BED9D30087ED8D /* libsndfile.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsndfile.1.dylib; sourceTree = "<group>"; };
-		358E455A22BED9D30087ED8D /* libintl.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libintl.8.dylib; sourceTree = "<group>"; };
-		358E455B22BED9D30087ED8D /* libvorbis.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libvorbis.0.dylib; sourceTree = "<group>"; };
-		358E455C22BED9D30087ED8D /* libgthread-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libgthread-2.0.0.dylib"; sourceTree = "<group>"; };
-		358E455D22BED9D30087ED8D /* libFLAC.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libFLAC.8.dylib; sourceTree = "<group>"; };
-		358E455E22BED9D30087ED8D /* libogg.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libogg.0.dylib; sourceTree = "<group>"; };
+		358E45B422BEE53A0087ED8D /* libpcre.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpcre.1.dylib; sourceTree = "<group>"; };
+		358E45B522BEE53A0087ED8D /* libvorbisenc.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libvorbisenc.2.dylib; sourceTree = "<group>"; };
+		358E45B622BEE53A0087ED8D /* libfluidsynth.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfluidsynth.dylib; sourceTree = "<group>"; };
+		358E45B722BEE53A0087ED8D /* libglib-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libglib-2.0.0.dylib"; sourceTree = "<group>"; };
+		358E45B822BEE53A0087ED8D /* libsndfile.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsndfile.1.dylib; sourceTree = "<group>"; };
+		358E45B922BEE53A0087ED8D /* libintl.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libintl.8.dylib; sourceTree = "<group>"; };
+		358E45BA22BEE53A0087ED8D /* libvorbis.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libvorbis.0.dylib; sourceTree = "<group>"; };
+		358E45BB22BEE53A0087ED8D /* libgthread-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libgthread-2.0.0.dylib"; sourceTree = "<group>"; };
+		358E45BC22BEE53A0087ED8D /* libFLAC.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libFLAC.8.dylib; sourceTree = "<group>"; };
+		358E45BD22BEE53A0087ED8D /* libogg.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libogg.0.dylib; sourceTree = "<group>"; };
 		35D551D55292C9D0508A408A /* PluginEditor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PluginEditor.cpp; path = ../../Source/PluginEditor.cpp; sourceTree = SOURCE_ROOT; };
 		373EF982A53046CE00BECE68 /* include_juce_events.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_events.mm; path = ../../JuceLibraryCode/include_juce_events.mm; sourceTree = SOURCE_ROOT; };
 		3909EE4609ED2DCCC6B6B290 /* juce_data_structures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_data_structures; path = /Applications/JUCE/modules/juce_data_structures; sourceTree = "<absolute>"; };
@@ -365,16 +365,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				358E454422BED9BF0087ED8D /* Accelerate.framework in Frameworks */,
-				358E454522BED9BF0087ED8D /* AudioToolbox.framework in Frameworks */,
-				358E454622BED9BF0087ED8D /* Carbon.framework in Frameworks */,
-				358E454722BED9BF0087ED8D /* Cocoa.framework in Frameworks */,
-				358E454822BED9BF0087ED8D /* CoreAudio.framework in Frameworks */,
-				358E454922BED9BF0087ED8D /* CoreMIDI.framework in Frameworks */,
-				358E454A22BED9BF0087ED8D /* DiscRecording.framework in Frameworks */,
-				358E454B22BED9BF0087ED8D /* IOKit.framework in Frameworks */,
-				358E454C22BED9BF0087ED8D /* QuartzCore.framework in Frameworks */,
-				358E454D22BED9BF0087ED8D /* WebKit.framework in Frameworks */,
+				358E45A322BEE5090087ED8D /* Accelerate.framework in Frameworks */,
+				358E45A422BEE5090087ED8D /* AudioToolbox.framework in Frameworks */,
+				358E45A522BEE5090087ED8D /* Carbon.framework in Frameworks */,
+				358E45A622BEE5090087ED8D /* Cocoa.framework in Frameworks */,
+				358E45A722BEE5090087ED8D /* CoreAudio.framework in Frameworks */,
+				358E45A822BEE5090087ED8D /* CoreMIDI.framework in Frameworks */,
+				358E45A922BEE5090087ED8D /* DiscRecording.framework in Frameworks */,
+				358E45AA22BEE5090087ED8D /* IOKit.framework in Frameworks */,
+				358E45AB22BEE5090087ED8D /* QuartzCore.framework in Frameworks */,
+				358E45AC22BEE5090087ED8D /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,18 +382,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				358E453922BED9BF0087ED8D /* Accelerate.framework in Frameworks */,
-				358E453A22BED9BF0087ED8D /* AudioToolbox.framework in Frameworks */,
+				358E459822BEE5090087ED8D /* Accelerate.framework in Frameworks */,
+				358E459922BEE5090087ED8D /* AudioToolbox.framework in Frameworks */,
 				0F93D0F16F2E4F0E3B7A93EA /* AudioUnit.framework in Frameworks */,
-				358E453B22BED9BF0087ED8D /* Carbon.framework in Frameworks */,
-				358E453C22BED9BF0087ED8D /* Cocoa.framework in Frameworks */,
-				358E453D22BED9BF0087ED8D /* CoreAudio.framework in Frameworks */,
+				358E459A22BEE5090087ED8D /* Carbon.framework in Frameworks */,
+				358E459B22BEE5090087ED8D /* Cocoa.framework in Frameworks */,
+				358E459C22BEE5090087ED8D /* CoreAudio.framework in Frameworks */,
 				B92F6EAB1D5ACC13AF0CD750 /* CoreAudioKit.framework in Frameworks */,
-				358E453E22BED9BF0087ED8D /* CoreMIDI.framework in Frameworks */,
-				358E453F22BED9BF0087ED8D /* DiscRecording.framework in Frameworks */,
-				358E454022BED9BF0087ED8D /* IOKit.framework in Frameworks */,
-				358E454122BED9BF0087ED8D /* QuartzCore.framework in Frameworks */,
-				358E454222BED9BF0087ED8D /* WebKit.framework in Frameworks */,
+				358E459D22BEE5090087ED8D /* CoreMIDI.framework in Frameworks */,
+				358E459E22BEE5090087ED8D /* DiscRecording.framework in Frameworks */,
+				358E459F22BEE5090087ED8D /* IOKit.framework in Frameworks */,
+				358E45A022BEE5090087ED8D /* QuartzCore.framework in Frameworks */,
+				358E45A122BEE5090087ED8D /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,16 +418,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				358E452E22BED9BF0087ED8D /* Accelerate.framework in Frameworks */,
-				358E452F22BED9BF0087ED8D /* AudioToolbox.framework in Frameworks */,
-				358E453022BED9BF0087ED8D /* Carbon.framework in Frameworks */,
-				358E453122BED9BF0087ED8D /* Cocoa.framework in Frameworks */,
-				358E453222BED9BF0087ED8D /* CoreAudio.framework in Frameworks */,
-				358E453322BED9BF0087ED8D /* CoreMIDI.framework in Frameworks */,
-				358E453422BED9BF0087ED8D /* DiscRecording.framework in Frameworks */,
-				358E453522BED9BF0087ED8D /* IOKit.framework in Frameworks */,
-				358E453622BED9BF0087ED8D /* QuartzCore.framework in Frameworks */,
-				358E453722BED9BF0087ED8D /* WebKit.framework in Frameworks */,
+				358E458D22BEE5090087ED8D /* Accelerate.framework in Frameworks */,
+				358E458E22BEE5090087ED8D /* AudioToolbox.framework in Frameworks */,
+				358E458F22BEE5090087ED8D /* Carbon.framework in Frameworks */,
+				358E459022BEE5090087ED8D /* Cocoa.framework in Frameworks */,
+				358E459122BEE5090087ED8D /* CoreAudio.framework in Frameworks */,
+				358E459222BEE5090087ED8D /* CoreMIDI.framework in Frameworks */,
+				358E459322BEE5090087ED8D /* DiscRecording.framework in Frameworks */,
+				358E459422BEE5090087ED8D /* IOKit.framework in Frameworks */,
+				358E459522BEE5090087ED8D /* QuartzCore.framework in Frameworks */,
+				358E459622BEE5090087ED8D /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,7 +437,7 @@
 		276B008B7925AD1E743A0CB3 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				358E455422BED9D30087ED8D /* lib */,
+				358E45B322BEE53A0087ED8D /* lib */,
 				663ACFA11DCEC0D411B8497E /* juicysfplugin.entitlements */,
 				DCBD5E00523105542B51AC58 /* juicysfplugin */,
 				800C5A6C86E6F156E7B0C0BD /* JUCE Modules */,
@@ -477,19 +477,19 @@
 			name = "JUCE Library Code";
 			sourceTree = "<group>";
 		};
-		358E455422BED9D30087ED8D /* lib */ = {
+		358E45B322BEE53A0087ED8D /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				358E455522BED9D30087ED8D /* libpcre.1.dylib */,
-				358E455622BED9D30087ED8D /* libvorbisenc.2.dylib */,
-				358E455722BED9D30087ED8D /* libfluidsynth.dylib */,
-				358E455822BED9D30087ED8D /* libglib-2.0.0.dylib */,
-				358E455922BED9D30087ED8D /* libsndfile.1.dylib */,
-				358E455A22BED9D30087ED8D /* libintl.8.dylib */,
-				358E455B22BED9D30087ED8D /* libvorbis.0.dylib */,
-				358E455C22BED9D30087ED8D /* libgthread-2.0.0.dylib */,
-				358E455D22BED9D30087ED8D /* libFLAC.8.dylib */,
-				358E455E22BED9D30087ED8D /* libogg.0.dylib */,
+				358E45B422BEE53A0087ED8D /* libpcre.1.dylib */,
+				358E45B522BEE53A0087ED8D /* libvorbisenc.2.dylib */,
+				358E45B622BEE53A0087ED8D /* libfluidsynth.dylib */,
+				358E45B722BEE53A0087ED8D /* libglib-2.0.0.dylib */,
+				358E45B822BEE53A0087ED8D /* libsndfile.1.dylib */,
+				358E45B922BEE53A0087ED8D /* libintl.8.dylib */,
+				358E45BA22BEE53A0087ED8D /* libvorbis.0.dylib */,
+				358E45BB22BEE53A0087ED8D /* libgthread-2.0.0.dylib */,
+				358E45BC22BEE53A0087ED8D /* libFLAC.8.dylib */,
+				358E45BD22BEE53A0087ED8D /* libogg.0.dylib */,
 			);
 			path = lib;
 			sourceTree = "<group>";
@@ -625,7 +625,7 @@
 				728195082906BF99D6FC3A47 /* Resources */,
 				8F58AED7D06F74AA4F8B7223 /* Sources */,
 				EE0E075B08329174838D1C4A /* Frameworks */,
-				358E457422BEDA060087ED8D /* CopyFiles */,
+				358E45DE22BEE5AD0087ED8D /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -644,7 +644,7 @@
 				4531632E6D7024A9994D9BD7 /* Resources */,
 				024E62EECAC276DCD3B570DF /* Sources */,
 				3361F4AE1F2F4216B1D35111 /* Frameworks */,
-				358E455322BED9C60087ED8D /* CopyFiles */,
+				358E45C822BEE5800087ED8D /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -664,7 +664,7 @@
 				0DE2871579A4664F3CFD4C3B /* Rez */,
 				F1F15A0CF45EE86825050D74 /* Sources */,
 				4094FE45FF59891531844FF1 /* Frameworks */,
-				358E456922BED9E80087ED8D /* CopyFiles */,
+				358E45D322BEE5970087ED8D /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -683,7 +683,7 @@
 				344D74419B9F46B1B6930D8D /* Resources */,
 				34F8C07ACAB5A635C5320817 /* Sources */,
 				CDAFA0AE11EB84FC6C127532 /* Frameworks */,
-				358E457F22BEDA180087ED8D /* CopyFiles */,
+				358E45E922BEE5C30087ED8D /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -865,7 +865,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				358E453822BED9BF0087ED8D /* RecentFilesMenuTemplate.nib in Resources */,
+				358E459722BEE5090087ED8D /* RecentFilesMenuTemplate.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -881,7 +881,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				358E454322BED9BF0087ED8D /* RecentFilesMenuTemplate.nib in Resources */,
+				358E45A222BEE5090087ED8D /* RecentFilesMenuTemplate.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -889,7 +889,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				358E452D22BED9BF0087ED8D /* RecentFilesMenuTemplate.nib in Resources */,
+				358E458C22BEE5090087ED8D /* RecentFilesMenuTemplate.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -979,27 +979,27 @@
 		0BDEED056BA0113C3E521A9B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 345302E3C02BBFCDACE98BE7 /* juicysfplugin - AU */;
-			targetProxy = 358E455122BED9C00087ED8D /* PBXContainerItemProxy */;
+			targetProxy = 358E45B022BEE5090087ED8D /* PBXContainerItemProxy */;
 		};
 		469B5373AD26166AFF0A43B2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1AD8392A4CF90A2094A07A34 /* juicysfplugin - VST3 */;
-			targetProxy = 358E455022BED9C00087ED8D /* PBXContainerItemProxy */;
+			targetProxy = 358E45AF22BEE5090087ED8D /* PBXContainerItemProxy */;
 		};
 		638B76E2D7187BAA974C003D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 24C399ED93EC47D5BEB26F76 /* juicysfplugin - Standalone Plugin */;
-			targetProxy = 358E455222BED9C00087ED8D /* PBXContainerItemProxy */;
+			targetProxy = 358E45B122BEE5090087ED8D /* PBXContainerItemProxy */;
 		};
 		87D5EB38E030EC9EFB288BAB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 146121DEAF4D97C27E67B85E /* juicysfplugin - Shared Code */;
-			targetProxy = 358E454E22BED9C00087ED8D /* PBXContainerItemProxy */;
+			targetProxy = 358E45AD22BEE5090087ED8D /* PBXContainerItemProxy */;
 		};
 		DACDE9B16E17E19AABFE3DBE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 48A570326AA09CE818BE1901 /* juicysfplugin - VST */;
-			targetProxy = 358E454F22BED9C00087ED8D /* PBXContainerItemProxy */;
+			targetProxy = 358E45AE22BEE5090087ED8D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
