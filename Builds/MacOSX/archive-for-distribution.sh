@@ -6,6 +6,15 @@
 MYDIR=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 set -o pipefail
 
+VERSION="$1"
+
+if [ -z ${1+x} ]; then
+  >&2 echo 'specify version number using (for example) ./archive-for-distribution.sh 2.0.0'
+  exit 1
+else
+  VERSION="$1"
+fi
+
 error() {
   local parent_lineno="$1"
   local message="$2"
@@ -24,7 +33,8 @@ trap 'error ${LINENO}' ERR
 declare -a BUILDS=("Debug" "Release")
 for BUILD in "${BUILDS[@]}"
 do
-  BUILDDIR="$MYDIR/build/$BUILD"
+  BUILDROOT="$MYDIR/build"
+  BUILDDIR="$BUILDROOT/$BUILD"
 	if [ -d "$BUILDDIR" ]; then
     echo "Found build $BUILD"
     if [[ -d "$BUILDDIR/juicysfplugin.app" \
@@ -34,10 +44,8 @@ do
       echo "Found in $BUILD all targets: .app, .component, .vst, .vst3"
       echo "Archiving $BUILD targets to build/$BUILD.tar.xz:"
       ls "$BUILDDIR"
-      \cp -rf "$MYDIR/how to install.txt" "$BUILDDIR/how to install.txt"
-      \cp -rf "$MYDIR/../../LICENSE.txt" "$BUILDDIR/LICENSE.txt"
-      \cp -rf "$MYDIR/licenses_of_dependencies" "$BUILDDIR/."
-      tar -hczf "$BUILDDIR.tar.xz" --exclude="libjuicysfplugin.a" -C "$MYDIR/build/$BUILD" .
+      \cp -rf "$MYDIR/"{"how to install.txt",licenses_of_dependencies,../../{LICENSE,PRIVACY}.txt} "$BUILDDIR/"
+      tar -hczf "$BUILDROOT/juicysfplugin.$VERSION.$BUILD.tar.xz" --exclude="libjuicysfplugin.a" -C "$MYDIR/build/$BUILD" .
     else
       echo "Did not find in $BUILD all targets: .app, .component, .vst, .vst3; skipping."
     fi

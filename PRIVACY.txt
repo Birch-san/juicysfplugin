@@ -1,0 +1,8 @@
+This synthesizer is built upon an application framework, JUCE, which is made by ROLI, LTD.
+
+The free tier of JUCE (which this software uses) comes with a condition:
+
+ROLI, LTD may track the IP addresses associated with your use of juicysfplugin solely for their internal purposes in providing JUCE.
+
+https://github.com/WeAreROLI/JUCE/blob/master/LICENSE.md  
+https://juce.com/juce-5-privacy-policy
