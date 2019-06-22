@@ -6,9 +6,9 @@
               companyWebsite="https://birchlabs.co.uk" bundleIdentifier="uk.co.birchlabs.juicysfplugin"
               pluginManufacturer="birchlabs" pluginCode="Jspf" pluginManufacturerCode="Blbs"
               pluginName="Juicy SF" pluginDesc="Audio plugin to play soundfonts"
-              id="ptvVfg" pluginFormats="buildAU,buildStandalone,buildVST3"
+              id="ptvVfg" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn,pluginEditorRequiresKeys"
-              buildVST="0" buildAU="1" buildRTAS="0" buildAAX="0" enableIAA="0"
+              buildVST="1" buildAU="1" buildRTAS="0" buildAAX="0" enableIAA="0"
               projectLineFeed="&#10;" cppLanguageStandard="17">
   <MAINGROUP id="rCqBG3" name="juicysfplugin">
     <GROUP id="{ED7E27E3-B67D-383C-F819-F05289E08A33}" name="Source">
@@ -63,9 +63,10 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="fluidsynth" extraLinkerFlags="-Llib">
+    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="fluidsynth" extraLinkerFlags="-Llib"
+               vstLegacyFolder="~/SDKs/VST_SDK/VST2_SDK">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" headerPath="../../include&#10;../../modules"/>
+        <CONFIGURATION isDebug="1" name="Debug" headerPath="../../include&#10;../../modules&#10;~/SDKs/VST_SDK/VST2_SDK&#10;~/SDKs/VST_SDK/VST3_SDK"/>
         <CONFIGURATION isDebug="0" name="Release" headerPath="../../include&#10;../../modules"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

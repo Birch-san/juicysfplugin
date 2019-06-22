@@ -15,6 +15,15 @@ if (APPLE)
 
 project ("juicysfplugin" C CXX)
 
+add_library (VST MODULE
+    "../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.cpp"
+    "../../JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp"
+    "PkgInfo"
+)
+
+set_source_files_properties ("PkgInfo" PROPERTIES MACOSX_PACKAGE_LOCATION .)
+set_source_files_properties ("../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.cpp" PROPERTIES HEADER_FILE_ONLY TRUE)
+
 add_library (VST3 MODULE
     "../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3_Wrapper.cpp"
     "../../../../../../Applications/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.cpp"
@@ -2805,12 +2814,99 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
 
 execute_process (COMMAND uname -m OUTPUT_VARIABLE JUCE_ARCH_LABEL OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-target_include_directories (VST3 PRIVATE
+target_include_directories (VST PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
     "../../include"
     "../../modules"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "/Applications/JUCE/modules/juce_audio_plugin_client"
+)
+
+target_compile_definitions (VST PRIVATE
+    "_DEBUG=1"
+    "DEBUG=1"
+    "JUCER_XCODE_MAC_F6D2F4CF=1"
+    "JUCE_APP_VERSION=1.0.0"
+    "JUCE_APP_VERSION_HEX=0x10000"
+    "JucePlugin_Build_VST=1"
+    "JucePlugin_Build_VST3=0"
+    "JucePlugin_Build_AU=0"
+    "JucePlugin_Build_AUv3=0"
+    "JucePlugin_Build_RTAS=0"
+    "JucePlugin_Build_AAX=0"
+    "JucePlugin_Build_Standalone=0"
+    "JucePlugin_Build_Unity=0"
+)
+
+target_compile_options (VST PRIVATE
+    -mmacosx-version-min=10.11
+    -O0
+    -stdlib=libc++
+)
+
+set_target_properties (VST PROPERTIES
+    OUTPUT_NAME "juicysfplugin"
+    CXX_STANDARD 17
+    CXX_EXTENSIONS OFF
+    XCODE_ATTRIBUTE_CLANG_LINK_OBJC_RUNTIME NO
+    XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES YES
+    XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "$(PROJECT_DIR)/build/$(CONFIGURATION)"
+    XCODE_ATTRIBUTE_COPY_PHASE_STRIP NO
+    XCODE_ATTRIBUTE_DEPLOYMENT_LOCATION YES
+    XCODE_ATTRIBUTE_DSTROOT /
+    XCODE_ATTRIBUTE_GCC_DYNAMIC_NO_PIC NO
+    XCODE_ATTRIBUTE_GCC_VERSION com.apple.compilers.llvm.clang.1_0
+    XCODE_ATTRIBUTE_GENERATE_PKGINFO_FILE YES
+    XCODE_ATTRIBUTE_INFOPLIST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/Debug-Info-VST.plist"
+    XCODE_ATTRIBUTE_INFOPLIST_PREPROCESS NO
+    XCODE_ATTRIBUTE_INSTALL_PATH "$(HOME)/Library/Audio/Plug-Ins/VST/"
+    XCODE_ATTRIBUTE_LIBRARY_STYLE Bundle
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
+    XCODE_ATTRIBUTE_PRODUCT_NAME "juicysfplugin"
+    XCODE_ATTRIBUTE_USE_HEADERMAP NO
+    XCODE_ATTRIBUTE_WRAPPER_EXTENSION vst
+    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Debug-Info-VST.plist"
+    XCODE_ATTRIBUTE_PRODUCT_NAME "juicysfplugin"
+    BUNDLE TRUE
+    BUNDLE_EXTENSION vst
+    XCODE_ATTRIBUTE_MACH_O_TYPE "mh_bundle"
+)
+
+target_link_libraries (VST PRIVATE
+    SHARED_CODE
+    "-Llib"
+    "-lfluidsynth"
+    "-framework Accelerate"
+    "-framework AudioToolbox"
+    "-framework Carbon"
+    "-framework Cocoa"
+    "-framework CoreAudio"
+    "-framework CoreMIDI"
+    "-framework DiscRecording"
+    "-framework IOKit"
+    "-framework QuartzCore"
+    "-framework WebKit"
+)
+
+add_custom_command (TARGET VST POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "$ENV{HOME}/Library/Audio/Plug-Ins/VST/juicysfplugin.vst"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_BINARY_DIR}/juicysfplugin.vst" "$ENV{HOME}/Library/Audio/Plug-Ins/VST/juicysfplugin.vst"
+    COMMENT "Copying \"juicysfplugin.vst\" to \"$ENV{HOME}/Library/Audio/Plug-Ins/VST/\""
+)
+
+target_include_directories (VST3 PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
+    "../../JuceLibraryCode"
+    "/Applications/JUCE/modules"
+    "../../include"
+    "../../modules"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -2888,10 +2984,13 @@ add_custom_command (TARGET VST3 POST_BUILD
 
 target_include_directories (AU PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
     "../../include"
     "../../modules"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -2931,10 +3030,13 @@ if (RC_COMPILER)
         -d ppc_$ppc -d i386_$i386 -d ppc64_$ppc64 -d x86_64_$x86_64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I "$(DEVELOPER_DIR)/Extras/CoreAudio/AudioUnits/AUPublic/AUBase"
         -isysroot "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
         -I "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+        -I "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
         -I "${PROJECT_SOURCE_DIR}/../../JuceLibraryCode"
         -I "/Applications/JUCE/modules"
         -I "${PROJECT_SOURCE_DIR}/../../include"
         -I "${PROJECT_SOURCE_DIR}/../../modules"
+        -I "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
+        -I "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
         -I "/Applications/JUCE/modules/juce_audio_plugin_client"
         ${AU_REZ_SOURCES}
         -o ${AU_REZ_OUTPUT}
@@ -2999,10 +3101,13 @@ add_custom_command (TARGET AU POST_BUILD
 
 target_include_directories (STANDALONE_PLUGIN PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
     "../../include"
     "../../modules"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -3066,10 +3171,13 @@ target_link_libraries (STANDALONE_PLUGIN PRIVATE
 
 target_include_directories (SHARED_CODE PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
     "../../include"
     "../../modules"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
     "/Applications/JUCE/modules/juce_audio_plugin_client"
 )
 
@@ -3079,7 +3187,7 @@ target_compile_definitions (SHARED_CODE PRIVATE
     "JUCER_XCODE_MAC_F6D2F4CF=1"
     "JUCE_APP_VERSION=1.0.0"
     "JUCE_APP_VERSION_HEX=0x10000"
-    "JucePlugin_Build_VST=0"
+    "JucePlugin_Build_VST=1"
     "JucePlugin_Build_VST3=1"
     "JucePlugin_Build_AU=1"
     "JucePlugin_Build_AUv3=0"
@@ -3141,8 +3249,93 @@ if (CMAKE_BUILD_TYPE STREQUAL Release)
 
 execute_process (COMMAND uname -m OUTPUT_VARIABLE JUCE_ARCH_LABEL OUTPUT_STRIP_TRAILING_WHITESPACE)
 
+target_include_directories (VST PRIVATE
+    "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
+    "../../JuceLibraryCode"
+    "/Applications/JUCE/modules"
+    "../../include"
+    "../../modules"
+    "/Applications/JUCE/modules/juce_audio_plugin_client"
+)
+
+target_compile_definitions (VST PRIVATE
+    "_NDEBUG=1"
+    "NDEBUG=1"
+    "JUCER_XCODE_MAC_F6D2F4CF=1"
+    "JUCE_APP_VERSION=1.0.0"
+    "JUCE_APP_VERSION_HEX=0x10000"
+    "JucePlugin_Build_VST=1"
+    "JucePlugin_Build_VST3=0"
+    "JucePlugin_Build_AU=0"
+    "JucePlugin_Build_AUv3=0"
+    "JucePlugin_Build_RTAS=0"
+    "JucePlugin_Build_AAX=0"
+    "JucePlugin_Build_Standalone=0"
+    "JucePlugin_Build_Unity=0"
+)
+
+target_compile_options (VST PRIVATE
+    -mmacosx-version-min=10.11
+    -O3
+    -flto
+    -stdlib=libc++
+)
+
+set_target_properties (VST PROPERTIES
+    OUTPUT_NAME "juicysfplugin"
+    CXX_STANDARD 17
+    CXX_EXTENSIONS OFF
+    XCODE_ATTRIBUTE_CLANG_LINK_OBJC_RUNTIME NO
+    XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES YES
+    XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "$(PROJECT_DIR)/build/$(CONFIGURATION)"
+    XCODE_ATTRIBUTE_DEAD_CODE_STRIPPING YES
+    XCODE_ATTRIBUTE_DEPLOYMENT_LOCATION YES
+    XCODE_ATTRIBUTE_DSTROOT /
+    XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS NO
+    XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN YES
+    XCODE_ATTRIBUTE_GCC_VERSION com.apple.compilers.llvm.clang.1_0
+    XCODE_ATTRIBUTE_GENERATE_PKGINFO_FILE YES
+    XCODE_ATTRIBUTE_INFOPLIST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/Release-Info-VST.plist"
+    XCODE_ATTRIBUTE_INFOPLIST_PREPROCESS NO
+    XCODE_ATTRIBUTE_INSTALL_PATH "$(HOME)/Library/Audio/Plug-Ins/VST/"
+    XCODE_ATTRIBUTE_LIBRARY_STYLE Bundle
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER uk.co.birchlabs.juicysfplugin
+    XCODE_ATTRIBUTE_PRODUCT_NAME "juicysfplugin"
+    XCODE_ATTRIBUTE_USE_HEADERMAP NO
+    XCODE_ATTRIBUTE_WRAPPER_EXTENSION vst
+    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Release-Info-VST.plist"
+    XCODE_ATTRIBUTE_PRODUCT_NAME "juicysfplugin"
+    BUNDLE TRUE
+    BUNDLE_EXTENSION vst
+    XCODE_ATTRIBUTE_MACH_O_TYPE "mh_bundle"
+)
+
+target_link_libraries (VST PRIVATE
+    SHARED_CODE
+    "-Llib"
+    "-lfluidsynth"
+    "-framework Accelerate"
+    "-framework AudioToolbox"
+    "-framework Carbon"
+    "-framework Cocoa"
+    "-framework CoreAudio"
+    "-framework CoreMIDI"
+    "-framework DiscRecording"
+    "-framework IOKit"
+    "-framework QuartzCore"
+    "-framework WebKit"
+)
+
+add_custom_command (TARGET VST POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "$ENV{HOME}/Library/Audio/Plug-Ins/VST/juicysfplugin.vst"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_BINARY_DIR}/juicysfplugin.vst" "$ENV{HOME}/Library/Audio/Plug-Ins/VST/juicysfplugin.vst"
+    COMMENT "Copying \"juicysfplugin.vst\" to \"$ENV{HOME}/Library/Audio/Plug-Ins/VST/\""
+)
+
 target_include_directories (VST3 PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
     "../../include"
@@ -3226,6 +3419,7 @@ add_custom_command (TARGET VST3 POST_BUILD
 
 target_include_directories (AU PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
     "../../include"
@@ -3270,6 +3464,7 @@ if (RC_COMPILER)
         -d ppc_$ppc -d i386_$i386 -d ppc64_$ppc64 -d x86_64_$x86_64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I "$(DEVELOPER_DIR)/Extras/CoreAudio/AudioUnits/AUPublic/AUBase"
         -isysroot "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
         -I "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+        -I "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
         -I "${PROJECT_SOURCE_DIR}/../../JuceLibraryCode"
         -I "/Applications/JUCE/modules"
         -I "${PROJECT_SOURCE_DIR}/../../include"
@@ -3339,6 +3534,7 @@ add_custom_command (TARGET AU POST_BUILD
 
 target_include_directories (STANDALONE_PLUGIN PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
     "../../include"
@@ -3408,6 +3604,7 @@ target_link_libraries (STANDALONE_PLUGIN PRIVATE
 
 target_include_directories (SHARED_CODE PRIVATE
     "$ENV{HOME}/SDKs/VST_SDK/VST3_SDK"
+    "$ENV{HOME}/SDKs/VST_SDK/VST2_SDK"
     "../../JuceLibraryCode"
     "/Applications/JUCE/modules"
     "../../include"
@@ -3421,7 +3618,7 @@ target_compile_definitions (SHARED_CODE PRIVATE
     "JUCER_XCODE_MAC_F6D2F4CF=1"
     "JUCE_APP_VERSION=1.0.0"
     "JUCE_APP_VERSION_HEX=0x10000"
-    "JucePlugin_Build_VST=0"
+    "JucePlugin_Build_VST=1"
     "JucePlugin_Build_VST3=1"
     "JucePlugin_Build_AU=1"
     "JucePlugin_Build_AUv3=0"
@@ -3496,6 +3693,13 @@ pkg_search_module (XINERAMA REQUIRED xinerama)
 pkg_search_module (WEBKIT2GTK-4.0 REQUIRED webkit2gtk-4.0)
 pkg_search_module (GTK+-X11-3.0 REQUIRED gtk+-x11-3.0)
 pkg_search_module (LIBCURL REQUIRED libcurl)
+
+add_library (VST MODULE
+    "../../../../JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.cpp"
+    "../../JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp"
+)
+
+set_source_files_properties ("../../../../JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.cpp" PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_executable (STANDALONE_PLUGIN
     "../../../../JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Standalone.cpp"
@@ -6243,6 +6447,9 @@ set_source_files_properties ("../../../../../../Applications/JUCE/modules/juce_g
 set_source_files_properties ("../../JuceLibraryCode/AppConfig.h" PROPERTIES HEADER_FILE_ONLY TRUE)
 set_source_files_properties ("../../JuceLibraryCode/JuceHeader.h" PROPERTIES HEADER_FILE_ONLY TRUE)
 
+set_target_properties (VST PROPERTIES PREFIX "")
+set_target_properties (VST PROPERTIES SUFFIX ".so")
+
 set_target_properties (STANDALONE_PLUGIN PROPERTIES SUFFIX "")
 
 set_target_properties (SHARED_CODE PROPERTIES SUFFIX ".a")
@@ -6256,6 +6463,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Debug)
 execute_process (COMMAND uname -m OUTPUT_VARIABLE JUCE_ARCH_LABEL OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 include_directories (
+    "~/JUCE/modules/juce_audio_processors/format_types/VST3_SDK"
     "../../JuceLibraryCode"
     "~/JUCE/modules"
     "../../include"
@@ -6281,6 +6489,55 @@ find_library (RT rt
 
 find_library (FLUIDSYNTH fluidsynth
 )
+
+set_target_properties (VST PROPERTIES
+    OUTPUT_NAME "juicysfplugin"
+    CXX_STANDARD 17
+    CXX_EXTENSIONS OFF
+)
+
+target_compile_definitions (VST PRIVATE
+    LINUX=1
+    DEBUG=1
+    _DEBUG=1
+    JUCER_LINUX_MAKE_7346DA2A=1
+    JUCE_APP_VERSION=1.0.0
+    JUCE_APP_VERSION_HEX=0x10000
+    JucePlugin_Build_VST=1
+    JucePlugin_Build_VST3=0
+    JucePlugin_Build_AU=0
+    JucePlugin_Build_AUv3=0
+    JucePlugin_Build_RTAS=0
+    JucePlugin_Build_AAX=0
+    JucePlugin_Build_Standalone=0
+    JucePlugin_Build_Unity=0
+)
+
+target_compile_options (VST PRIVATE
+    -fPIC
+    -fvisibility=hidden
+)
+
+target_link_libraries (VST PRIVATE
+    SHARED_CODE
+    -march=native
+    -shared
+    -Wl,--no-undefined
+    ${DL}
+    ${PTHREAD}
+    ${RT}
+    ${FLUIDSYNTH}
+    ${ALSA_LIBRARIES}
+    ${FREETYPE2_LIBRARIES}
+    ${X11_LIBRARIES}
+    ${XEXT_LIBRARIES}
+    ${XINERAMA_LIBRARIES}
+    ${WEBKIT2GTK-4.0_LIBRARIES}
+    ${GTK+-X11-3.0_LIBRARIES}
+    ${LIBCURL_LIBRARIES}
+)
+
+add_dependencies (VST SHARED_CODE)
 
 set_target_properties (STANDALONE_PLUGIN PROPERTIES
     OUTPUT_NAME "juicysfplugin"
@@ -6337,7 +6594,7 @@ target_compile_definitions (SHARED_CODE PRIVATE
     JUCER_LINUX_MAKE_7346DA2A=1
     JUCE_APP_VERSION=1.0.0
     JUCE_APP_VERSION_HEX=0x10000
-    JucePlugin_Build_VST=0
+    JucePlugin_Build_VST=1
     JucePlugin_Build_VST3=0
     JucePlugin_Build_AU=0
     JucePlugin_Build_AUv3=0
@@ -6364,7 +6621,7 @@ target_link_libraries (SHARED_CODE PRIVATE
     ${LIBCURL_LIBRARIES}
 )
 
-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -pthread -g -ggdb -O0")
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -pthread -fPIC -g -ggdb -O0")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} ")
 
 endif (CMAKE_BUILD_TYPE STREQUAL Debug)
@@ -6378,6 +6635,7 @@ if (CMAKE_BUILD_TYPE STREQUAL Release)
 execute_process (COMMAND uname -m OUTPUT_VARIABLE JUCE_ARCH_LABEL OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 include_directories (
+    "~/JUCE/modules/juce_audio_processors/format_types/VST3_SDK"
     "../../JuceLibraryCode"
     "~/JUCE/modules"
     "../../include"
@@ -6403,6 +6661,55 @@ find_library (RT rt
 
 find_library (FLUIDSYNTH fluidsynth
 )
+
+set_target_properties (VST PROPERTIES
+    OUTPUT_NAME "juicysfplugin"
+    CXX_STANDARD 17
+    CXX_EXTENSIONS OFF
+)
+
+target_compile_definitions (VST PRIVATE
+    LINUX=1
+    NDEBUG=1
+    JUCER_LINUX_MAKE_7346DA2A=1
+    JUCE_APP_VERSION=1.0.0
+    JUCE_APP_VERSION_HEX=0x10000
+    JucePlugin_Build_VST=1
+    JucePlugin_Build_VST3=0
+    JucePlugin_Build_AU=0
+    JucePlugin_Build_AUv3=0
+    JucePlugin_Build_RTAS=0
+    JucePlugin_Build_AAX=0
+    JucePlugin_Build_Standalone=0
+    JucePlugin_Build_Unity=0
+)
+
+target_compile_options (VST PRIVATE
+    -fPIC
+    -fvisibility=hidden
+)
+
+target_link_libraries (VST PRIVATE
+    SHARED_CODE
+    -march=native
+    -shared
+    -Wl,--no-undefined
+    -fvisibility=hidden
+    ${DL}
+    ${PTHREAD}
+    ${RT}
+    ${FLUIDSYNTH}
+    ${ALSA_LIBRARIES}
+    ${FREETYPE2_LIBRARIES}
+    ${X11_LIBRARIES}
+    ${XEXT_LIBRARIES}
+    ${XINERAMA_LIBRARIES}
+    ${WEBKIT2GTK-4.0_LIBRARIES}
+    ${GTK+-X11-3.0_LIBRARIES}
+    ${LIBCURL_LIBRARIES}
+)
+
+add_dependencies (VST SHARED_CODE)
 
 set_target_properties (STANDALONE_PLUGIN PROPERTIES
     OUTPUT_NAME "juicysfplugin"
@@ -6458,7 +6765,7 @@ target_compile_definitions (SHARED_CODE PRIVATE
     JUCER_LINUX_MAKE_7346DA2A=1
     JUCE_APP_VERSION=1.0.0
     JUCE_APP_VERSION_HEX=0x10000
-    JucePlugin_Build_VST=0
+    JucePlugin_Build_VST=1
     JucePlugin_Build_VST3=0
     JucePlugin_Build_AU=0
     JucePlugin_Build_AUv3=0
@@ -6486,7 +6793,7 @@ target_link_libraries (SHARED_CODE PRIVATE
     ${LIBCURL_LIBRARIES}
 )
 
-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -pthread -O3")
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -pthread -fPIC -O3")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} ")
 
 endif (CMAKE_BUILD_TYPE STREQUAL Release)
