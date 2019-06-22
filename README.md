@@ -141,6 +141,77 @@ Then symlink `/Applications/JUCE/AudioPluginHost.app` to the built `AudioPluginH
 ln -sf /Applications/JUCE/extras/AudioPluginHost/Builds/MacOSX/build/Debug/AudioPluginHost.app /Applications/JUCE/AudioPluginHost.app
 ```
 
+## Visual Studio Code settings
+
+Concerning the use of Visual Studio Code extension, [C/C++ for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools), as an IDE (i.e. instead of XCode)…
+
+Following advice is for macOS, using brew-installed LLVM 8 Clang.
+
+All includePath entries are shallow (no recursive globbing) for now, since I don't have any deeply-nested headers.  
+We don't need to dip into /usr/local, since all library/framework headers are already in this repository.
+
+Ensure that there exists at the root of the repository, a folder named `.vscode`.
+
+`.vscode/c_cpp_properties.json`
+
+```json
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/Source",
+                "${workspaceFolder}/JuceLibraryCode",
+                "${workspaceFolder}/modules"
+            ],
+            "defines": [],
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "clang-x64",
+            "compilerPath": "/usr/local/Cellar/llvm/8.0.0_1/bin/clang++"
+        }
+    ],
+    "version": 4
+}
+```
+
+I've kept this minimal, but documented some other include paths worthy of consideration (e.g. if more parts of the toolchain were to be used, brew were to be used, or the standard XCode clang were to be used).
+
+`~/Library/Application Support/Code/User/settings.json`
+
+```json
+{
+    "C_Cpp.updateChannel": "Insiders",
+    "C_Cpp.default.intelliSenseMode": "clang-x64",
+    "C_Cpp.default.macFrameworkPath": [
+        // "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreServices.framework/Frameworks",
+        "/System/Library/Frameworks",
+        // "/Library/Frameworks"
+    ],
+    "C_Cpp.default.includePath": [
+        // "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1",
+        // "/usr/local/include",
+        // "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/10.0.1/include",
+        // "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
+        // "${workspaceFolder}/include"
+        // "/usr/include",
+        "/usr/local/Cellar/llvm/8.0.0_1/Toolchains/LLVM8.0.0.xctoolchain/usr/include/c++/v1",
+        // "/usr/local/Cellar/llvm/8.0.0_1/Toolchains/LLVM8.0.0.xctoolchain/usr/lib/clang/8.0.0/include",
+        // "/usr/local/Cellar/llvm/8.0.0_1/Toolchains/LLVM8.0.0.xctoolchain/usr/include",
+    ],
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.default.cppStandard": "c++14",
+    "C_Cpp.default.compilerPath": "/usr/local/Cellar/llvm/8.0.0_1/bin/clang++",
+    "C_Cpp.clang_format_fallbackStyle": "LLVM",
+    "C_Cpp.clang_format_style": "LLVM",
+    "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": true,
+    "C_Cpp.default.enableConfigurationSquiggles": true,
+    "C_Cpp.errorSquiggles": "Enabled",
+    "C_Cpp.enhancedColorization": "Enabled"
+}
+```
+
 # Dependency versions
 
 Known working with:
