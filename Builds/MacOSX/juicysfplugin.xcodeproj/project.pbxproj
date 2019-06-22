@@ -187,7 +187,7 @@
 		358E455322BED9C60087ED8D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = lib;
+			dstPath = Contents/lib;
 			dstSubfolderSpec = 1;
 			files = (
 				358E455F22BED9D80087ED8D /* libpcre.1.dylib in CopyFiles */,
@@ -206,7 +206,7 @@
 		358E456922BED9E80087ED8D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = lib;
+			dstPath = Contents/lib;
 			dstSubfolderSpec = 1;
 			files = (
 				358E456A22BED9F10087ED8D /* libpcre.1.dylib in CopyFiles */,
@@ -225,7 +225,7 @@
 		358E457422BEDA060087ED8D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = lib;
+			dstPath = Contents/lib;
 			dstSubfolderSpec = 1;
 			files = (
 				358E457522BEDA140087ED8D /* libpcre.1.dylib in CopyFiles */,
@@ -244,7 +244,7 @@
 		358E457F22BEDA180087ED8D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = lib;
+			dstPath = Contents/lib;
 			dstSubfolderSpec = 1;
 			files = (
 				358E458022BEDA210087ED8D /* libpcre.1.dylib in CopyFiles */,
