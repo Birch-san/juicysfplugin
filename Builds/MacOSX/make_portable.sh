@@ -2,6 +2,9 @@
 
 # Example input:
 # ./make_portable.sh mycoolbinary
+# Or:
+# USE_RPATH=1 ./make_portable.sh mycoolbinary
+#
 # where mycoolbinary is a mach-o object file
 # (for example an executable binary or a .dylib)
 #
@@ -29,11 +32,27 @@ trap 'error ${LINENO}' ERR
 
 BINARY="$1"
 BINARYDIR=$(dirname "$BINARY")
-LIBREL="lib"
-LIB="$BINARYDIR/$LIBREL"
+LIBDIRNAME=${LIBDIRNAME:-lib}
+LIBOUTPUTDIR="$BINARYDIR/$LIBDIRNAME"
+
+# assume that our binary is running from:
+# CoolBinary.app/Contents/MacOS/coolbinary
+# and wants to navigate to:
+# CoolBinary.app/Contents/lib/coollibrary.dylib
+RPATH_FALLBACK="@loader_path/../$LIBDIRNAME"
+
+if [ -z ${USE_RPATH+x} ]; then
+	# don't use rpath
+	OBJLOADREL="$RPATH_FALLBACK"
+else
+	OBJLOADREL="@rpath"
+	# define in our binary what it should expand the
+	# runtime search path @rpath to
+	install_name_tool -add_rpath "$RPATH_FALLBACK" "$BINARY"
+fi
 
 # make a lib folder
-mkdir -p "$LIB"
+mkdir -p "$LIBOUTPUTDIR"
 
 # find every LC_LOAD_DYLIB command in the obj file
 # filter to just loads under /usr/local
@@ -65,22 +84,22 @@ get_env_specific_dependencies_recursive () {
 
 DEP_PATHS=$(get_env_specific_dependencies_recursive "$BINARY")
 
-mkdir -p "$LIB"
+mkdir -p "$LIBOUTPUTDIR"
 # copy each distinct dylib in the dependency tree into our lib folder
 echo "$DEP_PATHS" \
 | xargs -n1 realpath \
 | sort \
 | uniq \
-| xargs -I'{}' cp {} "$LIB/"
+| xargs -I'{}' cp {} "$LIBOUTPUTDIR/"
 
-chmod +w "$LIB"/*.dylib
+chmod +w "$BINARY" "$LIBOUTPUTDIR"/*.dylib
 
 while read -r obj; do
 	[ -z "$obj" ] && continue
 	OBJ_LEAF_NAME=$(echo "$obj" | awk -F'/' '{print $NF}')
 	# rewrite the install name of this obj file. completely optional.
 	# provides good default for future people who link to it.
-	install_name_tool -id "@rpath/$OBJ_LEAF_NAME" "$obj"
+	install_name_tool -id "$OBJLOADREL/$OBJ_LEAF_NAME" "$obj"
 
 	# iterate over every LC_LOAD_DYLIB command in the objfile
 	while read -r load; do
@@ -88,10 +107,6 @@ while read -r obj; do
 		LOAD_LEAF_NAME=$(echo "$load" | awk -F'/' '{print $NF}')
 		# rewrite a LC_LOAD_DYLIB command in this obj file
 		# to point relative to @rpath
-		install_name_tool -change "$load" "@rpath/$LOAD_LEAF_NAME" "$obj"
+		install_name_tool -change "$load" "$OBJLOADREL/$LOAD_LEAF_NAME" "$obj"
 	done < <(get_env_specific_direct_dependencies "$obj")
-done < <(cat <(echo "$BINARY") <(echo "$DEP_PATHS" | awk -F'/' -v l="$LIB" -v OFS='/' '{print l,$NF}'))
-
-# define in our binary what it should expand the
-# runtime search path @rpath to
-install_name_tool -add_rpath "@loader_path/$LIBREL" "$BINARY"
+done < <(cat <(echo "$BINARY") <(echo "$DEP_PATHS" | awk -F'/' -v l="$LIBOUTPUTDIR" -v OFS='/' '{print l,$NF}'))
