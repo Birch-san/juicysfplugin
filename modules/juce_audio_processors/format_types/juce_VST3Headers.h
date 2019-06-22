@@ -47,8 +47,20 @@
  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
  #pragma clang diagnostic ignored "-Wextra-semi"
  #pragma clang diagnostic ignored "-Wmissing-braces"
+ #if __has_warning("-Wpragma-pack")
+  #pragma clang diagnostic ignored "-Wpragma-pack"
+ #endif
  #if __has_warning("-Wcomma")
   #pragma clang diagnostic ignored "-Wcomma"
+ #endif
+ #if __has_warning("-Wzero-as-null-pointer-constant")
+  #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+ #endif
+ #if __has_warning("-Winconsistent-missing-destructor-override")
+  #pragma clang diagnostic ignored "-Winconsistent-missing-destructor-override"
+ #endif
+ #if __has_warning("-Wcast-align")
+  #pragma clang diagnostic ignored "-Wcast-align"
  #endif
 #endif
 
@@ -125,6 +137,9 @@
  #include <public.sdk/source/vst/vstparameters.cpp>
  #include <public.sdk/source/vst/vstpresetfile.cpp>
  #include <public.sdk/source/vst/hosting/hostclasses.cpp>
+#if VST_VERSION >= 0x03060c   // 3.6.12
+ #include <public.sdk/source/vst/hosting/pluginterfacesupport.cpp>
+#endif
 
 //==============================================================================
 namespace Steinberg

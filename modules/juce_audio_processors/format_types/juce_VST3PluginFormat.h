@@ -41,7 +41,7 @@ public:
     VST3PluginFormat();
 
     /** Destructor */
-    ~VST3PluginFormat();
+    ~VST3PluginFormat() override;
 
     //==============================================================================
     /** Attempts to reload a VST3 plugin's state from some preset file data.
@@ -63,8 +63,7 @@ public:
 
 private:
     void createPluginInstance (const PluginDescription&, double initialSampleRate,
-                               int initialBufferSize, void* userData,
-                               void (*callback) (void*, AudioPluginInstance*, const String&)) override;
+                               int initialBufferSize, void* userData, PluginCreationCallback) override;
 
     bool requiresUnblockedMessageThreadDuringCreation (const PluginDescription&) const noexcept override;
 
