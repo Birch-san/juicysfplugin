@@ -13,6 +13,7 @@
 #include "SoundfontSynthVoice.h"
 #include "SoundfontSynthSound.h"
 #include "ExposesComponents.h"
+#include "MidiConstants.h"
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
@@ -153,6 +154,36 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     // Now pass any incoming midi messages to our keyboard state object, and let it
     // add messages to the buffer if the user is clicking on the on-screen keys
     keyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
+    
+    MidiBuffer processedMidi;
+    int time;
+    MidiMessage m;
+    
+    // TODO: factor into a MidiCollector
+    for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);) {
+       Logger::outputDebugString ( m.getDescription() );
+        if (m.isController()) {
+//            switch(static_cast<fluid_midi_control_change>(m.getControllerNumber())) {
+//                case GEN_VOLENVATTACK:
+//
+//                    break;
+//                default:
+//                    break;
+//            }
+//            m.getControllerValue()
+//            fluid_event_t *event(new_fluid_event());
+//            fluid_event_control_change(event, fluidSynthModel.getChannel(), m.getControllerNumber(), m.getControllerValue());
+//            delete_fluid_event(event);
+            fluid_midi_event_t *midi_event(new_fluid_midi_event());
+            fluid_midi_event_set_type(midi_event, static_cast<int>(CONTROL_CHANGE));
+            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
+            fluid_midi_event_set_control(midi_event, m.getControllerNumber());
+            fluid_midi_event_set_value(midi_event, m.getControllerValue());
+            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            
+            delete_fluid_midi_event(midi_event);
+        }
+    }
 
     // and now get our synth to process these midi events and generate its output.
     synth.renderNextBlock (buffer, midiMessages, 0, numSamples);

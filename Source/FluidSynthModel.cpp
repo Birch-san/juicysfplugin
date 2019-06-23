@@ -43,7 +43,7 @@ void FluidSynthModel::initialise() {
 
     settings = new_fluid_settings();
     // https://sourceforge.net/p/fluidsynth/wiki/FluidSettings/
-//    fluid_settings_setint(settings, "synth.verbose", 1);
+    fluid_settings_setint(settings, "synth.verbose", 1);
 
     synth = new_fluid_synth(settings);
     fluid_synth_set_sample_rate(synth, currentSampleRate);
@@ -85,9 +85,10 @@ void FluidSynthModel::initialise() {
 //                    FLUID_MOD_CONCAVE);
 //    // modulator's secondary source controller and flags
 //    // MIDI CC 74
-//    fluid_mod_set_source2(mod, 74, FLUID_MOD_CC);
+////    fluid_mod_set_source2(mod, 74, FLUID_MOD_CC);
+//    fluid_mod_set_source2(mod, 0, 0);
 //    // generator for filter cutoff
-//    fluid_mod_set_dest(mod, GEN_FILTERFC);
+//    fluid_mod_set_dest(mod, GEN_MODENVATTACK);
 //    fluid_mod_set_amount(mod, 13500.0f);
 //
 //    fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
