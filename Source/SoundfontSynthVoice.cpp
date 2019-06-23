@@ -58,12 +58,16 @@ void SoundfontSynthVoice::stopNote (float /*velocity*/, bool allowTailOff) {
     clearCurrentNote();
     fluid_synth_noteoff(synth, 0, this->midiNoteNumber);
 }
-void SoundfontSynthVoice::pitchWheelMoved (int /*newValue*/) {
-    // who cares?
+
+// receives input as MIDI 0 to 16383, with 8192 being center
+// this is also exactly the input fluidsynth requires
+void SoundfontSynthVoice::pitchWheelMoved (int newValue) {
+    Logger::outputDebugString ( juce::String::formatted("Pitch wheel: %d\n", newValue) );
+    fluid_synth_pitch_bend(synth, 0, newValue);
 }
 
-void SoundfontSynthVoice::controllerMoved (int /*controllerNumber*/, int /*newValue*/) {
-    // what's a controller?
+void SoundfontSynthVoice::controllerMoved (int controllerNumber, int newValue) {
+    Logger::outputDebugString ( juce::String::formatted("Controlled moved: %d, %d\n", controllerNumber, newValue) );
 }
 
 void SoundfontSynthVoice::renderNextBlock (AudioBuffer<float>& outputBuffer, int startSample, int numSamples) {

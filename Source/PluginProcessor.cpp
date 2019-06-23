@@ -161,26 +161,45 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     
     // TODO: factor into a MidiCollector
     for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);) {
-       Logger::outputDebugString ( m.getDescription() );
+        Logger::outputDebugString ( m.getDescription() );
+        
+        // explicitly not handling note_on/off, or pitch_bend, because these are (for better or worse)
+        // responsibilities of SoundfontSynthVoice.
+        // well, by that logic maybe I should move program change onto Voice. but it doesn't feel like a per-voice concern.
         if (m.isController()) {
-//            switch(static_cast<fluid_midi_control_change>(m.getControllerNumber())) {
-//                case GEN_VOLENVATTACK:
-//
-//                    break;
-//                default:
-//                    break;
-//            }
-//            m.getControllerValue()
-//            fluid_event_t *event(new_fluid_event());
-//            fluid_event_control_change(event, fluidSynthModel.getChannel(), m.getControllerNumber(), m.getControllerValue());
-//            delete_fluid_event(event);
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
             fluid_midi_event_set_type(midi_event, static_cast<int>(CONTROL_CHANGE));
             fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
             fluid_midi_event_set_control(midi_event, m.getControllerNumber());
             fluid_midi_event_set_value(midi_event, m.getControllerValue());
             fluid_synth_handle_midi_event(fluidSynth, midi_event);
-            
+            delete_fluid_midi_event(midi_event);
+        } else if (m.isProgramChange()) {
+            fluid_midi_event_t *midi_event(new_fluid_midi_event());
+            fluid_midi_event_set_type(midi_event, static_cast<int>(PROGRAM_CHANGE));
+            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
+            fluid_midi_event_set_program(midi_event, m.getProgramChangeNumber());
+            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            delete_fluid_midi_event(midi_event);
+        } else if (m.isChannelPressure()) {
+            fluid_midi_event_t *midi_event(new_fluid_midi_event());
+            fluid_midi_event_set_type(midi_event, static_cast<int>(CHANNEL_PRESSURE));
+            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
+            fluid_midi_event_set_program(midi_event, m.getChannelPressureValue());
+            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            delete_fluid_midi_event(midi_event);
+        } else if (m.isResetAllControllers()) {
+            fluid_midi_event_t *midi_event(new_fluid_midi_event());
+            fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSTEM_RESET));
+            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            delete_fluid_midi_event(midi_event);
+        } else if (m.isSysEx()) {
+            fluid_midi_event_t *midi_event(new_fluid_midi_event());
+            fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSEX));
+            // I assume that the MidiMessage's sysex buffer would be freed anyway when MidiMessage is destroyed, so set dynamic=false
+            // to ensure that fluidsynth does not attempt to free the sysex buffer during delete_fluid_midi_event()
+            fluid_midi_event_set_sysex(midi_event, const_cast<juce::uint8*>(m.getSysExData()), m.getSysExDataSize(), static_cast<int>(false));
+            fluid_synth_handle_midi_event(fluidSynth, midi_event);
             delete_fluid_midi_event(midi_event);
         }
     }
