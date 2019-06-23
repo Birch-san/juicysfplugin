@@ -30,7 +30,8 @@ trap 'error ${LINENO}' ERR
 
 ####
 
-declare -a BUILDS=("Debug" "Release")
+# declare -a BUILDS=("Debug" "Release")
+declare -a BUILDS=("Release")
 for BUILD in "${BUILDS[@]}"
 do
   BUILDROOT="$MYDIR/build"

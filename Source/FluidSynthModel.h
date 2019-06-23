@@ -88,7 +88,7 @@ private:
     unsigned int sfont_id;
     unsigned int channel;
 
-    fluid_mod_t* mod;
+//    fluid_mod_t* mod;
 
     ListenerList<Listener> eventListeners;
 

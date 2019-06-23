@@ -294,6 +294,7 @@
 		358E45BB22BEE53A0087ED8D /* libgthread-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libgthread-2.0.0.dylib"; sourceTree = "<group>"; };
 		358E45BC22BEE53A0087ED8D /* libFLAC.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libFLAC.8.dylib; sourceTree = "<group>"; };
 		358E45BD22BEE53A0087ED8D /* libogg.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libogg.0.dylib; sourceTree = "<group>"; };
+		358E45F422BFC00C0087ED8D /* MidiConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MidiConstants.h; path = ../../Source/MidiConstants.h; sourceTree = "<group>"; };
 		35D551D55292C9D0508A408A /* PluginEditor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PluginEditor.cpp; path = ../../Source/PluginEditor.cpp; sourceTree = SOURCE_ROOT; };
 		373EF982A53046CE00BECE68 /* include_juce_events.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_events.mm; path = ../../JuceLibraryCode/include_juce_events.mm; sourceTree = SOURCE_ROOT; };
 		3909EE4609ED2DCCC6B6B290 /* juce_data_structures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_data_structures; path = /Applications/JUCE/modules/juce_data_structures; sourceTree = "<absolute>"; };
@@ -545,6 +546,7 @@
 				420DCC01988E65E68562F9DC /* PluginProcessor.h */,
 				35D551D55292C9D0508A408A /* PluginEditor.cpp */,
 				8990F3EAFFBBD6A42247C663 /* PluginEditor.h */,
+				358E45F422BFC00C0087ED8D /* MidiConstants.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";

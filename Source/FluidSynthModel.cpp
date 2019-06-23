@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "FluidSynthModel.h"
+#include "MidiConstants.h"
 
 using namespace std;
 
@@ -15,8 +16,8 @@ FluidSynthModel::FluidSynthModel(SharesParams& p)
           currentSampleRate(44100),
           initialised(false),
           sfont_id(0),
-          channel(0),
-          mod(nullptr)
+          channel(0)/*,
+          mod(nullptr)*/
 
 {}
 
@@ -27,7 +28,7 @@ FluidSynthModel::~FluidSynthModel() {
         delete_fluid_settings(settings);
 //        delete driver;
 //        delete settings;
-        delete_fluid_mod(mod);
+//        delete_fluid_mod(mod);
     }
 }
 
@@ -43,7 +44,7 @@ void FluidSynthModel::initialise() {
 
     settings = new_fluid_settings();
     // https://sourceforge.net/p/fluidsynth/wiki/FluidSettings/
-//    fluid_settings_setint(settings, "synth.verbose", 1);
+    fluid_settings_setint(settings, "synth.verbose", 1);
 
     synth = new_fluid_synth(settings);
     fluid_synth_set_sample_rate(synth, currentSampleRate);
@@ -63,36 +64,73 @@ void FluidSynthModel::initialise() {
 
 //    changePreset(128, 13);
     
+    float env_amount(12700.0f);
     
-
-//    mod = new_fluid_mod();
-//
-//    // modulator's primary source controller and flags
-//    // fluid_mod_src:
-//    // https://github.com/FluidSynth/fluidsynth/blob/master/include/fluidsynth/mod.h#L61
-//    // fluid_mod_flags:
-//    // https://github.com/FluidSynth/fluidsynth/blob/master/include/fluidsynth/mod.h#L41
-//    // diagrams showing what negative and concave mean:
-//    // https://musescore.org/en/user/527826/blog/2016/05/23/volume-fluidsynth
-//    // fluid_gen_type:
-//    // https://github.com/FluidSynth/fluidsynth/blob/master/include/fluidsynth/gen.h#L36
-//    // https://github.com/FluidSynth/fluidsynth/blob/master/src/synth/fluid_gen.c#L27
-//    fluid_mod_set_source1(mod,
-//            FLUID_MOD_KEYPRESSURE,
-//            FLUID_MOD_CC |
-//                    FLUID_MOD_POSITIVE |
-//                    FLUID_MOD_UNIPOLAR |
-//                    FLUID_MOD_CONCAVE);
-//    // modulator's secondary source controller and flags
-//    // MIDI CC 74
-//    fluid_mod_set_source2(mod, 74, FLUID_MOD_CC);
-//    // generator for filter cutoff
-//    fluid_mod_set_dest(mod, GEN_FILTERFC);
-//    fluid_mod_set_amount(mod, 13500.0f);
-//
-//    fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
+    fluid_mod_t *mod(new_fluid_mod());
     
+    fluid_mod_set_source1(mod,
+                          static_cast<int>(SOUND_CTRL2), // MIDI CC 71 Timbre/Harmonic Intensity (filter resonance)
+                          FLUID_MOD_CC
+                          | FLUID_MOD_UNIPOLAR
+                          | FLUID_MOD_CONCAVE
+                          | FLUID_MOD_NEGATIVE);
+    fluid_mod_set_source2(mod, 0, 0);
+    fluid_mod_set_dest(mod, GEN_FILTERQ);
+    fluid_mod_set_amount(mod, FLUID_PEAK_ATTENUATION);
+    fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
+    delete_fluid_mod(mod);
     
+    mod = new_fluid_mod();
+    fluid_mod_set_source1(mod,
+                          static_cast<int>(SOUND_CTRL3), // MIDI CC 72 Release time
+                          FLUID_MOD_CC
+                          | FLUID_MOD_BIPOLAR
+                          | FLUID_MOD_CONCAVE
+                          | FLUID_MOD_POSITIVE);
+    fluid_mod_set_source2(mod, 0, 0);
+    fluid_mod_set_dest(mod, GEN_VOLENVRELEASE);
+    fluid_mod_set_amount(mod, env_amount);
+    fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
+    delete_fluid_mod(mod);
+    
+    mod = new_fluid_mod();
+    fluid_mod_set_source1(mod,
+                          static_cast<int>(SOUND_CTRL4), // MIDI CC 73 Attack time
+                          FLUID_MOD_CC
+                          | FLUID_MOD_BIPOLAR
+                          | FLUID_MOD_CONCAVE
+                          | FLUID_MOD_POSITIVE);
+    fluid_mod_set_source2(mod, 0, 0);
+    fluid_mod_set_dest(mod, GEN_VOLENVATTACK);
+    fluid_mod_set_amount(mod, env_amount);
+    fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
+    delete_fluid_mod(mod);
+    
+    mod = new_fluid_mod();
+    fluid_mod_set_source1(mod,
+                          static_cast<int>(SOUND_CTRL5), // MIDI CC 74 Brightness (cutoff frequency, FILTERFC)
+                          FLUID_MOD_CC
+                          | FLUID_MOD_SWITCH
+                          | FLUID_MOD_UNIPOLAR
+                          | FLUID_MOD_POSITIVE);
+    fluid_mod_set_source2(mod, 0, 0);
+    fluid_mod_set_dest(mod, GEN_FILTERFC);
+    fluid_mod_set_amount(mod, -2400.0f);
+    fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
+    delete_fluid_mod(mod);
+    
+    mod = new_fluid_mod();
+    fluid_mod_set_source1(mod,
+                          static_cast<int>(SOUND_CTRL6), // MIDI CC 75 Decay Time
+                          FLUID_MOD_CC
+                          | FLUID_MOD_BIPOLAR
+                          | FLUID_MOD_CONCAVE
+                          | FLUID_MOD_POSITIVE);
+    fluid_mod_set_source2(mod, 0, 0);
+    fluid_mod_set_dest(mod, GEN_VOLENVDECAY);
+    fluid_mod_set_amount(mod, env_amount);
+    fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
+    delete_fluid_mod(mod);
 
     initialised = true;
 }
