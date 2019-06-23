@@ -142,7 +142,7 @@ bool JuicySFAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 }
 
 AudioProcessor::BusesProperties JuicySFAudioProcessor::getBusesProperties() {
-    return BusesProperties().withInput  ("Input",  AudioChannelSet::stereo(), true)
+    return BusesProperties()
             .withOutput ("Output", AudioChannelSet::stereo(), true);
 }
 
