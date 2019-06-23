@@ -188,7 +188,15 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             fluid_midi_event_set_program(midi_event, m.getChannelPressureValue());
             fluid_synth_handle_midi_event(fluidSynth, midi_event);
             delete_fluid_midi_event(midi_event);
-        } else if (m.isResetAllControllers()) {
+        } else if (m.isAftertouch()) {
+            fluid_midi_event_t *midi_event(new_fluid_midi_event());
+            fluid_midi_event_set_type(midi_event, static_cast<int>(KEY_PRESSURE));
+            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
+            fluid_midi_event_set_key(midi_event, m.getNoteNumber());
+            fluid_midi_event_set_value(midi_event, m.getAfterTouchValue());
+            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            delete_fluid_midi_event(midi_event);
+        } else if (m.isMetaEvent()) {
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
             fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSTEM_RESET));
             fluid_synth_handle_midi_event(fluidSynth, midi_event);

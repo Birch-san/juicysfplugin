@@ -67,7 +67,8 @@ void SoundfontSynthVoice::pitchWheelMoved (int newValue) {
 }
 
 void SoundfontSynthVoice::controllerMoved (int controllerNumber, int newValue) {
-    Logger::outputDebugString ( juce::String::formatted("Controlled moved: %d, %d\n", controllerNumber, newValue) );
+    // this seems to be "program change" event
+    Logger::outputDebugString ( juce::String::formatted("Controller moved: %d, %d\n", controllerNumber, newValue) );
 }
 
 void SoundfontSynthVoice::renderNextBlock (AudioBuffer<float>& outputBuffer, int startSample, int numSamples) {
