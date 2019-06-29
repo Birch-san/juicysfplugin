@@ -64,7 +64,10 @@ void FluidSynthModel::initialise() {
 
 //    changePreset(128, 13);
     
-    float env_amount(12700.0f);
+//    float env_amount(12000.0f);
+    
+//     http://www.synthfont.com/SoundFont_NRPNs.PDF
+    float env_amount(20000.0f);
     
     fluid_mod_t *mod(new_fluid_mod());
     
@@ -73,7 +76,7 @@ void FluidSynthModel::initialise() {
                           FLUID_MOD_CC
                           | FLUID_MOD_UNIPOLAR
                           | FLUID_MOD_CONCAVE
-                          | FLUID_MOD_NEGATIVE);
+                          | FLUID_MOD_POSITIVE);
     fluid_mod_set_source2(mod, 0, 0);
     fluid_mod_set_dest(mod, GEN_FILTERQ);
     fluid_mod_set_amount(mod, FLUID_PEAK_ATTENUATION);
@@ -84,8 +87,8 @@ void FluidSynthModel::initialise() {
     fluid_mod_set_source1(mod,
                           static_cast<int>(SOUND_CTRL3), // MIDI CC 72 Release time
                           FLUID_MOD_CC
-                          | FLUID_MOD_BIPOLAR
-                          | FLUID_MOD_CONCAVE
+                          | FLUID_MOD_UNIPOLAR
+                          | FLUID_MOD_LINEAR
                           | FLUID_MOD_POSITIVE);
     fluid_mod_set_source2(mod, 0, 0);
     fluid_mod_set_dest(mod, GEN_VOLENVRELEASE);
@@ -97,8 +100,8 @@ void FluidSynthModel::initialise() {
     fluid_mod_set_source1(mod,
                           static_cast<int>(SOUND_CTRL4), // MIDI CC 73 Attack time
                           FLUID_MOD_CC
-                          | FLUID_MOD_BIPOLAR
-                          | FLUID_MOD_CONCAVE
+                          | FLUID_MOD_UNIPOLAR
+                          | FLUID_MOD_LINEAR
                           | FLUID_MOD_POSITIVE);
     fluid_mod_set_source2(mod, 0, 0);
     fluid_mod_set_dest(mod, GEN_VOLENVATTACK);
@@ -110,10 +113,10 @@ void FluidSynthModel::initialise() {
     fluid_mod_set_source1(mod,
                           static_cast<int>(SOUND_CTRL5), // MIDI CC 74 Brightness (cutoff frequency, FILTERFC)
                           FLUID_MOD_CC
-                          | FLUID_MOD_SWITCH
+                          | FLUID_MOD_LINEAR
                           | FLUID_MOD_UNIPOLAR
                           | FLUID_MOD_POSITIVE);
-    fluid_mod_set_source2(mod, 0, 0);
+        fluid_mod_set_source2(mod, 0, 0);
     fluid_mod_set_dest(mod, GEN_FILTERFC);
     fluid_mod_set_amount(mod, -2400.0f);
     fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
@@ -123,8 +126,8 @@ void FluidSynthModel::initialise() {
     fluid_mod_set_source1(mod,
                           static_cast<int>(SOUND_CTRL6), // MIDI CC 75 Decay Time
                           FLUID_MOD_CC
-                          | FLUID_MOD_BIPOLAR
-                          | FLUID_MOD_CONCAVE
+                          | FLUID_MOD_UNIPOLAR
+                          | FLUID_MOD_LINEAR
                           | FLUID_MOD_POSITIVE);
     fluid_mod_set_source2(mod, 0, 0);
     fluid_mod_set_dest(mod, GEN_VOLENVDECAY);
