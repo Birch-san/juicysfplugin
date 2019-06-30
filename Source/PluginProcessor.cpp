@@ -211,6 +211,14 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             delete_fluid_midi_event(midi_event);
         }
     }
+    
+//    int pval;
+    // 73: 64 attack
+    // 75: decay
+    // 79: sustain
+    // 72: 64 release
+//    fluid_synth_get_cc(fluidSynth, 0, 73, &pval);
+//    Logger::outputDebugString ( juce::String::formatted("hey: %d\n", pval) );
 
     // and now get our synth to process these midi events and generate its output.
     synth.renderNextBlock (buffer, midiMessages, 0, numSamples);
