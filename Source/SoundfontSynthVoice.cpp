@@ -24,6 +24,7 @@ void SoundfontSynthVoice::startNote(
         SynthesiserSound* sound,
         int /*currentPitchWheelPosition*/) {
     this->midiNoteNumber = midiNoteNumber;
+    Logger::outputDebugString ( juce::String::formatted("JUCE noteon: %d, %d\n", midiNoteNumber, velocity) );
     fluid_synth_noteon(synth, 0, midiNoteNumber, static_cast<int>(velocity * 127));
 
 //    currentAngle = 0.0;
@@ -55,6 +56,7 @@ void SoundfontSynthVoice::stopNote (float /*velocity*/, bool allowTailOff) {
 //        clearCurrentNote();
 //        angleDelta = 0.0;
 //    }
+    Logger::outputDebugString ( juce::String("JUCE noteoff\n") );
     clearCurrentNote();
     fluid_synth_noteoff(synth, 0, this->midiNoteNumber);
 }

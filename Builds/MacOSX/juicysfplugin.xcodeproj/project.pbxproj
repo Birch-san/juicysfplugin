@@ -107,6 +107,7 @@
 		358E45F122BEE5CE0087ED8D /* libgthread-2.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BB22BEE53A0087ED8D /* libgthread-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		358E45F222BEE5CE0087ED8D /* libFLAC.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BC22BEE53A0087ED8D /* libFLAC.8.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		358E45F322BEE5CE0087ED8D /* libogg.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 358E45BD22BEE53A0087ED8D /* libogg.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		358E45FB22C80DCA0087ED8D /* SlidersComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 358E45F922C80DCA0087ED8D /* SlidersComponent.cpp */; };
 		3793A7D5AC25576FAC8583E6 /* include_juce_graphics.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6BC2528C1717DDC2B66215E /* include_juce_graphics.mm */; };
 		42542EDC02B3DE845BCC21FE /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1616112041466F7324D7E19 /* Accelerate.framework */; };
 		458D25AB7460484F90B37A2F /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1910B48593DA5FACC7E122 /* IOKit.framework */; };
@@ -295,6 +296,8 @@
 		358E45BC22BEE53A0087ED8D /* libFLAC.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libFLAC.8.dylib; sourceTree = "<group>"; };
 		358E45BD22BEE53A0087ED8D /* libogg.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libogg.0.dylib; sourceTree = "<group>"; };
 		358E45F422BFC00C0087ED8D /* MidiConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MidiConstants.h; path = ../../Source/MidiConstants.h; sourceTree = "<group>"; };
+		358E45F922C80DCA0087ED8D /* SlidersComponent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SlidersComponent.cpp; path = ../../Source/SlidersComponent.cpp; sourceTree = "<group>"; };
+		358E45FA22C80DCA0087ED8D /* SlidersComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SlidersComponent.h; path = ../../Source/SlidersComponent.h; sourceTree = "<group>"; };
 		35D551D55292C9D0508A408A /* PluginEditor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PluginEditor.cpp; path = ../../Source/PluginEditor.cpp; sourceTree = SOURCE_ROOT; };
 		373EF982A53046CE00BECE68 /* include_juce_events.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_events.mm; path = ../../JuceLibraryCode/include_juce_events.mm; sourceTree = SOURCE_ROOT; };
 		3909EE4609ED2DCCC6B6B290 /* juce_data_structures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_data_structures; path = /Applications/JUCE/modules/juce_data_structures; sourceTree = "<absolute>"; };
@@ -547,6 +550,8 @@
 				35D551D55292C9D0508A408A /* PluginEditor.cpp */,
 				8990F3EAFFBBD6A42247C663 /* PluginEditor.h */,
 				358E45F422BFC00C0087ED8D /* MidiConstants.h */,
+				358E45F922C80DCA0087ED8D /* SlidersComponent.cpp */,
+				358E45FA22C80DCA0087ED8D /* SlidersComponent.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -945,6 +950,7 @@
 				E08B3A2AF85F9FCF991F1CA2 /* include_juce_audio_basics.mm in Sources */,
 				C4D76C968347E2ACBAB5B6E7 /* include_juce_audio_devices.mm in Sources */,
 				51C9DBCA840E334DB1804133 /* include_juce_audio_formats.mm in Sources */,
+				358E45FB22C80DCA0087ED8D /* SlidersComponent.cpp in Sources */,
 				5E5B833BBDD65F0D4271CA52 /* include_juce_audio_plugin_client_utils.cpp in Sources */,
 				C59AF9E198C59F67039F12BB /* include_juce_audio_plugin_client_VST_utils.mm in Sources */,
 				5BEE82A710A5F9566FCF4FDA /* include_juce_audio_processors.mm in Sources */,

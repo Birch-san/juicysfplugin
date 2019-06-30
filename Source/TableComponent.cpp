@@ -40,11 +40,12 @@ TableComponent::TableComponent(
     // Add some columns to the table header, based on the column list in our database..
     for (auto &column : columns) // access by reference to avoid copying
     {
+        const int colWidth{ columnIx == 1 ? 30 : 200 };
         table.getHeader().addColumn (
                 String(column),
                 columnIx++,
-                100, // column width
-                50, // min width
+                colWidth, // column width
+                30, // min width
                 400, // max width
                 TableHeaderComponent::defaultFlags
         );
@@ -147,9 +148,12 @@ void TableComponent::sortOrderChanged (
 // This is overloaded from TableListBoxModel, and should choose the best width for the specified
 // column.
 int TableComponent::getColumnAutoSizeWidth (int columnId) {
-    if (columnId == 5)
-        return 100; // (this is the ratings column, containing a custom combobox component)
+//    if (columnId == 5)
+//        return 100; // (this is the ratings column, containing a custom combobox component)
+    if (columnId == 1)
+        return 30; // (this is the ratings column, containing a custom combobox component)
 
+    
     int widest = 32;
 
     // find the widest bit of text in this column..

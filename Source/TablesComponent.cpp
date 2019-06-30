@@ -30,7 +30,7 @@ TablesComponent::TablesComponent(
     };
 
     presetTable = new TableComponent(
-            {"Preset", "Name"},
+            {"#", "Name"},
             mapPresets(
                     banksToPresets,
                     selectedBank

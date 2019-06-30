@@ -55,6 +55,11 @@ void FluidSynthModel::initialise() {
     }
 
     fluid_synth_set_gain(synth, 2.0);
+    
+    for(int i{SOUND_CTRL1}; i <= SOUND_CTRL10; i++)
+    {
+        setControllerValue(i, 0);
+    }
 
 //    fluid_synth_bank_select(synth, 0, 3);
 
@@ -68,9 +73,14 @@ void FluidSynthModel::initialise() {
     
 //     http://www.synthfont.com/SoundFont_NRPNs.PDF
     float env_amount(20000.0f);
+//    float env_amount(24000.0f);
+    
+    // note: fluid_chan.c#fluid_channel_init_ctrl()
+    // all SOUND_CTRL are inited with value of 64, not zero.
+    // "Just like panning, a value of 64 indicates no change for sound ctrls"
     
     fluid_mod_t *mod(new_fluid_mod());
-    
+//
     fluid_mod_set_source1(mod,
                           static_cast<int>(SOUND_CTRL2), // MIDI CC 71 Timbre/Harmonic Intensity (filter resonance)
                           FLUID_MOD_CC
@@ -92,6 +102,7 @@ void FluidSynthModel::initialise() {
                           | FLUID_MOD_POSITIVE);
     fluid_mod_set_source2(mod, 0, 0);
     fluid_mod_set_dest(mod, GEN_VOLENVRELEASE);
+//    fluid_mod_set_amount(mod, 15200.0f);
     fluid_mod_set_amount(mod, env_amount);
     fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
     delete_fluid_mod(mod);
@@ -109,6 +120,7 @@ void FluidSynthModel::initialise() {
     fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
     delete_fluid_mod(mod);
     
+    // soundfont spec says that if cutoff is >20kHz and resonance Q is 0, then no filtering occurs
     mod = new_fluid_mod();
     fluid_mod_set_source1(mod,
                           static_cast<int>(SOUND_CTRL5), // MIDI CC 74 Brightness (cutoff frequency, FILTERFC)
@@ -134,8 +146,34 @@ void FluidSynthModel::initialise() {
     fluid_mod_set_amount(mod, env_amount);
     fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
     delete_fluid_mod(mod);
+    
+    mod = new_fluid_mod();
+    fluid_mod_set_source1(mod,
+                          static_cast<int>(SOUND_CTRL10), // MIDI CC 79 undefined
+                          FLUID_MOD_CC
+                          | FLUID_MOD_UNIPOLAR
+                          | FLUID_MOD_CONCAVE
+                          | FLUID_MOD_POSITIVE);
+    fluid_mod_set_source2(mod, 0, 0);
+    fluid_mod_set_dest(mod, GEN_VOLENVSUSTAIN);
+    // fluice_voice.c#fluid_voice_update_param()
+    // clamps the range to between 0 and 1000, so we'll copy that
+    fluid_mod_set_amount(mod, 1000.0f);
+    fluid_synth_add_default_mod(synth, mod, FLUID_SYNTH_ADD);
+    delete_fluid_mod(mod);
 
     initialised = true;
+}
+
+void FluidSynthModel::setControllerValue(int controller, int value) {
+    fluid_midi_event_t *midi_event(new_fluid_midi_event());
+    fluid_midi_event_set_type(midi_event, static_cast<int>(CONTROL_CHANGE));
+    fluid_midi_event_set_channel(midi_event, channel);
+    fluid_midi_event_set_control(midi_event, controller);
+    fluid_midi_event_set_value(midi_event, value);
+    fluid_synth_handle_midi_event(synth, midi_event);
+    delete_fluid_midi_event(midi_event);
+    //        fluid_channel_set_cc(channel, i, 0);
 }
 
 int FluidSynthModel::getChannel() {

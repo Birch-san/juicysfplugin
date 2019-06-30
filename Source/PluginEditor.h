@@ -18,6 +18,7 @@
 #include "ExposesComponents.h"
 #include "FilePicker.h"
 #include "StateChangeSubscriber.h"
+#include "SlidersComponent.h"
 
 //==============================================================================
 /**
@@ -50,6 +51,7 @@ private:
     SurjectiveMidiKeyboardComponent midiKeyboard;
     TablesComponent tablesComponent;
     FilePicker filePicker;
+    SlidersComponent slidersComponent;
 
     bool focusInitialized;
 
