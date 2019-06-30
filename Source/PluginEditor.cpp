@@ -17,10 +17,11 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor&
       processor (p),
       midiKeyboard (p.keyboardState, SurjectiveMidiKeyboardComponent::horizontalKeyboard),
       tablesComponent(p.getFluidSynthModel()),
-      filePicker(p.getFluidSynthModel())
+      filePicker(p.getFluidSynthModel()),
+      slidersComponent{p.getFluidSynthModel()}
 {
     // set resize limits for this plug-in
-    setResizeLimits (400, 300, 1900, 1000);
+    setResizeLimits (500, 300, 1900, 1000);
 
     setSize (p.lastUIWidth, p.lastUIHeight);
 
@@ -82,7 +83,7 @@ void JuicySFAudioProcessorEditor::resized()
     const int padding{8};
     const int pianoHeight{70};
     const int filePickerHeight{25};
-    const int slidersHeight{150};
+    // const int slidersHeight{150};
     Rectangle<int> r{getLocalBounds()};
     filePicker.setBounds(r.removeFromTop(filePickerHeight + padding).reduced(padding, 0).withTrimmedTop(padding));
 

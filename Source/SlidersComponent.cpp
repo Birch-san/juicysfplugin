@@ -7,10 +7,13 @@
 //
 
 #include "SlidersComponent.h"
+#include "FluidSynthModel.h"
+#include "MidiConstants.h"
 
-std::function<void()> SlidersComponent::makeSliderListener(Slider& slider) {
-    return [&slider]{
-        slider.setValue(slider.getValue(), NotificationType::dontSendNotification);
+std::function<void()> SlidersComponent::makeSliderListener(Slider& slider, int controller) {
+    return [this, controller, &slider]{
+//        slider.setValue(slider.getValue(), NotificationType::dontSendNotification);
+        fluidSynthModel->setControllerValue(controller, slider.getValue());
     };
 }
 
@@ -55,7 +58,8 @@ void SlidersComponent::resized() {
     filterResonanceSlider.setBounds(rFilter.removeFromLeft(sliderWidth + sliderXMargin).withTrimmedTop(labelHeight).withTrimmedLeft(sliderXMargin));
 }
 
-SlidersComponent::SlidersComponent() :
+SlidersComponent::SlidersComponent(FluidSynthModel* fluidSynthModel) :
+fluidSynthModel{fluidSynthModel},
 envelopeGroup{"envelopeGroup", "Envelope"},
 filterGroup{"filterGroup", "Filter"}
 {
@@ -66,32 +70,32 @@ filterGroup{"filterGroup", "Filter"}
 
     attackSlider.setSliderStyle(style);
     attackSlider.setRange(rangeMin, rangeMax, rangeStep);
-    // attackSlider.onValueChange = makeSliderListener(attackSlider);
+    attackSlider.onValueChange = makeSliderListener(attackSlider, static_cast<int>(SOUND_CTRL4));
     attackSlider.setTextBoxStyle(Slider::TextBoxBelow, true, attackSlider.getTextBoxWidth(), attackSlider.getTextBoxHeight());
 
     decaySlider.setSliderStyle(style);
     decaySlider.setRange(rangeMin, rangeMax, rangeStep);
-    // decaySlider.onValueChange = makeSliderListener(decaySlider);
+    decaySlider.onValueChange = makeSliderListener(decaySlider, static_cast<int>(SOUND_CTRL6));
     decaySlider.setTextBoxStyle(Slider::TextBoxBelow, true, decaySlider.getTextBoxWidth(), decaySlider.getTextBoxHeight());
 
     sustainSlider.setSliderStyle(style);
     sustainSlider.setRange(rangeMin, rangeMax, rangeStep);
-    // sustainSlider.onValueChange = makeSliderListener(sustainSlider);
+    sustainSlider.onValueChange = makeSliderListener(sustainSlider, static_cast<int>(SOUND_CTRL10));
     sustainSlider.setTextBoxStyle(Slider::TextBoxBelow, true, sustainSlider.getTextBoxWidth(), sustainSlider.getTextBoxHeight());
 
     releaseSlider.setSliderStyle(style);
     releaseSlider.setRange(rangeMin, rangeMax, rangeStep);
-    // releaseSlider.onValueChange = makeSliderListener(releaseSlider);
+    releaseSlider.onValueChange = makeSliderListener(releaseSlider, static_cast<int>(SOUND_CTRL3));
     releaseSlider.setTextBoxStyle(Slider::TextBoxBelow, true, releaseSlider.getTextBoxWidth(), releaseSlider.getTextBoxHeight());
 
     filterCutOffSlider.setSliderStyle(style);
     filterCutOffSlider.setRange(rangeMin, rangeMax, rangeStep);
-    // filterCutOffSlider.onValueChange = makeSliderListener(filterCutOffSlider);
+    filterCutOffSlider.onValueChange = makeSliderListener(filterCutOffSlider, static_cast<int>(SOUND_CTRL5));
     filterCutOffSlider.setTextBoxStyle(Slider::TextBoxBelow, true, filterCutOffSlider.getTextBoxWidth(), filterCutOffSlider.getTextBoxHeight());
 
     filterResonanceSlider.setSliderStyle(style);
     filterResonanceSlider.setRange(rangeMin, rangeMax, rangeStep);
-    // filterResonanceSlider.onValueChange = makeSliderListener(filterResonanceSlider);
+    filterResonanceSlider.onValueChange = makeSliderListener(filterResonanceSlider, static_cast<int>(SOUND_CTRL2));
     filterResonanceSlider.setTextBoxStyle(Slider::TextBoxBelow, true, filterResonanceSlider.getTextBoxWidth(), filterResonanceSlider.getTextBoxHeight());
 
     addAndMakeVisible(attackSlider);

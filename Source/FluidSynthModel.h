@@ -31,6 +31,7 @@ public:
     int getChannel();
 
     void onFileNameChanged(const String &absPath, int bank, int preset);
+    void setControllerValue(int controller, int value);
 
     //==============================================================================
     /**

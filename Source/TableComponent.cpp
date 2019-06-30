@@ -40,7 +40,7 @@ TableComponent::TableComponent(
     // Add some columns to the table header, based on the column list in our database..
     for (auto &column : columns) // access by reference to avoid copying
     {
-        const int colWidth{ columnIx == 1 ? 30 : 100 };
+        const int colWidth{ columnIx == 1 ? 30 : 200 };
         table.getHeader().addColumn (
                 String(column),
                 columnIx++,

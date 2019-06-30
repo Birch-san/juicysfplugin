@@ -1,13 +1,14 @@
 # pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "FluidSynthModel.h"
 
 using namespace std;
 
 class SlidersComponent : public Component
 {
 public:
-    SlidersComponent();
+    SlidersComponent(FluidSynthModel* fluidSynthModel);
     ~SlidersComponent();
 
     void resized() override;
@@ -15,7 +16,9 @@ public:
     const int getDesiredWidth();
 
 private:
-    std::function<void()> makeSliderListener(Slider& slider);
+    std::function<void()> makeSliderListener(Slider& slider, int controller);
+
+    FluidSynthModel* fluidSynthModel;
 
     GroupComponent envelopeGroup;
 

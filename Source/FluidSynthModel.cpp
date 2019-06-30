@@ -58,14 +58,7 @@ void FluidSynthModel::initialise() {
     
     for(int i{SOUND_CTRL1}; i <= SOUND_CTRL10; i++)
     {
-        fluid_midi_event_t *midi_event(new_fluid_midi_event());
-        fluid_midi_event_set_type(midi_event, static_cast<int>(CONTROL_CHANGE));
-        fluid_midi_event_set_channel(midi_event, channel);
-        fluid_midi_event_set_control(midi_event, i);
-        fluid_midi_event_set_value(midi_event, 0);
-        fluid_synth_handle_midi_event(synth, midi_event);
-        delete_fluid_midi_event(midi_event);
-//        fluid_channel_set_cc(channel, i, 0);
+        setControllerValue(i, 0);
     }
 
 //    fluid_synth_bank_select(synth, 0, 3);
@@ -159,7 +152,7 @@ void FluidSynthModel::initialise() {
                           static_cast<int>(SOUND_CTRL10), // MIDI CC 79 undefined
                           FLUID_MOD_CC
                           | FLUID_MOD_UNIPOLAR
-                          | FLUID_MOD_LINEAR
+                          | FLUID_MOD_CONCAVE
                           | FLUID_MOD_POSITIVE);
     fluid_mod_set_source2(mod, 0, 0);
     fluid_mod_set_dest(mod, GEN_VOLENVSUSTAIN);
@@ -170,6 +163,17 @@ void FluidSynthModel::initialise() {
     delete_fluid_mod(mod);
 
     initialised = true;
+}
+
+void FluidSynthModel::setControllerValue(int controller, int value) {
+    fluid_midi_event_t *midi_event(new_fluid_midi_event());
+    fluid_midi_event_set_type(midi_event, static_cast<int>(CONTROL_CHANGE));
+    fluid_midi_event_set_channel(midi_event, channel);
+    fluid_midi_event_set_control(midi_event, controller);
+    fluid_midi_event_set_value(midi_event, value);
+    fluid_synth_handle_midi_event(synth, midi_event);
+    delete_fluid_midi_event(midi_event);
+    //        fluid_channel_set_cc(channel, i, 0);
 }
 
 int FluidSynthModel::getChannel() {
