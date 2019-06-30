@@ -18,6 +18,18 @@ SlidersComponent::~SlidersComponent()
 {
 }
 
+const int SlidersComponent::getDesiredWidth() {
+    const int envelopeSliders{4};
+    const int filterSliders{2};
+    const int groupXMargin{8};
+    const int groupXPadding{8};
+    const int sliderXMargin{3};
+    const int sliderWidth{30};
+
+    return envelopeSliders * sliderWidth + (envelopeSliders-1) * sliderXMargin + 2 * groupXPadding
+    + filterSliders * sliderWidth + (filterSliders-1) * sliderXMargin + 2 * groupXPadding + groupXMargin;
+}
+
 void SlidersComponent::resized() {
     const int envelopeSliders{4};
     const int filterSliders{2};

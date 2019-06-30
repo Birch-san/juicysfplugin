@@ -12,6 +12,8 @@ public:
 
     void resized() override;
 
+    const int getDesiredWidth();
+
 private:
     std::function<void()> makeSliderListener(Slider& slider);
 

@@ -83,15 +83,19 @@ void JuicySFAudioProcessorEditor::resized()
     const int pianoHeight{70};
     const int filePickerHeight{25};
     const int slidersHeight{150};
-    Rectangle<int> r (getLocalBounds());
+    Rectangle<int> r{getLocalBounds()};
     filePicker.setBounds(r.removeFromTop(filePickerHeight + padding).reduced(padding, 0).withTrimmedTop(padding));
-    slidersComponent.setBounds(r.removeFromTop(slidersHeight + padding).reduced(padding, 0).withTrimmedTop(padding));
 
     // Rectangle<int> r2 (getLocalBounds());
     // slidersComponent.setBounds(r2.removeFromLeft(filePickerWidth + padding).reduced(padding, 0).withTrimmedLeft(padding));
 
     midiKeyboard.setBounds (r.removeFromBottom (pianoHeight).reduced(padding, 0));
-    tablesComponent.setBounds(r.reduced(0, padding));
+
+    Rectangle<int> rContent{r.reduced(0, padding)};
+    slidersComponent.setBounds(rContent.removeFromRight(slidersComponent.getDesiredWidth() + padding).withTrimmedRight(padding));
+
+    tablesComponent.setBounds(rContent);
+
 
     processor.lastUIWidth = getWidth();
     processor.lastUIHeight = getHeight();
