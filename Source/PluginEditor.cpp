@@ -20,7 +20,7 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor&
       filePicker(p.getFluidSynthModel())
 {
     // set resize limits for this plug-in
-    setResizeLimits (400, 300, 800, 600);
+    setResizeLimits (400, 300, 1900, 1000);
 
     setSize (p.lastUIWidth, p.lastUIHeight);
 
@@ -34,8 +34,10 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor&
     setWantsKeyboardFocus(true);
     addAndMakeVisible (midiKeyboard);
 
+    addAndMakeVisible(slidersComponent);
     addAndMakeVisible(tablesComponent);
     addAndMakeVisible(filePicker);
+
 }
 
 JuicySFAudioProcessorEditor::~JuicySFAudioProcessorEditor()
@@ -77,11 +79,17 @@ void JuicySFAudioProcessorEditor::paint (Graphics& g)
 
 void JuicySFAudioProcessorEditor::resized()
 {
-    const int padding = 8;
-    const int pianoHeight = 70;
-    const int filePickerHeight = 25;
+    const int padding{8};
+    const int pianoHeight{70};
+    const int filePickerHeight{25};
+    const int slidersHeight{150};
     Rectangle<int> r (getLocalBounds());
     filePicker.setBounds(r.removeFromTop(filePickerHeight + padding).reduced(padding, 0).withTrimmedTop(padding));
+    slidersComponent.setBounds(r.removeFromTop(slidersHeight + padding).reduced(padding, 0).withTrimmedTop(padding));
+
+    // Rectangle<int> r2 (getLocalBounds());
+    // slidersComponent.setBounds(r2.removeFromLeft(filePickerWidth + padding).reduced(padding, 0).withTrimmedLeft(padding));
+
     midiKeyboard.setBounds (r.removeFromBottom (pianoHeight).reduced(padding, 0));
     tablesComponent.setBounds(r.reduced(0, padding));
 
