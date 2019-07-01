@@ -6,11 +6,13 @@
 #pragma once
 
 #include "FilePickerFragment.h"
+#include "SlidersFragment.h"
 
 class ExposesComponents {
 public:
     virtual ~ExposesComponents() {}
 
     virtual FilePickerFragment& getFilePicker() = 0;
+    virtual SlidersFragment& getSliders() = 0;
 
 };

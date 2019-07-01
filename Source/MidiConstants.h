@@ -162,3 +162,8 @@ enum fluid_midi_control_change
  - for case (2) or (3), FLUID_NOISE_FLOOR should be the noise floor for 16 bits (i.e -90 dB).
  */
 #define FLUID_PEAK_ATTENUATION  960.0f
+
+struct MidiConstants {
+    inline static const int midiMinValue = 0;
+    inline static const int midiMaxValue = 127;
+};

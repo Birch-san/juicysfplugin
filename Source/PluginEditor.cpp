@@ -10,20 +10,26 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "GuiConstants.h"
 
 //==============================================================================
-JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor& p)
-    : AudioProcessorEditor (&p),
-      processor (p),
-      midiKeyboard (p.keyboardState, SurjectiveMidiKeyboardComponent::horizontalKeyboard),
-      tablesComponent(p.getFluidSynthModel()),
-      filePicker(p.getFluidSynthModel()),
-      slidersComponent{p.getFluidSynthModel()}
+JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor(JuicySFAudioProcessor& p)
+    : AudioProcessorEditor{&p},
+      processor{p},
+      sharedParams{p.sharedParams},
+      midiKeyboard{p.keyboardState, SurjectiveMidiKeyboardComponent::horizontalKeyboard},
+      tablesComponent{p.getFluidSynthModel()},
+      filePicker{p.getFluidSynthModel()},
+      slidersComponent{p.sharedParams, p.getFluidSynthModel()}
 {
     // set resize limits for this plug-in
-    setResizeLimits (500, 300, 1900, 1000);
+    setResizeLimits(
+        GuiConstants::minWidth,
+        GuiConstants::minHeight,
+        GuiConstants::maxWidth,
+        GuiConstants::maxHeight);
 
-    setSize (p.lastUIWidth, p.lastUIHeight);
+    setSize(sharedParams->getUiWidth(), sharedParams->getUiHeight());
 
 //    processor.subscribeToStateChanges(this);
 
@@ -97,9 +103,8 @@ void JuicySFAudioProcessorEditor::resized()
 
     tablesComponent.setBounds(rContent);
 
-
-    processor.lastUIWidth = getWidth();
-    processor.lastUIHeight = getHeight();
+    sharedParams->setUiWidth(getWidth());
+    sharedParams->setUiHeight(getHeight());
 
 //    Rectangle<int> r2 (getLocalBounds());
 //    r2.reduce(0, padding);
@@ -150,4 +155,8 @@ bool JuicySFAudioProcessorEditor::keyStateChanged (bool isKeyDown) {
 
 FilePickerFragment& JuicySFAudioProcessorEditor::getFilePicker() {
     return filePicker;
+}
+
+SlidersFragment& JuicySFAudioProcessorEditor::getSliders() {
+    return slidersComponent;
 }

@@ -10,10 +10,11 @@
 #include "FluidSynthModel.h"
 #include "MidiConstants.h"
 
-std::function<void()> SlidersComponent::makeSliderListener(Slider& slider, int controller) {
+std::function<void()> SlidersComponent::makeSliderListener(Slider& slider, int controller/*, std::function<void()> callback*/) {
     return [this, controller, &slider]{
 //        slider.setValue(slider.getValue(), NotificationType::dontSendNotification);
         fluidSynthModel->setControllerValue(controller, slider.getValue());
+        // callback();
     };
 }
 
@@ -58,7 +59,54 @@ void SlidersComponent::resized() {
     filterResonanceSlider.setBounds(rFilter.removeFromLeft(sliderWidth + sliderXMargin).withTrimmedTop(labelHeight).withTrimmedLeft(sliderXMargin));
 }
 
-SlidersComponent::SlidersComponent(FluidSynthModel* fluidSynthModel) :
+void SlidersComponent::acceptMidiControlEvent(int controller, int value) {
+    switch(static_cast<fluid_midi_control_change>(controller)) {
+        case SOUND_CTRL2: // MIDI CC 71 Timbre/Harmonic Intensity (filter resonance)
+            filterResonanceSlider.setValue(value, NotificationType::dontSendNotification);
+            break;
+        case SOUND_CTRL3: // MIDI CC 72 Release time
+            releaseSlider.setValue(value, NotificationType::dontSendNotification);
+            break;
+        case SOUND_CTRL4: // MIDI CC 73 Attack time
+            attackSlider.setValue(value, NotificationType::dontSendNotification);
+            break;
+        case SOUND_CTRL5: // MIDI CC 74 Brightness (cutoff frequency, FILTERFC)
+            filterCutOffSlider.setValue(value, NotificationType::dontSendNotification);
+            break;
+        case SOUND_CTRL6: // MIDI CC 75 Decay Time
+            decaySlider.setValue(value, NotificationType::dontSendNotification);
+            break;
+        case SOUND_CTRL10: // MIDI CC 79 undefined
+            sustainSlider.setValue(value, NotificationType::dontSendNotification);
+            break;
+        default:
+            break;
+    }
+}
+
+// void SlidersComponent::updateAttackSlider(int value) {
+//     attackSlider.setValue(value, NotificationType::dontSendNotification);
+// }
+// void SlidersComponent::updateDecaySlider(int value) {
+//     decaySlider.setValue(value, NotificationType::dontSendNotification);
+// }
+// void SlidersComponent::updateSustainSlider(int value) {
+//     sustainSlider.setValue(value, NotificationType::dontSendNotification);
+// }
+// void SlidersComponent::updateReleaseSlider(int value) {
+//     releaseSlider.setValue(value, NotificationType::dontSendNotification);
+// }
+// void SlidersComponent::updateFilterCutOffSlider(int value) {
+//     filterCutOffSlider.setValue(value, NotificationType::dontSendNotification);
+// }
+// void SlidersComponent::updateFilterResonanceSlider(int value) {
+//     filterResonanceSlider.setValue(value, NotificationType::dontSendNotification);
+// }
+
+SlidersComponent::SlidersComponent(
+    shared_ptr<SharesParams> sharedParams,
+    FluidSynthModel* fluidSynthModel) :
+sharedParams{sharedParams},
 fluidSynthModel{fluidSynthModel},
 envelopeGroup{"envelopeGroup", "Envelope"},
 filterGroup{"filterGroup", "Filter"}

@@ -15,19 +15,20 @@
 #include "ExposesComponents.h"
 #include "MidiConstants.h"
 #include "Util.h"
+#include "SharesParams.h"
+#include "Params.h"
+
+using namespace std;
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 
 //==============================================================================
 JuicySFAudioProcessor::JuicySFAudioProcessor()
-     : AudioProcessor (getBusesProperties()),
-       lastUIWidth(400),
-       lastUIHeight(300),
-       soundFontPath(String()),
-       lastPreset(-1),
-       lastBank(-1),
-       fluidSynthModel(*this)/*,
+     : AudioProcessor{getBusesProperties()},
+       sharedParams{static_pointer_cast<SharesParams>(make_shared<Params>())},
+       fluidSynthModel{sharedParams}/*,
+       fluidSynthModel{*this},
        pluginEditor(nullptr)*/
 {
     initialiseSynth();
@@ -47,10 +48,10 @@ void JuicySFAudioProcessor::initialiseSynth() {
 
     // Add some voices...
     for (int i = numVoices; --i >= 0;)
-        synth.addVoice (new SoundfontSynthVoice(fluidSynthModel.getSynth()));
+        synth.addVoice(new SoundfontSynthVoice(fluidSynthModel.getSynth()));
 
     // ..and give the synth a sound to play
-    synth.addSound (new SoundfontSynthSound());
+    synth.addSound(new SoundfontSynthSound());
 }
 
 //==============================================================================
@@ -168,6 +169,11 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
         // responsibilities of SoundfontSynthVoice.
         // well, by that logic maybe I should move program change onto Voice. but it doesn't feel like a per-voice concern.
         if (m.isController()) {
+            // shared_ptr<fluid_midi_event_t> midi_event{
+            //     new_fluid_midi_event(),
+            //     [](fluid_midi_event_t *event) {
+            //         delete_fluid_midi_event(midi_event);
+            //     }};
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
             fluid_midi_event_set_type(midi_event, static_cast<int>(CONTROL_CHANGE));
             fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
@@ -175,6 +181,13 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             fluid_midi_event_set_value(midi_event, m.getControllerValue());
             fluid_synth_handle_midi_event(fluidSynth, midi_event);
             delete_fluid_midi_event(midi_event);
+            
+            sharedParams->acceptMidiControlEvent(m.getControllerNumber(), m.getControllerValue());
+            
+            AudioProcessorEditor* editor{getActiveEditor()};
+            jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
+            ExposesComponents* exposesComponents{dynamic_cast<ExposesComponents*>(editor)};
+            exposesComponents->getSliders().acceptMidiControlEvent(m.getControllerNumber(), m.getControllerValue());
         } else if (m.isProgramChange()) {
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
             fluid_midi_event_set_type(midi_event, static_cast<int>(PROGRAM_CHANGE));
@@ -266,14 +279,8 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
     // as intermediaries to make it easy to save and load complex data.
 
     // Create an outer XML element..
-    XmlElement xml ("MYPLUGINSETTINGS");
-
-    // add some attributes to it..
-    xml.setAttribute ("uiWidth", lastUIWidth);
-    xml.setAttribute ("uiHeight", lastUIHeight);
-    xml.setAttribute ("soundFontPath", soundFontPath);
-    xml.setAttribute ("preset", lastPreset);
-    xml.setAttribute ("bank", lastBank);
+    XmlElement xml{"MYPLUGINSETTINGS"};
+    sharedParams->setAttributesOnXml(xml);
 
 //    list<StateChangeSubscriber*>::iterator p;
 //    for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
@@ -294,7 +301,7 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
     // This getXmlFromBinary() helper function retrieves our XML from the binary blob..
-    ScopedPointer<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    shared_ptr<XmlElement> xmlState{getXmlFromBinary(data, sizeInBytes)};
 
     if (xmlState != nullptr)
     {
@@ -307,26 +314,27 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
 //            }
 
             // ok, now pull out our last window size..
-            lastUIWidth  = jmax (xmlState->getIntAttribute ("uiWidth", lastUIWidth), 400);
-            lastUIHeight = jmax (xmlState->getIntAttribute ("uiHeight", lastUIHeight), 300);
-            soundFontPath = xmlState->getStringAttribute ("soundFontPath", soundFontPath);
-            lastPreset = xmlState->getIntAttribute ("preset", lastPreset);
-            lastBank = xmlState->getIntAttribute ("bank", lastBank);
+            sharedParams->loadAttributesFromXml(xmlState);
 
             // Now reload our parameters..
             for (auto* param : getParameters())
                 if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param))
                     p->setValue ((float) xmlState->getDoubleAttribute (p->paramID, p->getValue()));
 
-            fluidSynthModel.onFileNameChanged(soundFontPath, lastBank, lastPreset);
+            fluidSynthModel.onFileNameChanged(
+                sharedParams->getSoundFontPath(),
+                sharedParams->getBank(),
+                sharedParams->getPreset());
 
-            AudioProcessorEditor* editor = getActiveEditor();
+            AudioProcessorEditor* editor{getActiveEditor()};
             if (editor != nullptr) {
-                editor->setSize(lastUIWidth, lastUIHeight);
+                editor->setSize(
+                    sharedParams->getUiWidth(),
+                    sharedParams->getUiHeight());
 
                 jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
                 ExposesComponents* exposesComponents = dynamic_cast<ExposesComponents*> (editor);
-                exposesComponents->getFilePicker().setDisplayedFilePath(soundFontPath);
+                exposesComponents->getFilePicker().setDisplayedFilePath(sharedParams->getSoundFontPath());
             }
 
 //            const String& currentSoundFontAbsPath = fluidSynthModel->getCurrentSoundFontAbsPath();
@@ -352,26 +360,6 @@ bool JuicySFAudioProcessor::supportsDoublePrecisionProcessing() const {
 
 FluidSynthModel* JuicySFAudioProcessor::getFluidSynthModel() {
     return &fluidSynthModel;
-}
-
-void JuicySFAudioProcessor::setSoundFontPath(const String& value) {
-    soundFontPath = value;
-}
-
-String& JuicySFAudioProcessor::getSoundFontPath() {
-    return soundFontPath;
-}
-int JuicySFAudioProcessor::getPreset() {
-    return lastPreset;
-}
-int JuicySFAudioProcessor::getBank() {
-    return lastBank;
-}
-void JuicySFAudioProcessor::setPreset(int preset) {
-    lastPreset = preset;
-}
-void JuicySFAudioProcessor::setBank(int bank) {
-    lastBank = bank;
 }
 
 //==============================================================================

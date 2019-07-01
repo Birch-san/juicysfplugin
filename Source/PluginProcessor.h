@@ -21,8 +21,7 @@ using namespace std;
 //==============================================================================
 /**
 */
-class JuicySFAudioProcessor  : public AudioProcessor,
-                               public SharesParams
+class JuicySFAudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
@@ -67,24 +66,13 @@ public:
 
     MidiKeyboardState keyboardState;
 
-    virtual void setSoundFontPath(const String& value) override;
-    virtual String& getSoundFontPath() override;
-    virtual int getPreset() override;
-    virtual void setPreset(int preset) override;
-    virtual int getBank() override;
-    virtual void setBank(int bank) override;
+    shared_ptr<SharesParams> sharedParams;
 
 //    void subscribeToStateChanges(StateChangeSubscriber* subscriber);
 //    void unsubscribeFromStateChanges(StateChangeSubscriber* subscriber);
 
-    int lastUIWidth, lastUIHeight;
-
 private:
     void initialiseSynth();
-
-    String soundFontPath;
-    int lastPreset;
-    int lastBank;
 
     FluidSynthModel fluidSynthModel;
     fluid_synth_t* fluidSynth;

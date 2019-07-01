@@ -19,7 +19,7 @@ using namespace std;
 
 class FluidSynthModel {
 public:
-    FluidSynthModel(SharesParams& p);
+    FluidSynthModel(shared_ptr<SharesParams> sharedParams);
     ~FluidSynthModel();
 
     fluid_synth_t* getSynth();
@@ -65,7 +65,7 @@ public:
     const String& getCurrentSoundFontAbsPath();
 
 private:
-    SharesParams& sharesParams;
+    shared_ptr<SharesParams> sharedParams;
 
     fluid_synth_t* synth;
     fluid_settings_t* settings;

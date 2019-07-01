@@ -8,15 +8,15 @@
 
 using namespace std;
 
-FluidSynthModel::FluidSynthModel(SharesParams& p)
-        : sharesParams(p),
-          synth(nullptr),
-          settings(nullptr),
-          currentSoundFontAbsPath(),
-          currentSampleRate(44100),
-          initialised(false),
-          sfont_id(0),
-          channel(0)/*,
+FluidSynthModel::FluidSynthModel(shared_ptr<SharesParams> sharedParams)
+        : sharedParams{sharedParams},
+          synth{nullptr},
+          settings{nullptr},
+          currentSoundFontAbsPath{},
+          currentSampleRate{44100},
+          initialised{false},
+          sfont_id{0},
+          channel{0}/*,
           mod(nullptr)*/
 
 {}
@@ -51,9 +51,9 @@ void FluidSynthModel::initialise() {
     synth = new_fluid_synth(settings);
     fluid_synth_set_sample_rate(synth, currentSampleRate);
 
-    if (sharesParams.getSoundFontPath().isNotEmpty()) {
-        loadFont(sharesParams.getSoundFontPath());
-        changePreset(sharesParams.getBank(), sharesParams.getPreset());
+    if (sharedParams->getSoundFontPath().isNotEmpty()) {
+        loadFont(sharedParams->getSoundFontPath());
+        changePreset(sharedParams->getBank(), sharedParams->getPreset());
     }
 
     fluid_synth_set_gain(synth, 2.0);
@@ -189,8 +189,8 @@ void FluidSynthModel::changePreset(int bank, int preset) {
         preset = bankAndPreset->getPreset();
     }
     changePresetImpl(bank, preset);
-    sharesParams.setPreset(preset);
-    sharesParams.setBank(bank);
+    sharedParams->setPreset(preset);
+    sharedParams->setBank(bank);
 }
 
 void FluidSynthModel::changePresetImpl(int bank, int preset) {
@@ -272,7 +272,7 @@ void FluidSynthModel::onFileNameChanged(const String &absPath, int bank, int pre
     }
     unloadAndLoadFont(absPath);
     changePreset(bank, preset);
-    sharesParams.setSoundFontPath(absPath);
+    sharedParams->setSoundFontPath(absPath);
     eventListeners.call(&FluidSynthModel::Listener::fontChanged, this, absPath);
 }
 
