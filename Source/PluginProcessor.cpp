@@ -14,6 +14,7 @@
 #include "SoundfontSynthSound.h"
 #include "ExposesComponents.h"
 #include "MidiConstants.h"
+#include "Util.h"
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
@@ -161,7 +162,7 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     
     // TODO: factor into a MidiCollector
     for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);) {
-        Logger::outputDebugString ( m.getDescription() );
+        DEBUG_PRINT ( m.getDescription() );
         
         // explicitly not handling note_on/off, or pitch_bend, because these are (for better or worse)
         // responsibilities of SoundfontSynthVoice.
@@ -181,6 +182,13 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             fluid_midi_event_set_program(midi_event, m.getProgramChangeNumber());
             fluid_synth_handle_midi_event(fluidSynth, midi_event);
             delete_fluid_midi_event(midi_event);
+        } else if (m.isPitchWheel()) {
+            fluid_midi_event_t *midi_event(new_fluid_midi_event());
+            fluid_midi_event_set_type(midi_event, static_cast<int>(PITCH_BEND));
+            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
+            fluid_midi_event_set_pitch(midi_event, m.getPitchWheelValue());
+            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            delete_fluid_midi_event(midi_event);
         } else if (m.isChannelPressure()) {
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
             fluid_midi_event_set_type(midi_event, static_cast<int>(CHANNEL_PRESSURE));
@@ -196,11 +204,11 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             fluid_midi_event_set_value(midi_event, m.getAfterTouchValue());
             fluid_synth_handle_midi_event(fluidSynth, midi_event);
             delete_fluid_midi_event(midi_event);
-        } else if (m.isMetaEvent()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSTEM_RESET));
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
-            delete_fluid_midi_event(midi_event);
+//        } else if (m.isMetaEvent()) {
+//            fluid_midi_event_t *midi_event(new_fluid_midi_event());
+//            fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSTEM_RESET));
+//            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+//            delete_fluid_midi_event(midi_event);
         } else if (m.isSysEx()) {
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
             fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSEX));

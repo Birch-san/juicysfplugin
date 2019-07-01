@@ -4,6 +4,7 @@
 
 #include "SoundfontSynthVoice.h"
 #include "SoundfontSynthSound.h"
+#include "Util.h"
 
 SoundfontSynthVoice::SoundfontSynthVoice(fluid_synth_t* synth)
 : tailOff (0.0),
@@ -24,7 +25,7 @@ void SoundfontSynthVoice::startNote(
         SynthesiserSound* sound,
         int /*currentPitchWheelPosition*/) {
     this->midiNoteNumber = midiNoteNumber;
-    Logger::outputDebugString ( juce::String::formatted("JUCE noteon: %d, %d\n", midiNoteNumber, velocity) );
+    DEBUG_PRINT ( juce::String::formatted("JUCE noteon: %d, %d\n", midiNoteNumber, velocity) );
     fluid_synth_noteon(synth, 0, midiNoteNumber, static_cast<int>(velocity * 127));
 
 //    currentAngle = 0.0;
@@ -56,7 +57,7 @@ void SoundfontSynthVoice::stopNote (float /*velocity*/, bool allowTailOff) {
 //        clearCurrentNote();
 //        angleDelta = 0.0;
 //    }
-    Logger::outputDebugString ( juce::String("JUCE noteoff\n") );
+    DEBUG_PRINT ( juce::String("JUCE noteoff\n") );
     clearCurrentNote();
     fluid_synth_noteoff(synth, 0, this->midiNoteNumber);
 }
@@ -64,13 +65,17 @@ void SoundfontSynthVoice::stopNote (float /*velocity*/, bool allowTailOff) {
 // receives input as MIDI 0 to 16383, with 8192 being center
 // this is also exactly the input fluidsynth requires
 void SoundfontSynthVoice::pitchWheelMoved (int newValue) {
-    Logger::outputDebugString ( juce::String::formatted("Pitch wheel: %d\n", newValue) );
-    fluid_synth_pitch_bend(synth, 0, newValue);
+//    fluid_synth_pitch_bend(synth, 0, newValue);
+//    int ppitch_bend;
+//    fluid_synth_get_pitch_bend(synth, 0, &ppitch_bend);
+//    int ppitch_bend_sens;
+//    fluid_synth_get_pitch_wheel_sens(synth, 0, &ppitch_bend_sens);
+//    Logger::outputDebugString ( juce::String::formatted("Pitch wheel: %d %d %d\n", newValue, ppitch_bend, ppitch_bend_sens) );
 }
 
 void SoundfontSynthVoice::controllerMoved (int controllerNumber, int newValue) {
     // this seems to be "program change" event
-    Logger::outputDebugString ( juce::String::formatted("Controller moved: %d, %d\n", controllerNumber, newValue) );
+    DEBUG_PRINT ( juce::String::formatted("Controller moved: %d, %d\n", controllerNumber, newValue) );
 }
 
 void SoundfontSynthVoice::renderNextBlock (AudioBuffer<float>& outputBuffer, int startSample, int numSamples) {
