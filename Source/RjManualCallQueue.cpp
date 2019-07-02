@@ -19,8 +19,7 @@
  doing memory allocation, which may result in a lock.
  */
 
-template <int RingBufferSize>
-RjManualCallQueue<RingBufferSize>::RjManualCallQueue()
+RjManualCallQueue::RjManualCallQueue(int RingBufferSize)
 : fifo(RingBufferSize)
 {
     // TODO: data should be aligned to a cache line boundary.
@@ -29,207 +28,98 @@ RjManualCallQueue<RingBufferSize>::RjManualCallQueue()
     fifodata = new char[ RingBufferSize * 2 ];
 }
     
-template <int RingBufferSize>
-RjManualCallQueue<RingBufferSize>::~RjManualCallQueue()
+RjManualCallQueue::~RjManualCallQueue()
 {
     delete [] fifodata;
 }
 
 
-template <int RingBufferSize>
-bool RjManualCallQueue<RingBufferSize>::isEmpty() {
+bool RjManualCallQueue::isEmpty() {
     return fifo.getTotalSize() == fifo.getFreeSpace();
 }
 
-template <int RingBufferSize, class Functor>
-bool RjManualCallQueue<RingBufferSize>::Work<Functor>::callf(Functor const & f) {
+template <class Functor>
+bool RjManualCallQueue::callf(Functor const & f) {
     size_t allocSize = roundUpToCacheLineBoundary(sizeof(WorkItem<Functor>));
     
     int idx1, idx2, sz1, sz2;
-    fifo.prepareToWrite(allocSize, idx1, sz1, idx2, sz2);
+    fifo.prepareToWrite(static_cast<int>(allocSize), idx1, sz1, idx2, sz2);
     
     if (sz1+sz2 < allocSize) return false;
     
     // double size buffer means we can ignore idx2 and sz2
     new (fifodata+idx1) WorkItem<Functor> (f);
 
-    fifo.finishedWrite(allocSize);
+    fifo.finishedWrite(static_cast<int>(allocSize));
     
     return true;
 }
     
+bool RjManualCallQueue::synchronize() {
+    bool didSomething = false;
     
-    
-    bool synchronize() {
+    while (fifo.getNumReady() > 0) {
         
-        bool didSomething = false;
+        int idx1, idx2, sz1, sz2;
+        fifo.prepareToRead(1, idx1, sz1, idx2, sz2);
+        didSomething = true;
         
+        Work *w = reinterpret_cast<Work*>(fifodata+idx1);
         
+        // notice only one function pointer invocation here, not two virtual function calls
+        size_t sizeofWorkItem = (*w->execAndDestructFn) (w);
+        size_t allocSize = roundUpToCacheLineBoundary(sizeofWorkItem);
         
-        while (fifo.getNumReady() > 0) {
-            
-            int idx1, idx2, sz1, sz2;
-            
-            fifo.prepareToRead(1, idx1, sz1, idx2, sz2);
-            
-            didSomething = true;
-            
-            
-            
-            Work *w = reinterpret_cast<Work*>(fifodata+idx1);
-            
-            // notice only one function pointer invocation here, not two virtual function calls
-            
-            size_t sizeofWorkItem = (*w->execAndDestructFn) (w);
-            
-            size_t allocSize = roundUpToCacheLineBoundary(sizeofWorkItem);
-            
-            
-            fifo.finishedRead(allocSize);
-            
-        }
-        
-        return didSomething;
-        
+        fifo.finishedRead(static_cast<int>(allocSize));
     }
     
+    return didSomething;
+}
+
+RjManualCallQueue::Work::Work(WorkExecAndDestructFunctionPtr f) :
+execAndDestructFn(f)
+{}
+
+/** WorkItem template - extends Work for each type of Functor */
+template <class Functor>
+RjManualCallQueue::WorkItem<Functor>::WorkItem(Functor const & fun) :
+Work(&WorkItem::myExecAndDestruct),
+myCall(fun)
+{}
+
+template <class Functor>
+size_t RjManualCallQueue::WorkItem<Functor>::myExecAndDestruct(void *workItemStorage) {
+    // cast to *concrete* work item pointer
+    WorkItem *that = reinterpret_cast<WorkItem*>(workItemStorage);
+    that->myCall();
+    that->~WorkItem(); // invoke concrete dtor (destructs functor)
+    
+    return sizeof(WorkItem);
+}
+    
+/* For clarity (maybe) what's happening here is:
+ 1  There are instances of the templated class
+ WorkItem for each type of Functor, and hence
+ multiple versions of myExecAndDestruct.
+ 
+ 2  When the WorkItem is created the
+ Work::execAndDestructFn pointer is set to
+ point to the appropriate instance of
+ myExecAndDestruct - the pointer is passed
+ to the Work superclass constructor by the
+ WorkItem<Functor> class.
+ 
+ To call we:
+ -  Get the data from the fifo.
+ -  Cast it to be a Work.
+ -  Call the appropriate instance of myExecAndDestruct
+ 
+ via the execAndDestructFn pointer.
+*/
     
     
-    
-    
-private:
-    
-    
-    
-    // Avoid a vtable and two separate virtual function
-    
-    // dispatches (operator() and destructor) by putting
-    
-    // everything into a single function and implementing
-    
-    // our own virtual function call.
-    
-    
-    
-    // type for pointer to a function that executes work,
-    
-    // calls the destructor for the and returns size of
-    
-    // concrete instance.
-    
-    typedef size_t (*WorkExecAndDestructFunctionPtr)( void *workItemStorage );
-    
-    
-    
-    class Work {
-        
-        // NOTE: no vtable.
-        
-    public:
-        
-        Work( WorkExecAndDestructFunctionPtr f ) :
-        
-        execAndDestructFn(f)
-        
-        { }
-        
-        WorkExecAndDestructFunctionPtr execAndDestructFn;
-        
-    };
-    
-    
-    
-    /** WorkItem template - extends Work for each type of Functor */
-    
-    template <class Functor>
-    
-    struct WorkItem : public Work {
-        
-        explicit WorkItem(Functor const & fun) :
-        
-        Work(&WorkItem::myExecAndDestruct),
-        
-        myCall(fun)
-        
-        {}
-        
-        
-        
-    private:
-        
-        static size_t myExecAndDestruct(void *workItemStorage) {
-            
-            // cast to *concrete* work item pointer
-            
-            WorkItem *that = reinterpret_cast<WorkItem*>(workItemStorage);
-            
-            that->myCall();
-            
-            that->~WorkItem(); // invoke concrete dtor (destructs functor)
-            
-            return sizeof(WorkItem);
-            
-        }
-        
-        
-        
-        Functor myCall;
-        
-    };
-    
-    
-    
-    /* For clarity (maybe) what's happening here is:
-     
-     1  There are instances of the templated class
-     
-     WorkItem for each type of Functor, and hence
-     
-     multiple versions of myExecAndDestruct.
-     
-     2  When the WorkItem is created the
-     
-     Work::execAndDestructFn pointer is set to
-     
-     point to the appropriate instance of
-     
-     myExecAndDestruct - the pointer is passed
-     
-     to the Work superclass constructor by the
-     
-     WorkItem<Functor> class.
-     
-     
-     
-     To call we:
-     
-     -  Get the data from the fifo.
-     
-     -  Cast it to be a Work.
-     
-     -  Call the appropriate instance of myExecAndDestruct
-     
-     via the execAndDestructFn pointer.
-     
-     */
-    
-    
-    
-    AbstractFifo fifo;
-    
-    char *fifodata;
-    
-    
-    // Used to avoid false sharing and to give
-    
-    // correct alignment to embedded structs.
-    
-    size_t roundUpToCacheLineBoundary( size_t x )
-    
-    {
-        
-        return x; // TODO
-        
-    }
-    
-};
+// Used to avoid false sharing and to give
+// correct alignment to embedded structs.
+size_t RjManualCallQueue::roundUpToCacheLineBoundary(size_t x) {
+    return x; // TODO
+}

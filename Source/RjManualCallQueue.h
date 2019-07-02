@@ -18,10 +18,9 @@
  doing memory allocation, which may result in a lock.
  */
 
-template <int RingBufferSize>
 class RjManualCallQueue {
 public:
-    RjManualCallQueue();
+    RjManualCallQueue(int RingBufferSize);
     ~RjManualCallQueue();
     
     bool isEmpty();
