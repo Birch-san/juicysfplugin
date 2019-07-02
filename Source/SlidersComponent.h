@@ -6,6 +6,7 @@
 #include "SlidersFragment.h"
 
 using namespace std;
+using SliderAttachment = AudioProcessorValueTreeState::SliderAttachment;
 
 class SlidersComponent : public Component,
                          public SlidersFragment
@@ -13,6 +14,7 @@ class SlidersComponent : public Component,
 public:
     SlidersComponent(
         shared_ptr<SharesParams> sharedParams,
+        AudioProcessorValueTreeState& state,
         FluidSynthModel* fluidSynthModel);
     ~SlidersComponent();
 
@@ -34,29 +36,36 @@ private:
     std::function<void()> makeSliderListener(Slider& slider, int controller);
 
     shared_ptr<SharesParams> sharedParams;
+    AudioProcessorValueTreeState& state;
     FluidSynthModel* fluidSynthModel;
 
     GroupComponent envelopeGroup;
 
     Slider attackSlider;
     Label attackLabel;
+    unique_ptr<SliderAttachment> attackSliderAttachment;
 
     Slider decaySlider;
     Label decayLabel;
+    unique_ptr<SliderAttachment> decaySliderAttachment;
 
     Slider sustainSlider;
     Label sustainLabel;
+    unique_ptr<SliderAttachment> sustainSliderAttachment;
 
     Slider releaseSlider;
     Label releaseLabel;
+    unique_ptr<SliderAttachment> releaseSliderAttachment;
 
     GroupComponent filterGroup;
 
     Slider filterCutOffSlider;
     Label filterCutOffLabel;
+    unique_ptr<SliderAttachment> filterCutOffSliderAttachment;
 
     Slider filterResonanceSlider;
     Label filterResonanceLabel;
+    unique_ptr<SliderAttachment> filterResonanceSliderAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SlidersComponent)
 };

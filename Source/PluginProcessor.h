@@ -74,6 +74,8 @@ public:
 private:
     void initialiseSynth();
 
+    AudioProcessorValueTreeState state;
+
     FluidSynthModel fluidSynthModel;
     fluid_synth_t* fluidSynth;
     Synthesiser synth;
@@ -82,6 +84,8 @@ private:
 //    AudioProcessorEditor* pluginEditor;
 
 //    list<StateChangeSubscriber*> stateChangeSubscribers;
+
+    AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
     static BusesProperties getBusesProperties();
 

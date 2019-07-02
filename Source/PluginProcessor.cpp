@@ -19,19 +19,42 @@
 #include "Params.h"
 
 using namespace std;
+using Parameter = AudioProcessorValueTreeState::Parameter;
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 
 //==============================================================================
 JuicySFAudioProcessor::JuicySFAudioProcessor()
-     : AudioProcessor{getBusesProperties()},
-       sharedParams{static_pointer_cast<SharesParams>(make_shared<Params>())},
-       fluidSynthModel{sharedParams}/*,
-       fluidSynthModel{*this},
-       pluginEditor(nullptr)*/
+: AudioProcessor{getBusesProperties()}
+, sharedParams{static_pointer_cast<SharesParams>(make_shared<Params>())}
+, state{*this, nullptr,
+    { "PARAMETERS" /* MYPLUGINSETTINGS */ },
+    createParameterLayout()
+  }
+, fluidSynthModel{sharedParams}
+//, fluidSynthModel{*this}
+//, pluginEditor(nullptr)
 {
     initialiseSynth();
+}
+
+AudioProcessorValueTreeState::ParameterLayout JuicySFAudioProcessor::createParameterLayout() {
+    // std::vector<std::unique_ptr<AudioParameterInt>> params;
+
+    // for (int i = 1; i < 9; ++i)
+    //     params.push_back (std::make_unique<AudioParameterInt> (String (i), String (i), 0, i, 0));
+
+    vector<unique_ptr<AudioParameterInt>> params{
+        make_unique<AudioParameterInt>("attack", "volume envelope attack time", 0, 127, 0, "A" ),
+        make_unique<AudioParameterInt>("decay", "volume envelope sustain attentuation", 0, 127, 0, "D" ),
+        make_unique<AudioParameterInt>("sustain", "volume envelope decay time", 0, 127, 0, "S" ),
+        make_unique<AudioParameterInt>("release", "volume envelope release time", 0, 127, 0, "R" ),
+        make_unique<AudioParameterInt>("filterCutOff", "low-pass filter cut-off frequency", 0, 127, 0, "Cut" ),
+        make_unique<AudioParameterInt>("filterResonance", "low-pass filter resonance attentuation", 0, 127, 0, "Res" ),
+    };
+    
+    return { params.begin(), params.end() };
 }
 
 JuicySFAudioProcessor::~JuicySFAudioProcessor()
@@ -268,7 +291,7 @@ bool JuicySFAudioProcessor::hasEditor() const
 AudioProcessorEditor* JuicySFAudioProcessor::createEditor()
 {
     // grab a raw pointer to it for our own use
-    return /*pluginEditor = */new JuicySFAudioProcessorEditor (*this);
+    return /*pluginEditor = */new JuicySFAudioProcessorEditor (*this, state);
 }
 
 //==============================================================================
