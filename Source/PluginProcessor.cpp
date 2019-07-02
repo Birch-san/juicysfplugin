@@ -187,7 +187,11 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             AudioProcessorEditor* editor{getActiveEditor()};
             jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
             ExposesComponents* exposesComponents{dynamic_cast<ExposesComponents*>(editor)};
-            exposesComponents->getSliders().acceptMidiControlEvent(m.getControllerNumber(), m.getControllerValue());
+            {
+                MessageManagerLock mmlock;
+                exposesComponents->getSliders().acceptMidiControlEvent(m.getControllerNumber(), m.getControllerValue());
+            }
+            
         } else if (m.isProgramChange()) {
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
             fluid_midi_event_set_type(midi_event, static_cast<int>(PROGRAM_CHANGE));

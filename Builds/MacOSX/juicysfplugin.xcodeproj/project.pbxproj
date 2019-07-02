@@ -35,6 +35,7 @@
 		2E77C6FAF1BCDB9EB29D20B9 /* PluginProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53CAB963D5051C786D3A52D /* PluginProcessor.cpp */; };
 		305606C42BB0F2A12D382D34 /* SoundfontSynthVoice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B5A057FEC371053E83A73E47 /* SoundfontSynthVoice.cpp */; };
 		35099D9322CAA87D00CD4523 /* Params.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35099D9122CAA87D00CD4523 /* Params.cpp */; };
+		35099D9922CBF66400CD4523 /* RjManualCallQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35099D9722CBF66400CD4523 /* RjManualCallQueue.cpp */; };
 		358E458C22BEE5090087ED8D /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 78CC5234CCFE3B170585DDAD /* RecentFilesMenuTemplate.nib */; };
 		358E458D22BEE5090087ED8D /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1616112041466F7324D7E19 /* Accelerate.framework */; };
 		358E458E22BEE5090087ED8D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28CA077CDD21D0FEC66FC290 /* AudioToolbox.framework */; };
@@ -291,6 +292,8 @@
 		35099D9422CAB0A400CD4523 /* GuiConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GuiConstants.h; path = ../../Source/GuiConstants.h; sourceTree = "<group>"; };
 		35099D9522CAB7CD00CD4523 /* SlidersFragment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SlidersFragment.h; path = ../../Source/SlidersFragment.h; sourceTree = "<group>"; };
 		35099D9622CAC3C800CD4523 /* SharesParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SharesParams.h; path = ../../Source/SharesParams.h; sourceTree = "<group>"; };
+		35099D9722CBF66400CD4523 /* RjManualCallQueue.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RjManualCallQueue.cpp; path = ../../Source/RjManualCallQueue.cpp; sourceTree = "<group>"; };
+		35099D9822CBF66400CD4523 /* RjManualCallQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RjManualCallQueue.h; path = ../../Source/RjManualCallQueue.h; sourceTree = "<group>"; };
 		35880F58CB540AD30D1B0ED3 /* TablesComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TablesComponent.h; path = ../../Source/TablesComponent.h; sourceTree = SOURCE_ROOT; };
 		358E45B422BEE53A0087ED8D /* libpcre.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpcre.1.dylib; sourceTree = "<group>"; };
 		358E45B522BEE53A0087ED8D /* libvorbisenc.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libvorbisenc.2.dylib; sourceTree = "<group>"; };
@@ -565,6 +568,8 @@
 				35099D9222CAA87D00CD4523 /* Params.h */,
 				35099D9422CAB0A400CD4523 /* GuiConstants.h */,
 				35099D9522CAB7CD00CD4523 /* SlidersFragment.h */,
+				35099D9722CBF66400CD4523 /* RjManualCallQueue.cpp */,
+				35099D9822CBF66400CD4523 /* RjManualCallQueue.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -964,6 +969,7 @@
 				C4D76C968347E2ACBAB5B6E7 /* include_juce_audio_devices.mm in Sources */,
 				35099D9322CAA87D00CD4523 /* Params.cpp in Sources */,
 				51C9DBCA840E334DB1804133 /* include_juce_audio_formats.mm in Sources */,
+				35099D9922CBF66400CD4523 /* RjManualCallQueue.cpp in Sources */,
 				358E45FB22C80DCA0087ED8D /* SlidersComponent.cpp in Sources */,
 				5E5B833BBDD65F0D4271CA52 /* include_juce_audio_plugin_client_utils.cpp in Sources */,
 				C59AF9E198C59F67039F12BB /* include_juce_audio_plugin_client_VST_utils.mm in Sources */,
