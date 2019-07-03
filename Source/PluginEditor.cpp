@@ -13,15 +13,15 @@
 #include "GuiConstants.h"
 
 //==============================================================================
-JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor(JuicySFAudioProcessor& p, AudioProcessorValueTreeState& state)
+JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor(JuicySFAudioProcessor& p, AudioProcessorValueTreeState& valueTreeState)
     : AudioProcessorEditor{&p},
       processor{p},
-      state{state},
+      valueTreeState{valueTreeState},
       sharedParams{p.sharedParams},
       midiKeyboard{p.keyboardState, SurjectiveMidiKeyboardComponent::horizontalKeyboard},
       tablesComponent{p.getFluidSynthModel()},
       filePicker{p.getFluidSynthModel()},
-      slidersComponent{p.sharedParams, state, p.getFluidSynthModel()}
+      slidersComponent{p.sharedParams, valueTreeState, p.getFluidSynthModel()}
 {
     // set resize limits for this plug-in
     setResizeLimits(

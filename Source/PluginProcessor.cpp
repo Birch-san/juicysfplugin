@@ -17,6 +17,7 @@
 #include "Util.h"
 #include "SharesParams.h"
 #include "Params.h"
+#include "MidiConstants.h"
 
 using namespace std;
 using Parameter = AudioProcessorValueTreeState::Parameter;
@@ -28,7 +29,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 JuicySFAudioProcessor::JuicySFAudioProcessor()
 : AudioProcessor{getBusesProperties()}
 , sharedParams{static_pointer_cast<SharesParams>(make_shared<Params>())}
-, state{*this, nullptr,
+, valueTreeState{*this, nullptr,
     { "PARAMETERS" /* MYPLUGINSETTINGS */ },
     createParameterLayout()
   }
@@ -45,7 +46,8 @@ AudioProcessorValueTreeState::ParameterLayout JuicySFAudioProcessor::createParam
     // for (int i = 1; i < 9; ++i)
     //     params.push_back (std::make_unique<AudioParameterInt> (String (i), String (i), 0, i, 0));
 
-    vector<unique_ptr<AudioParameterInt>> params{
+    // https://stackoverflow.com/a/8469002/5257399
+    unique_ptr<AudioParameterInt> params[] = {
         make_unique<AudioParameterInt>("attack", "volume envelope attack time", 0, 127, 0, "A" ),
         make_unique<AudioParameterInt>("decay", "volume envelope sustain attentuation", 0, 127, 0, "D" ),
         make_unique<AudioParameterInt>("sustain", "volume envelope decay time", 0, 127, 0, "S" ),
@@ -54,7 +56,10 @@ AudioProcessorValueTreeState::ParameterLayout JuicySFAudioProcessor::createParam
         make_unique<AudioParameterInt>("filterResonance", "low-pass filter resonance attentuation", 0, 127, 0, "Res" ),
     };
     
-    return { params.begin(), params.end() };
+    return {
+        make_move_iterator(begin(params)),
+        make_move_iterator(end(params))
+    };
 }
 
 JuicySFAudioProcessor::~JuicySFAudioProcessor()
@@ -205,12 +210,53 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             fluid_synth_handle_midi_event(fluidSynth, midi_event);
             delete_fluid_midi_event(midi_event);
             
-            sharedParams->acceptMidiControlEvent(m.getControllerNumber(), m.getControllerValue());
+            switch(static_cast<fluid_midi_control_change>(m.getControllerNumber())) {
+                case SOUND_CTRL2: { // MIDI CC 71 Timbre/Harmonic Intensity (filter resonance)
+                    valueTreeState.state.setProperty({"filterResonance"}, m.getControllerValue(), nullptr);
+                    break;
+                }
+                case SOUND_CTRL3: { // MIDI CC 72 Release time
+//                    valueTreeState.state.setProperty({"release"}, m.getControllerValue(), nullptr);
+//                    valueTreeState.state.flushParameterValuesToValueTree();
+//                    jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
+                    RangedAudioParameter *param {valueTreeState.getParameter("release")};
+//                    dynamic_cast<AudioParameterInt&>(*param)
+                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+//                    castParam->setValue(m.getControllerValue());
+//                    castParam->
+//                    param->setValue(m.getControllerValue());
+//                    param->setValueNotifyingHost(m.getControllerValue());
+                    *castParam = m.getControllerValue();
+                    break;
+                }
+                case SOUND_CTRL4: { // MIDI CC 73 Attack time
+                    valueTreeState.state.setProperty({"attack"}, m.getControllerValue(), nullptr);
+                    break;
+                }
+                case SOUND_CTRL5: { // MIDI CC 74 Brightness (cutoff frequency, FILTERFC)
+                    valueTreeState.state.setProperty({"filterCutOff"}, m.getControllerValue(), nullptr);
+                    break;
+                }
+                case SOUND_CTRL6: { // MIDI CC 75 Decay Time
+                    valueTreeState.state.setProperty({"decay"}, m.getControllerValue(), nullptr);
+                    break;
+                }
+                case SOUND_CTRL10: { // MIDI CC 79 undefined
+                    valueTreeState.state.setProperty({"sustain"}, m.getControllerValue(), nullptr);
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
             
-            AudioProcessorEditor* editor{getActiveEditor()};
-            jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
-            ExposesComponents* exposesComponents{dynamic_cast<ExposesComponents*>(editor)};
-            exposesComponents->getSliders().acceptMidiControlEvent(m.getControllerNumber(), m.getControllerValue());
+            // sharedParams->acceptMidiControlEvent(m.getControllerNumber(), m.getControllerValue());
+            
+            // AudioProcessorEditor* editor{getActiveEditor()};
+            // jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
+            // ExposesComponents* exposesComponents{dynamic_cast<ExposesComponents*>(editor)};
+            // exposesComponents->getSliders().acceptMidiControlEvent(m.getControllerNumber(), m.getControllerValue());
         } else if (m.isProgramChange()) {
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
             fluid_midi_event_set_type(midi_event, static_cast<int>(PROGRAM_CHANGE));
@@ -291,7 +337,7 @@ bool JuicySFAudioProcessor::hasEditor() const
 AudioProcessorEditor* JuicySFAudioProcessor::createEditor()
 {
     // grab a raw pointer to it for our own use
-    return /*pluginEditor = */new JuicySFAudioProcessorEditor (*this, state);
+    return /*pluginEditor = */new JuicySFAudioProcessorEditor (*this, valueTreeState);
 }
 
 //==============================================================================

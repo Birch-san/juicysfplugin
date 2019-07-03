@@ -74,7 +74,7 @@ public:
 private:
     void initialiseSynth();
 
-    AudioProcessorValueTreeState state;
+    AudioProcessorValueTreeState valueTreeState;
 
     FluidSynthModel fluidSynthModel;
     fluid_synth_t* fluidSynth;

@@ -49,7 +49,7 @@ private:
     // access the processor object that created it.
     JuicySFAudioProcessor& processor;
 
-    AudioProcessorValueTreeState& state;
+    AudioProcessorValueTreeState& valueTreeState;
     shared_ptr<SharesParams> sharedParams;
 
     SurjectiveMidiKeyboardComponent midiKeyboard;
