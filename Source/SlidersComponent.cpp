@@ -9,10 +9,20 @@
 #include "SlidersComponent.h"
 #include "FluidSynthModel.h"
 #include "MidiConstants.h"
+#include "Util.h"
 using SliderAttachment = AudioProcessorValueTreeState::SliderAttachment;
 
 std::function<void()> SlidersComponent::makeSliderListener(Slider& slider, int controller/*, std::function<void()> callback*/) {
     return [this, controller, &slider]{
+        
+        RangedAudioParameter *param {valueTreeState.getParameter("release")};
+        jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+        AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+        int value {castParam->get()};
+        
+        String s{"slider "};
+        s << slider.getComponentID() << ", controller " << controller << ", value " << slider.getValue() << ", xmlReleaseValue " << value;
+        DEBUG_PRINT(s);
 //        slider.setValue(slider.getValue(), NotificationType::dontSendNotification);
         fluidSynthModel->setControllerValue(controller, slider.getValue());
         // callback();
@@ -121,37 +131,37 @@ SlidersComponent::SlidersComponent(
 
     attackSlider.setSliderStyle(style);
     attackSlider.setRange(rangeMin, rangeMax, rangeStep);
-    // attackSlider.onValueChange = makeSliderListener(attackSlider, static_cast<int>(SOUND_CTRL4));
+    attackSlider.onDragEnd = makeSliderListener(attackSlider, static_cast<int>(SOUND_CTRL4));
     attackSlider.setTextBoxStyle(Slider::TextBoxBelow, true, attackSlider.getTextBoxWidth(), attackSlider.getTextBoxHeight());
     attackSliderAttachment = make_unique<SliderAttachment>(valueTreeState, "attack", attackSlider);
 
     decaySlider.setSliderStyle(style);
     decaySlider.setRange(rangeMin, rangeMax, rangeStep);
-    // decaySlider.onValueChange = makeSliderListener(decaySlider, static_cast<int>(SOUND_CTRL6));
+    decaySlider.onDragEnd = makeSliderListener(decaySlider, static_cast<int>(SOUND_CTRL6));
     decaySlider.setTextBoxStyle(Slider::TextBoxBelow, true, decaySlider.getTextBoxWidth(), decaySlider.getTextBoxHeight());
     decaySliderAttachment = make_unique<SliderAttachment>(valueTreeState, "decay", decaySlider);
 
     sustainSlider.setSliderStyle(style);
     sustainSlider.setRange(rangeMin, rangeMax, rangeStep);
-    // sustainSlider.onValueChange = makeSliderListener(sustainSlider, static_cast<int>(SOUND_CTRL10));
+    sustainSlider.onDragEnd = makeSliderListener(sustainSlider, static_cast<int>(SOUND_CTRL10));
     sustainSlider.setTextBoxStyle(Slider::TextBoxBelow, true, sustainSlider.getTextBoxWidth(), sustainSlider.getTextBoxHeight());
     sustainSliderAttachment = make_unique<SliderAttachment>(valueTreeState, "sustain", sustainSlider);
 
     releaseSlider.setSliderStyle(style);
     releaseSlider.setRange(rangeMin, rangeMax, rangeStep);
-    // releaseSlider.onValueChange = makeSliderListener(releaseSlider, static_cast<int>(SOUND_CTRL3));
+    releaseSlider.onDragEnd = makeSliderListener(releaseSlider, static_cast<int>(SOUND_CTRL3));
     releaseSlider.setTextBoxStyle(Slider::TextBoxBelow, true, releaseSlider.getTextBoxWidth(), releaseSlider.getTextBoxHeight());
     releaseSliderAttachment = make_unique<SliderAttachment>(valueTreeState, "release", releaseSlider);
 
     filterCutOffSlider.setSliderStyle(style);
     filterCutOffSlider.setRange(rangeMin, rangeMax, rangeStep);
-    // filterCutOffSlider.onValueChange = makeSliderListener(filterCutOffSlider, static_cast<int>(SOUND_CTRL5));
+    filterCutOffSlider.onDragEnd = makeSliderListener(filterCutOffSlider, static_cast<int>(SOUND_CTRL5));
     filterCutOffSlider.setTextBoxStyle(Slider::TextBoxBelow, true, filterCutOffSlider.getTextBoxWidth(), filterCutOffSlider.getTextBoxHeight());
     filterCutOffSliderAttachment = make_unique<SliderAttachment>(valueTreeState, "filterCutOff", filterCutOffSlider);
 
     filterResonanceSlider.setSliderStyle(style);
     filterResonanceSlider.setRange(rangeMin, rangeMax, rangeStep);
-    // filterResonanceSlider.onValueChange = makeSliderListener(filterResonanceSlider, static_cast<int>(SOUND_CTRL2));
+    filterResonanceSlider.onDragEnd = makeSliderListener(filterResonanceSlider, static_cast<int>(SOUND_CTRL2));
     filterResonanceSlider.setTextBoxStyle(Slider::TextBoxBelow, true, filterResonanceSlider.getTextBoxWidth(), filterResonanceSlider.getTextBoxHeight());
     filterResonanceSliderAttachment = make_unique<SliderAttachment>(valueTreeState, "filterResonance", filterResonanceSlider);
 

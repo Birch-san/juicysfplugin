@@ -47,7 +47,7 @@ AudioProcessorValueTreeState::ParameterLayout JuicySFAudioProcessor::createParam
     //     params.push_back (std::make_unique<AudioParameterInt> (String (i), String (i), 0, i, 0));
 
     // https://stackoverflow.com/a/8469002/5257399
-    unique_ptr<AudioParameterInt> params[] = {
+    unique_ptr<AudioParameterInt> params[] {
         make_unique<AudioParameterInt>("attack", "volume envelope attack time", 0, 127, 0, "A" ),
         make_unique<AudioParameterInt>("decay", "volume envelope sustain attentuation", 0, 127, 0, "D" ),
         make_unique<AudioParameterInt>("sustain", "volume envelope decay time", 0, 127, 0, "S" ),
@@ -216,34 +216,38 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
                     break;
                 }
                 case SOUND_CTRL3: { // MIDI CC 72 Release time
-//                    valueTreeState.state.setProperty({"release"}, m.getControllerValue(), nullptr);
-//                    valueTreeState.state.flushParameterValuesToValueTree();
-//                    jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
                     RangedAudioParameter *param {valueTreeState.getParameter("release")};
-//                    dynamic_cast<AudioParameterInt&>(*param)
                     jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
                     AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-//                    castParam->setValue(m.getControllerValue());
-//                    castParam->
-//                    param->setValue(m.getControllerValue());
-//                    param->setValueNotifyingHost(m.getControllerValue());
                     *castParam = m.getControllerValue();
                     break;
                 }
                 case SOUND_CTRL4: { // MIDI CC 73 Attack time
-                    valueTreeState.state.setProperty({"attack"}, m.getControllerValue(), nullptr);
+                    RangedAudioParameter *param {valueTreeState.getParameter("release")};
+                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+                    *castParam = m.getControllerValue();
                     break;
                 }
                 case SOUND_CTRL5: { // MIDI CC 74 Brightness (cutoff frequency, FILTERFC)
-                    valueTreeState.state.setProperty({"filterCutOff"}, m.getControllerValue(), nullptr);
+                    RangedAudioParameter *param {valueTreeState.getParameter("filterCutOff")};
+                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+                    *castParam = m.getControllerValue();
                     break;
                 }
                 case SOUND_CTRL6: { // MIDI CC 75 Decay Time
-                    valueTreeState.state.setProperty({"decay"}, m.getControllerValue(), nullptr);
+                    RangedAudioParameter *param {valueTreeState.getParameter("decay")};
+                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+                    *castParam = m.getControllerValue();
                     break;
                 }
                 case SOUND_CTRL10: { // MIDI CC 79 undefined
-                    valueTreeState.state.setProperty({"sustain"}, m.getControllerValue(), nullptr);
+                    RangedAudioParameter *param {valueTreeState.getParameter("sustain")};
+                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+                    *castParam = m.getControllerValue();
                     break;
                 }
                 default: {
