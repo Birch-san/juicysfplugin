@@ -26,14 +26,16 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 
 //==============================================================================
+//, sharedParams{static_pointer_cast<SharesParams>(make_shared<Params>())}
 JuicySFAudioProcessor::JuicySFAudioProcessor()
 : AudioProcessor{getBusesProperties()}
-, sharedParams{static_pointer_cast<SharesParams>(make_shared<Params>())}
-, valueTreeState{*this, nullptr,
-    { "PARAMETERS" /* MYPLUGINSETTINGS */ },
-    createParameterLayout()
-  }
-, fluidSynthModel{sharedParams}
+, sharedParams{}
+, valueTreeState{
+    *this,
+    nullptr,
+    { "MYPLUGINSETTINGS" },
+    createParameterLayout()}
+, fluidSynthModel{valueTreeState, sharedParams}
 //, fluidSynthModel{*this}
 //, pluginEditor(nullptr)
 {
@@ -45,9 +47,15 @@ AudioProcessorValueTreeState::ParameterLayout JuicySFAudioProcessor::createParam
 
     // for (int i = 1; i < 9; ++i)
     //     params.push_back (std::make_unique<AudioParameterInt> (String (i), String (i), 0, i, 0));
+    
+    
+//    make_unique<AudioParameter>("soundfontPath", "filepath to soundfont", 0, 127, 0, "A" ),
 
     // https://stackoverflow.com/a/8469002/5257399
     unique_ptr<AudioParameterInt> params[] {
+        make_unique<AudioParameterInt>("bank", "which bank is selected in the soundfont", 0, 127, 0, "Bank" ),
+        // note: banks may be sparse, and lack a 0th preset. so defend against this.
+        make_unique<AudioParameterInt>("preset", "which patch (aka patch, program, instrument) is selected in the soundfont", 0, 127, 0, "Preset" ),
         make_unique<AudioParameterInt>("attack", "volume envelope attack time", 0, 127, 0, "A" ),
         make_unique<AudioParameterInt>("decay", "volume envelope sustain attentuation", 0, 127, 0, "D" ),
         make_unique<AudioParameterInt>("sustain", "volume envelope decay time", 0, 127, 0, "S" ),
@@ -70,7 +78,7 @@ JuicySFAudioProcessor::~JuicySFAudioProcessor()
 void JuicySFAudioProcessor::initialiseSynth() {
     fluidSynthModel.initialise();
 
-    fluidSynth = fluidSynthModel.getSynth();
+//    fluidSynth = fluidSynthModel.getSynth();
 
     const int numVoices = 8;
 
@@ -352,8 +360,11 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
     // as intermediaries to make it easy to save and load complex data.
 
     // Create an outer XML element..
-    XmlElement xml{"MYPLUGINSETTINGS"};
-    sharedParams->setAttributesOnXml(xml);
+//    XmlElement xml{"MYPLUGINSETTINGS"};
+//    sharedParams->setAttributesOnXml(xml);
+    auto state{valueTreeState.copyState()};
+    shared_ptr<XmlElement> xml{state.createXml()};
+    sharedParams.setAttributesOnXml(xml);
 
 //    list<StateChangeSubscriber*>::iterator p;
 //    for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
@@ -361,12 +372,12 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
 //    }
 
     // Store the values of all our parameters, using their param ID as the XML attribute
-    for (auto* param : getParameters())
-        if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param))
-            xml.setAttribute (p->paramID, p->getValue());
+    // for (auto* param : getParameters())
+    //     if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param))
+    //         xml->setAttribute (p->paramID, p->getValue());
 
     // then use this helper function to stuff it into the binary blob and return it..
-    copyXmlToBinary (xml, destData);
+    copyXmlToBinary (*xml, destData);
 }
 
 void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -375,40 +386,42 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
     // whose contents will have been created by the getStateInformation() call.
     // This getXmlFromBinary() helper function retrieves our XML from the binary blob..
     shared_ptr<XmlElement> xmlState{getXmlFromBinary(data, sizeInBytes)};
+//    unique_ptr<XmlElement> xmlState{getXmlFromBinary(data, sizeInBytes)};
 
-    if (xmlState != nullptr)
-    {
+    if (xmlState.get() != nullptr) {
         // make sure that it's actually our type of XML object..
-        if (xmlState->hasTagName ("MYPLUGINSETTINGS"))
-        {
+//        if (xmlState->hasTagName ("MYPLUGINSETTINGS")) {
+        if (xmlState->hasTagName(valueTreeState.state.getType())) {
+            valueTreeState.replaceState(ValueTree::fromXml(*xmlState));
 //            list<StateChangeSubscriber*>::iterator p;
 //            for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
 //                (*p)->setStateInformation(xmlState);
 //            }
 
             // ok, now pull out our last window size..
-            sharedParams->loadAttributesFromXml(xmlState);
+           sharedParams.loadAttributesFromXml(xmlState);
 
             // Now reload our parameters..
-            for (auto* param : getParameters())
-                if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param))
-                    p->setValue ((float) xmlState->getDoubleAttribute (p->paramID, p->getValue()));
-
-            fluidSynthModel.onFileNameChanged(
-                sharedParams->getSoundFontPath(),
-                sharedParams->getBank(),
-                sharedParams->getPreset());
-
-            AudioProcessorEditor* editor{getActiveEditor()};
-            if (editor != nullptr) {
-                editor->setSize(
-                    sharedParams->getUiWidth(),
-                    sharedParams->getUiHeight());
-
-                jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
-                ExposesComponents* exposesComponents = dynamic_cast<ExposesComponents*> (editor);
-                exposesComponents->getFilePicker().setDisplayedFilePath(sharedParams->getSoundFontPath());
-            }
+            
+//            for (auto* param : getParameters())
+//                if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param))
+//                    p->setValue ((float) xmlState->getDoubleAttribute (p->paramID, p->getValue()));
+//
+//            fluidSynthModel.onFileNameChanged(
+//                sharedParams->getSoundFontPath(),
+//                sharedParams->getBank(),
+//                sharedParams->getPreset());
+//
+//            AudioProcessorEditor* editor{getActiveEditor()};
+//            if (editor != nullptr) {
+//                editor->setSize(
+//                    sharedParams->getUiWidth(),
+//                    sharedParams->getUiHeight());
+//
+//                jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
+//                ExposesComponents* exposesComponents = dynamic_cast<ExposesComponents*> (editor);
+//                exposesComponents->getFilePicker().setDisplayedFilePath(sharedParams->getSoundFontPath());
+//            }
 
 //            const String& currentSoundFontAbsPath = fluidSynthModel->getCurrentSoundFontAbsPath();
 //            if (currentSoundFontAbsPath.isNotEmpty()) {
@@ -431,8 +444,12 @@ bool JuicySFAudioProcessor::supportsDoublePrecisionProcessing() const {
     return false;
 }
 
-FluidSynthModel* JuicySFAudioProcessor::getFluidSynthModel() {
-    return &fluidSynthModel;
+FluidSynthModel& JuicySFAudioProcessor::getFluidSynthModel() {
+    return fluidSynthModel;
+}
+
+SharesParams& JuicySFAudioProcessor::getSharedParams() {
+    return sharedParams;
 }
 
 //==============================================================================

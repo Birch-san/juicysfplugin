@@ -13,9 +13,9 @@ class SlidersComponent : public Component,
 {
 public:
     SlidersComponent(
-        shared_ptr<SharesParams> sharedParams,
+        SharesParams& sharedParams,
         AudioProcessorValueTreeState& valueTreeState,
-        FluidSynthModel* fluidSynthModel);
+        FluidSynthModel& fluidSynthModel);
     ~SlidersComponent();
 
     void resized() override;
@@ -35,9 +35,9 @@ public:
 private:
     std::function<void()> makeSliderListener(Slider& slider, int controller);
 
-    shared_ptr<SharesParams> sharedParams;
+    SharesParams& sharedParams;
     AudioProcessorValueTreeState& valueTreeState;
-    FluidSynthModel* fluidSynthModel;
+    FluidSynthModel& fluidSynthModel;
 
     GroupComponent envelopeGroup;
 

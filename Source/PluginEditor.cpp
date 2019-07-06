@@ -17,11 +17,11 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor(JuicySFAudioProcessor& 
     : AudioProcessorEditor{&p},
       processor{p},
       valueTreeState{valueTreeState},
-      sharedParams{p.sharedParams},
+      sharedParams{p.getSharedParams()},
       midiKeyboard{p.keyboardState, SurjectiveMidiKeyboardComponent::horizontalKeyboard},
-      tablesComponent{p.getFluidSynthModel()},
-      filePicker{p.getFluidSynthModel()},
-      slidersComponent{p.sharedParams, valueTreeState, p.getFluidSynthModel()}
+      tablesComponent{valueTreeState, p.getFluidSynthModel()},
+      filePicker{valueTreeState, p.getFluidSynthModel()},
+      slidersComponent{p.getSharedParams(), valueTreeState, p.getFluidSynthModel()}
 {
     // set resize limits for this plug-in
     setResizeLimits(
@@ -30,7 +30,7 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor(JuicySFAudioProcessor& 
         GuiConstants::maxWidth,
         GuiConstants::maxHeight);
 
-    setSize(sharedParams->getUiWidth(), sharedParams->getUiHeight());
+    setSize(sharedParams.getUiWidth(), sharedParams.getUiHeight());
 
 //    processor.subscribeToStateChanges(this);
 
@@ -104,8 +104,8 @@ void JuicySFAudioProcessorEditor::resized()
 
     tablesComponent.setBounds(rContent);
 
-    sharedParams->setUiWidth(getWidth());
-    sharedParams->setUiHeight(getHeight());
+    sharedParams.setUiWidth(getWidth());
+    sharedParams.setUiHeight(getHeight());
 
 //    Rectangle<int> r2 (getLocalBounds());
 //    r2.reduce(0, padding);

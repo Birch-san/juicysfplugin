@@ -28,7 +28,10 @@ class JuicySFAudioProcessorEditor  : public AudioProcessorEditor,
                                      public StateChangeSubscriber*/
 {
 public:
-    JuicySFAudioProcessorEditor (JuicySFAudioProcessor&, AudioProcessorValueTreeState& state);
+    JuicySFAudioProcessorEditor(
+      JuicySFAudioProcessor&,
+      AudioProcessorValueTreeState& state
+      );
     ~JuicySFAudioProcessorEditor();
 
     //==============================================================================
@@ -50,7 +53,7 @@ private:
     JuicySFAudioProcessor& processor;
 
     AudioProcessorValueTreeState& valueTreeState;
-    shared_ptr<SharesParams> sharedParams;
+    SharesParams& sharedParams;
 
     SurjectiveMidiKeyboardComponent midiKeyboard;
     TablesComponent tablesComponent;

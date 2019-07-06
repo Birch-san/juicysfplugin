@@ -6,13 +6,15 @@
 #include "SoundfontSynthSound.h"
 #include "Util.h"
 
-SoundfontSynthVoice::SoundfontSynthVoice(fluid_synth_t* synth)
-: tailOff (0.0),
-level(0.0),
-currentAngle(0.0),
-angleDelta(0.0),
-midiNoteNumber(0),
-synth(synth)
+using namespace std;
+
+SoundfontSynthVoice::SoundfontSynthVoice(shared_ptr<fluid_synth_t> synth)
+: tailOff(0.0)
+, level(0.0)
+, currentAngle(0.0)
+, angleDelta(0.0)
+, midiNoteNumber(0)
+, synth(synth)
 {
 }
 
@@ -26,7 +28,7 @@ void SoundfontSynthVoice::startNote(
         int /*currentPitchWheelPosition*/) {
     this->midiNoteNumber = midiNoteNumber;
     DEBUG_PRINT ( juce::String::formatted("JUCE noteon: %d, %d\n", midiNoteNumber, velocity) );
-    fluid_synth_noteon(synth, 0, midiNoteNumber, static_cast<int>(velocity * 127));
+    fluid_synth_noteon(synth.get(), 0, midiNoteNumber, static_cast<int>(velocity * 127));
 
 //    currentAngle = 0.0;
 //    level = velocity * 0.15;
@@ -59,7 +61,7 @@ void SoundfontSynthVoice::stopNote (float /*velocity*/, bool allowTailOff) {
 //    }
     DEBUG_PRINT ( juce::String("JUCE noteoff\n") );
     clearCurrentNote();
-    fluid_synth_noteoff(synth, 0, this->midiNoteNumber);
+    fluid_synth_noteoff(synth.get(), 0, this->midiNoteNumber);
 }
 
 // receives input as MIDI 0 to 16383, with 8192 being center

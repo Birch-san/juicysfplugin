@@ -1,6 +1,6 @@
-//
-// Created by Alex Birch on 17/09/2017.
-//
+// http://www.synthfont.com/Tutorial6.html
+// a bank can hold many (128) presets
+// bank 128 is reserved for percussion
 
 #pragma once
 

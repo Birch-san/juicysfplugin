@@ -19,10 +19,13 @@ using namespace std;
 
 class FluidSynthModel {
 public:
-    FluidSynthModel(shared_ptr<SharesParams> sharedParams);
-    ~FluidSynthModel();
+    FluidSynthModel(
+        AudioProcessorValueTreeState& valueTreeState,
+        SharesParams& sharedParams
+        );
+    // ~FluidSynthModel();
 
-    fluid_synth_t* getSynth();
+    shared_ptr<fluid_synth_t> getSynth();
     void initialise();
 
     BanksToPresets getBanks();
@@ -65,11 +68,14 @@ public:
     const String& getCurrentSoundFontAbsPath();
 
 private:
-    shared_ptr<SharesParams> sharedParams;
+    int handleMidiEvent(void* data, fluid_midi_event_t* event);
 
-    fluid_synth_t* synth;
-    fluid_settings_t* settings;
-//    fluid_audio_driver_t* driver;
+    AudioProcessorValueTreeState& valueTreeState;
+    SharesParams& sharedParams;
+
+    shared_ptr<fluid_synth_t> synth;
+    unique_ptr<fluid_settings_t, decltype(&delete_fluid_settings)> settings;
+    // unique_ptr<fluid_midi_driver_t, decltype(&delete_fluid_midi_driver)> midiDriver;
 
     String currentSoundFontAbsPath;
 

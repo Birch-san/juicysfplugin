@@ -24,7 +24,7 @@ std::function<void()> SlidersComponent::makeSliderListener(Slider& slider, int c
         s << slider.getComponentID() << ", controller " << controller << ", value " << slider.getValue() << ", xmlReleaseValue " << value;
         DEBUG_PRINT(s);
 //        slider.setValue(slider.getValue(), NotificationType::dontSendNotification);
-        fluidSynthModel->setControllerValue(controller, slider.getValue());
+        fluidSynthModel.setControllerValue(controller, slider.getValue());
         // callback();
     };
 }
@@ -115,9 +115,9 @@ void SlidersComponent::acceptMidiControlEvent(int controller, int value) {
 // }
 
 SlidersComponent::SlidersComponent(
-    shared_ptr<SharesParams> sharedParams,
+    SharesParams& sharedParams,
     AudioProcessorValueTreeState& valueTreeState,
-    FluidSynthModel* fluidSynthModel)
+    FluidSynthModel& fluidSynthModel)
 : sharedParams{sharedParams}
 , valueTreeState{valueTreeState}
 , fluidSynthModel{fluidSynthModel}

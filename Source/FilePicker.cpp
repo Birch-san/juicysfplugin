@@ -6,24 +6,26 @@
 #include "MyColours.h"
 
 FilePicker::FilePicker(
-        FluidSynthModel* fluidSynthModel
+    AudioProcessorValueTreeState& valueTreeState,
+    FluidSynthModel& fluidSynthModel
 )
-: fileChooser(
-        "File",
-        File(),
-        true,
-        false,
-        false,
-        "*.sf2;*.sf3",
-        String(),
-        "Choose a Soundfont file to load into the synthesizer"
-),
-  fluidSynthModel(fluidSynthModel),
-  currentPath() {
+: fileChooser{
+    "File",
+    File(),
+    true,
+    false,
+    false,
+    "*.sf2;*.sf3",
+    String(),
+    "Choose a Soundfont file to load into the synthesizer"}
+, valueTreeState{valueTreeState}
+, fluidSynthModel{fluidSynthModel}
+// , currentPath{}
+{
     // faster (rounded edges introduce transparency)
     setOpaque (true);
 
-    setDisplayedFilePath(fluidSynthModel->getCurrentSoundFontAbsPath());
+    setDisplayedFilePath(fluidSynthModel.getCurrentSoundFontAbsPath());
 
     addAndMakeVisible (fileChooser);
     fileChooser.addListener (this);
@@ -47,7 +49,7 @@ void FilePicker::paint(Graphics& g)
 
 void FilePicker::filenameComponentChanged (FilenameComponent*) {
     currentPath = fileChooser.getCurrentFile().getFullPathName();
-    fluidSynthModel->onFileNameChanged(fileChooser.getCurrentFile().getFullPathName(), -1, -1);
+    fluidSynthModel.onFileNameChanged(fileChooser.getCurrentFile().getFullPathName(), -1, -1);
 }
 
 void FilePicker::setDisplayedFilePath(const String& path) {

@@ -14,6 +14,7 @@
 #include "FluidSynthModel.h"
 #include "StateChangeSubscriber.h"
 #include "SharesParams.h"
+#include "Params.h"
 #include <list>
 
 using namespace std;
@@ -62,11 +63,10 @@ public:
 
     bool supportsDoublePrecisionProcessing() const override;
 
-    FluidSynthModel* getFluidSynthModel();
+    FluidSynthModel& getFluidSynthModel();
+    SharesParams& getSharedParams();
 
     MidiKeyboardState keyboardState;
-
-    shared_ptr<SharesParams> sharedParams;
 
 //    void subscribeToStateChanges(StateChangeSubscriber* subscriber);
 //    void unsubscribeFromStateChanges(StateChangeSubscriber* subscriber);
@@ -74,6 +74,7 @@ public:
 private:
     void initialiseSynth();
 
+    Params sharedParams;
     AudioProcessorValueTreeState valueTreeState;
 
     FluidSynthModel fluidSynthModel;

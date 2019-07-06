@@ -14,7 +14,8 @@ class FilePicker: public Component,
 {
 public:
     FilePicker(
-            FluidSynthModel* fluidSynthModel
+        AudioProcessorValueTreeState& valueTreeState,
+        FluidSynthModel& fluidSynthModel
     );
     ~FilePicker();
 
@@ -25,7 +26,8 @@ public:
 private:
     FilenameComponent fileChooser;
 
-    FluidSynthModel* fluidSynthModel;
+    AudioProcessorValueTreeState& valueTreeState;
+    FluidSynthModel& fluidSynthModel;
 
     String currentPath;
 

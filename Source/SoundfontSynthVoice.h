@@ -8,11 +8,11 @@
 #include<fluidsynth.h>
 #include "../JuceLibraryCode/JuceHeader.h"
 
-using std::shared_ptr;
+using namespace std;
 
 class SoundfontSynthVoice : public SynthesiserVoice {
 public:
-    SoundfontSynthVoice(fluid_synth_t* synth);
+    SoundfontSynthVoice(shared_ptr<fluid_synth_t> synth);
 
     bool canPlaySound (SynthesiserSound* sound) override;
     void startNote (
@@ -35,5 +35,5 @@ private:
     double angleDelta;
     int midiNoteNumber;
 
-    fluid_synth_t* synth;
+    shared_ptr<fluid_synth_t> synth;
 };

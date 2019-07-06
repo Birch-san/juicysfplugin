@@ -8,10 +8,13 @@ using namespace std;
 using namespace placeholders;
 
 TablesComponent::TablesComponent(
-        FluidSynthModel* fluidSynthModel
-) : fluidSynthModel(fluidSynthModel),
-    banksToPresets(fluidSynthModel->getBanks()),
-    initialised(false)
+    AudioProcessorValueTreeState& valueTreeState,
+    FluidSynthModel& fluidSynthModel
+)
+: valueTreeState{valueTreeState}
+, fluidSynthModel{fluidSynthModel}
+, banksToPresets{fluidSynthModel.getBanks()}
+, initialised{false}
 {
     fluid_preset_t* currentPreset = getCurrentPreset();
     selectedBank = -1;
@@ -59,13 +62,13 @@ TablesComponent::TablesComponent(
 
     initialised = true;
 
-    fluidSynthModel->addListener(this);
+    fluidSynthModel.addListener(this);
 }
 
 fluid_preset_t* TablesComponent::getCurrentPreset() {
-    fluid_synth_t* synth = fluidSynthModel->getSynth();
+    shared_ptr<fluid_synth_t> synth {fluidSynthModel.getSynth()};
 
-    return fluid_synth_get_channel_preset(synth, fluidSynthModel->getChannel());
+    return fluid_synth_get_channel_preset(synth.get(), fluidSynthModel.getChannel());
 }
 
 Preset TablesComponent::getFirstPresetInBank(int bank) {
@@ -108,13 +111,13 @@ void TablesComponent::onPresetSelected(int preset) {
     }
     cout << "Preset " << preset << endl;
 //    selectedPreset = preset;
-    fluidSynthModel->changePreset(selectedBank, preset);
+    fluidSynthModel.changePreset(selectedBank, preset);
 }
 
 TablesComponent::~TablesComponent() {
     delete presetTable;
     delete banks;
-    fluidSynthModel->removeListener(this);
+    fluidSynthModel.removeListener(this);
 }
 
 vector<string> TablesComponent::mapBanks(const BanksToPresets &banksToPresets) {
@@ -165,7 +168,7 @@ bool TablesComponent::keyPressed(const KeyPress &key) {
 }
 
 void TablesComponent::fontChanged(FluidSynthModel *, const String &) {
-    banksToPresets = fluidSynthModel->getBanks();
+    banksToPresets = fluidSynthModel.getBanks();
 
     fluid_preset_t* currentPreset = getCurrentPreset();
 

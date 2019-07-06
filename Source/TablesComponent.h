@@ -20,7 +20,8 @@ class TablesComponent : public Component,
 {
 public:
     TablesComponent(
-            FluidSynthModel* fluidSynthModel
+        AudioProcessorValueTreeState& valueTreeState,
+        FluidSynthModel& fluidSynthModel
     );
     ~TablesComponent();
 
@@ -30,7 +31,8 @@ public:
     void fontChanged(FluidSynthModel *, const String &) override;
 
 private:
-    FluidSynthModel* fluidSynthModel;
+    AudioProcessorValueTreeState& valueTreeState;
+    FluidSynthModel& fluidSynthModel;
     int selectedBank;
 
     Pills* banks;
