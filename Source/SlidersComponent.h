@@ -13,7 +13,7 @@ class SlidersComponent : public Component,
 {
 public:
     SlidersComponent(
-        SharesParams& sharedParams,
+        // SharesParams& sharedParams,
         AudioProcessorValueTreeState& valueTreeState,
         FluidSynthModel& fluidSynthModel);
     ~SlidersComponent();
@@ -35,7 +35,7 @@ public:
 private:
     std::function<void()> makeSliderListener(Slider& slider, int controller);
 
-    SharesParams& sharedParams;
+    // SharesParams& sharedParams;
     AudioProcessorValueTreeState& valueTreeState;
     FluidSynthModel& fluidSynthModel;
 

@@ -23,14 +23,18 @@
 //==============================================================================
 /**
 */
-class JuicySFAudioProcessorEditor  : public AudioProcessorEditor,
-                                     public ExposesComponents/*,
+class JuicySFAudioProcessorEditor
+: public AudioProcessorEditor
+// , public AudioProcessorValueTreeState::Listener
+, public ValueTree::Listener
+                      /*,
+                                     , public ExposesComponents
                                      public StateChangeSubscriber*/
 {
 public:
     JuicySFAudioProcessorEditor(
       JuicySFAudioProcessor&,
-      AudioProcessorValueTreeState& state
+      AudioProcessorValueTreeState& valueTreeState
       );
     ~JuicySFAudioProcessorEditor();
 
@@ -44,16 +48,33 @@ public:
 //    void getStateInformation (XmlElement& xml) override;
 //    void setStateInformation (XmlElement* xmlState) override;
 
-    virtual FilePickerFragment& getFilePicker() override;
-    virtual SlidersFragment& getSliders() override;
+    // virtual FilePickerFragment& getFilePicker() override;
+    // virtual SlidersFragment& getSliders() override;
+    // virtual void parameterChanged (const String& parameterID, float newValue) override;
+
+    // int getWidth();
+    // int getHeight();
+
+    virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
+                                           const Identifier& property) override;
+    inline virtual void valueTreeChildAdded (ValueTree& parentTree,
+                                             ValueTree& childWhichHasBeenAdded) override {};
+    inline virtual void valueTreeChildRemoved (ValueTree& parentTree,
+                                               ValueTree& childWhichHasBeenRemoved,
+                                               int indexFromWhichChildWasRemoved) override {};
+    inline virtual void valueTreeChildOrderChanged (ValueTree& parentTreeWhoseChildrenHaveMoved,
+                                                    int oldIndex, int newIndex) override {};
+    inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
+    inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
 
 private:
+
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     JuicySFAudioProcessor& processor;
 
     AudioProcessorValueTreeState& valueTreeState;
-    SharesParams& sharedParams;
+    // SharesParams& sharedParams;
 
     SurjectiveMidiKeyboardComponent midiKeyboard;
     TablesComponent tablesComponent;

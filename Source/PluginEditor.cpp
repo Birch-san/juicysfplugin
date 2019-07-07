@@ -13,15 +13,17 @@
 #include "GuiConstants.h"
 
 //==============================================================================
-JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor(JuicySFAudioProcessor& p, AudioProcessorValueTreeState& valueTreeState)
-    : AudioProcessorEditor{&p},
-      processor{p},
-      valueTreeState{valueTreeState},
-      sharedParams{p.getSharedParams()},
-      midiKeyboard{p.keyboardState, SurjectiveMidiKeyboardComponent::horizontalKeyboard},
-      tablesComponent{valueTreeState, p.getFluidSynthModel()},
-      filePicker{valueTreeState, p.getFluidSynthModel()},
-      slidersComponent{p.getSharedParams(), valueTreeState, p.getFluidSynthModel()}
+JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor(
+    JuicySFAudioProcessor& p,
+    AudioProcessorValueTreeState& valueTreeState)
+: AudioProcessorEditor{&p}
+, processor{p}
+, valueTreeState{valueTreeState}
+    //   sharedParams{p.getSharedParams()},
+, midiKeyboard{p.keyboardState, SurjectiveMidiKeyboardComponent::horizontalKeyboard}
+, tablesComponent{valueTreeState, p.getFluidSynthModel()}
+, filePicker{valueTreeState, p.getFluidSynthModel()}
+, slidersComponent{valueTreeState, p.getFluidSynthModel()}
 {
     // set resize limits for this plug-in
     setResizeLimits(
@@ -29,8 +31,29 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor(JuicySFAudioProcessor& 
         GuiConstants::minHeight,
         GuiConstants::maxWidth,
         GuiConstants::maxHeight);
+    
+    // int width, height;
+    // {
+    //     RangedAudioParameter *param {valueTreeState.getParameter("uiWidth")};
+    //     jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+    //     AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+    //     width = castParam->get();
+    // }
+    // {
+    //     RangedAudioParameter *param {valueTreeState.getParameter("uiHeight")};
+    //     jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+    //     AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+    //     height = castParam->get();
+    // }
 
-    setSize(sharedParams.getUiWidth(), sharedParams.getUiHeight());
+    // valueTreeState.addParameterListener("uiWidthPersist", this);
+    // valueTreeState.addParameterListener("uiHeightPersist", this);
+    // valueTreeState.addParameterListener("uiWidth", this);
+    // valueTreeState.addParameterListener("uiHeight", this);
+
+    valueTreeState.state.addListener(this);
+
+    setSize(GuiConstants::minWidth, GuiConstants::minHeight);
 
 //    processor.subscribeToStateChanges(this);
 
@@ -50,8 +73,52 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor(JuicySFAudioProcessor& 
 
 JuicySFAudioProcessorEditor::~JuicySFAudioProcessorEditor()
 {
+    // valueTreeState.removeParameterListener("uiWidthPersist", this);
+    // valueTreeState.removeParameterListener("uiHeightPersist", this);
+    // valueTreeState.removeParameterListener("uiWidth", this);
+    // valueTreeState.removeParameterListener("uiHeight", this);
+    valueTreeState.state.removeListener(this);
 //    processor.unsubscribeFromStateChanges(this);
 }
+
+void JuicySFAudioProcessorEditor::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged,
+                                               const Identifier& property) {
+    if (&treeWhosePropertyHasChanged == &valueTreeState.state) {
+        if (property == Identifier("uiWidth")) {
+            // String soundFontPath{treeWhosePropertyHasChanged.getProperty("soundFontPath", "")};
+            // if (soundFontPath.isNotEmpty()) {
+            //     loadFont(soundFontPath);
+            // }
+            int value{treeWhosePropertyHasChanged.getProperty("uiWidth", GuiConstants::minWidth)};
+            setSize(value, getHeight());
+        } else if (property == Identifier("uiHeight")) {
+            int value{treeWhosePropertyHasChanged.getProperty("uiHeight", GuiConstants::minHeight)};
+            setSize(getWidth(), value);
+        }
+    }
+}
+
+// void JuicySFAudioProcessorEditor::parameterChanged(const String& parameterID, float newValue) {
+//     // if (parameterID == "uiWidthPersist"
+//     // || parameterID == "uiHeightPersist") {
+//     if (parameterID == "uiWidth"
+//     || parameterID == "uiHeight") {
+//         RangedAudioParameter *param {valueTreeState.getParameter(parameterID)};
+//         jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+//         AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+//         int value{castParam->get()};
+//         // if (parameterID == "uiWidthPersist") {
+//         //     setSize(value, getHeight());
+//         // } else if (parameterID == "uiHeightPersist") {
+//         //     setSize(getWidth(), value);
+//         // }
+//         if (parameterID == "uiWidth") {
+//             setSize(value, getHeight());
+//         } else if (parameterID == "uiHeight") {
+//             setSize(getWidth(), value);
+//         }
+//     }
+// }
 
 //void JuicySFAudioProcessorEditor::getStateInformation (XmlElement& xml) {
 //    // save
@@ -104,8 +171,24 @@ void JuicySFAudioProcessorEditor::resized()
 
     tablesComponent.setBounds(rContent);
 
-    sharedParams.setUiWidth(getWidth());
-    sharedParams.setUiHeight(getHeight());
+    valueTreeState.state.setPropertyExcludingListener(this, "uiWidth", getWidth(), nullptr);
+    valueTreeState.state.setPropertyExcludingListener(this, "uiHeight", getHeight(), nullptr);
+    
+    // {
+    //     RangedAudioParameter *param {valueTreeState.getParameter("uiWidth2")};
+    //     jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+    //     AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+    //     *castParam = getWidth();
+    // }
+    // {
+    //     RangedAudioParameter *param {valueTreeState.getParameter("uiHeight2")};
+    //     jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+    //     AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+    //     *castParam = getHeight();
+    // }
+
+//    sharedParams.setUiWidth(getWidth());
+//    sharedParams.setUiHeight(getHeight());
 
 //    Rectangle<int> r2 (getLocalBounds());
 //    r2.reduce(0, padding);
@@ -154,10 +237,10 @@ bool JuicySFAudioProcessorEditor::keyStateChanged (bool isKeyDown) {
 //    return false;
 }
 
-FilePickerFragment& JuicySFAudioProcessorEditor::getFilePicker() {
-    return filePicker;
-}
-
-SlidersFragment& JuicySFAudioProcessorEditor::getSliders() {
-    return slidersComponent;
-}
+//FilePickerFragment& JuicySFAudioProcessorEditor::getFilePicker() {
+//    return filePicker;
+//}
+//
+//SlidersFragment& JuicySFAudioProcessorEditor::getSliders() {
+//    return slidersComponent;
+//}

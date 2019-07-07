@@ -64,7 +64,7 @@ public:
     bool supportsDoublePrecisionProcessing() const override;
 
     FluidSynthModel& getFluidSynthModel();
-    SharesParams& getSharedParams();
+//    SharesParams& getSharedParams();
 
     MidiKeyboardState keyboardState;
 
@@ -74,11 +74,12 @@ public:
 private:
     void initialiseSynth();
 
-    Params sharedParams;
+//    Params sharedParams;
     AudioProcessorValueTreeState valueTreeState;
+    ValueTree valueTree;
 
     FluidSynthModel fluidSynthModel;
-    fluid_synth_t* fluidSynth;
+    // fluid_synth_t* fluidSynth;
     Synthesiser synth;
 
 //    // just a raw pointer; we do not own

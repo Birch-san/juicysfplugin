@@ -24,10 +24,10 @@ public:
     // virtual int getBank() = 0;
     // virtual void setBank(int value) = 0;
 
-    virtual int getUiWidth() = 0;
-    virtual void setUiWidth(int value) = 0;
-    virtual int getUiHeight() = 0;
-    virtual void setUiHeight(int value) = 0;
+    // virtual int getUiWidth() = 0;
+    // virtual void setUiWidth(int value) = 0;
+    // virtual int getUiHeight() = 0;
+    // virtual void setUiHeight(int value) = 0;
     
     // virtual int getAttack() = 0;
     // virtual void setAttack(int value) = 0;

@@ -17,13 +17,14 @@
 
 using namespace std;
 
-class FluidSynthModel {
+class FluidSynthModel: public ValueTree::Listener {
 public:
     FluidSynthModel(
         AudioProcessorValueTreeState& valueTreeState,
-        SharesParams& sharedParams
+        // SharesParams& sharedParams
+        ValueTree& valueTree
         );
-    // ~FluidSynthModel();
+     ~FluidSynthModel();
 
     shared_ptr<fluid_synth_t> getSynth();
     void initialise();
@@ -66,15 +67,54 @@ public:
     void setSampleRate(float sampleRate);
 
     const String& getCurrentSoundFontAbsPath();
+    
+    
+    virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
+                                           const Identifier& property) override;
+    inline virtual void valueTreeChildAdded (ValueTree& parentTree,
+                                             ValueTree& childWhichHasBeenAdded) override {};
+    inline virtual void valueTreeChildRemoved (ValueTree& parentTree,
+                                               ValueTree& childWhichHasBeenRemoved,
+                                               int indexFromWhichChildWasRemoved) override {};
+    inline virtual void valueTreeChildOrderChanged (ValueTree& parentTreeWhoseChildrenHaveMoved,
+                                                    int oldIndex, int newIndex) override {};
+    inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
+    inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
 
 private:
+//    class ValueTreeListener: public ValueTree::Listener {
+//    public:
+////        ValueTreeListener();
+////        ~ValueTreeListener();
+//        virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
+//                                               const Identifier& property) override;
+//        inline virtual void valueTreeChildAdded (ValueTree& parentTree,
+//                                          ValueTree& childWhichHasBeenAdded) override {};
+//        inline virtual void valueTreeChildRemoved (ValueTree& parentTree,
+//                                            ValueTree& childWhichHasBeenRemoved,
+//                                            int indexFromWhichChildWasRemoved) override {};
+//        inline virtual void valueTreeChildOrderChanged (ValueTree& parentTreeWhoseChildrenHaveMoved,
+//                                                 int oldIndex, int newIndex) override {};
+//        inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
+//        inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
+//        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValueTreeListener)
+//    };
+
     int handleMidiEvent(void* data, fluid_midi_event_t* event);
+    
+//    ValueTreeListener valueTreeListener;
 
     AudioProcessorValueTreeState& valueTreeState;
-    SharesParams& sharedParams;
+    // SharesParams& sharedParams;
+    ValueTree& valueTree;
 
-    shared_ptr<fluid_synth_t> synth;
+    // https://stackoverflow.com/questions/38980315/is-stdunique-ptr-deletion-order-guaranteed
+    // members are destroyed in reverse of the order they're declared
+    // http://www.fluidsynth.org/api/
+    // in their examples, they destroy the synth before destroying the settings
     unique_ptr<fluid_settings_t, decltype(&delete_fluid_settings)> settings;
+    // TODO: shared_ptr may ruin our guarantee of synth's being destroyed first, so consider changing the access we expose
+    shared_ptr<fluid_synth_t> synth;
     // unique_ptr<fluid_midi_driver_t, decltype(&delete_fluid_midi_driver)> midiDriver;
 
     String currentSoundFontAbsPath;

@@ -20,10 +20,10 @@ public:
     // virtual int getBank() override;
     // virtual void setBank(int value) override;
 
-    virtual int getUiWidth() override;
-    virtual void setUiWidth(int value) override;
-    virtual int getUiHeight() override;
-    virtual void setUiHeight(int value) override;
+    // virtual int getUiWidth() override;
+    // virtual void setUiWidth(int value) override;
+    // virtual int getUiHeight() override;
+    // virtual void setUiHeight(int value) override;
 
     // virtual int getAttack() override;
     // virtual void setAttack(int value) override;
@@ -40,8 +40,8 @@ public:
     // virtual void setFilterResonance(int value) override;
 
 private:
-    int uiWidth;
-    int uiHeight;
+    // int uiWidth;
+    // int uiHeight;
 
     String soundFontPath;
     // int preset;

@@ -12,10 +12,12 @@ using namespace std;
 
 FluidSynthModel::FluidSynthModel(
     AudioProcessorValueTreeState& valueTreeState,
-    SharesParams& sharedParams
+    ValueTree& valueTree
+    // SharesParams& sharedParams
     )
 : valueTreeState{valueTreeState}
-, sharedParams{sharedParams}
+, valueTree{valueTree}
+// , sharedParams{sharedParams}
 //, synth{nullptr}
 , settings{nullptr, nullptr}
 , currentSoundFontAbsPath{}
@@ -24,10 +26,12 @@ FluidSynthModel::FluidSynthModel(
 , sfont_id{0}
 , channel{0}/*,
 mod(nullptr)*/
+{
+    valueTree.addListener(this);
+}
 
-{}
-
-// FluidSynthModel::~FluidSynthModel() {
+FluidSynthModel::~FluidSynthModel() {
+    valueTree.removeListener(this);
     // if (initialised) {
 //        delete_fluid_audio_driver(driver);
         // delete_fluid_synth(synth);
@@ -36,7 +40,7 @@ mod(nullptr)*/
 //        delete settings;
 //        delete_fluid_mod(mod);
     // }
-// }
+ }
 
 int FluidSynthModel::handleMidiEvent(void* data, fluid_midi_event_t* event)
 {
@@ -79,16 +83,16 @@ void FluidSynthModel::initialise() {
     synth = { new_fluid_synth(settings.get()), delete_fluid_synth };
     fluid_synth_set_sample_rate(synth.get(), currentSampleRate);
 
-    valueTreeState.getParameter("soundFontPath")->getValue();
+    // valueTreeState.getParameter("soundFontPath")->getValue();
     // RangedAudioParameter *param {valueTreeState.getParameter("release")};
     // jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
     // AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
     // *castParam = m.getControllerValue();
-
-    if (sharedParams.getSoundFontPath().isNotEmpty()) {
-        loadFont(sharedParams.getSoundFontPath());
+    
+//    if (sharedParams.getSoundFontPath().isNotEmpty()) {
+//        loadFont(sharedParams.getSoundFontPath());
 //        changePreset(sharedParams->getBank(), sharedParams->getPreset());
-    }
+//    }
 
     fluid_synth_set_gain(synth.get(), 2.0);
     
@@ -191,8 +195,22 @@ void FluidSynthModel::initialise() {
     // clamps the range to between 0 and 1000, so we'll copy that
     fluid_mod_set_amount(mod.get(), 1000.0f);
     fluid_synth_add_default_mod(synth.get(), mod.get(), FLUID_SYNTH_ADD);
+    
+    valueTree.sendPropertyChangeMessage("soundFontPath");
 
     // initialised = true;
+}
+
+void FluidSynthModel::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged,
+                                               const Identifier& property) {
+    if (&treeWhosePropertyHasChanged == &valueTree) {
+        if (property == Identifier("soundFontPath")) {
+            String soundFontPath{treeWhosePropertyHasChanged.getProperty("soundFontPath", "")};
+            if (soundFontPath.isNotEmpty()) {
+                loadFont(soundFontPath);
+            }
+        }
+    }
 }
 
 void FluidSynthModel::setControllerValue(int controller, int value) {
@@ -300,7 +318,8 @@ void FluidSynthModel::onFileNameChanged(const String &absPath, int bank, int pre
     }
     unloadAndLoadFont(absPath);
     changePreset(bank, preset);
-    sharedParams.setSoundFontPath(absPath);
+    valueTree.setPropertyExcludingListener(this, "soundFontPath", absPath, nullptr);
+//    sharedParams.setSoundFontPath(absPath);
     eventListeners.call(&FluidSynthModel::Listener::fontChanged, this, absPath);
 }
 

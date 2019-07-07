@@ -15,9 +15,9 @@
 using namespace std;
 
 Params::Params() noexcept
-: uiWidth{GuiConstants::minWidth}
-, uiHeight{GuiConstants::minHeight}
-, soundFontPath{String()}
+// : uiWidth{GuiConstants::minWidth}
+// , uiHeight{GuiConstants::minHeight}
+: soundFontPath{String()}
 // , preset{-1}
 // , bank{-1}
 // , attack{0}
@@ -30,8 +30,8 @@ Params::Params() noexcept
 }
 
 void Params::setAttributesOnXml(shared_ptr<XmlElement> xml) {
-    xml->setAttribute("uiWidth", uiWidth);
-    xml->setAttribute("uiHeight", uiHeight);
+    // xml->setAttribute("uiWidth", uiWidth);
+    // xml->setAttribute("uiHeight", uiHeight);
     xml->setAttribute("soundFontPath", soundFontPath);
     // xml.setAttribute("preset", preset);
     // xml.setAttribute("bank", bank);
@@ -44,8 +44,8 @@ void Params::setAttributesOnXml(shared_ptr<XmlElement> xml) {
 }
 
 void Params::loadAttributesFromXml(shared_ptr<XmlElement> xmlState) {
-    uiWidth = jmin(jmax(xmlState->getIntAttribute("uiWidth", uiWidth), GuiConstants::minWidth), GuiConstants::maxWidth);
-    uiHeight = jmin(jmax(xmlState->getIntAttribute("uiHeight", uiHeight), GuiConstants::minHeight), GuiConstants::maxHeight);
+    // uiWidth = jmin(jmax(xmlState->getIntAttribute("uiWidth", uiWidth), GuiConstants::minWidth), GuiConstants::maxWidth);
+    // uiHeight = jmin(jmax(xmlState->getIntAttribute("uiHeight", uiHeight), GuiConstants::minHeight), GuiConstants::maxHeight);
     soundFontPath = xmlState->getStringAttribute("soundFontPath", soundFontPath);
     // preset = xmlState->getIntAttribute("preset", preset);
     // bank = xmlState->getIntAttribute("bank", bank);
@@ -95,12 +95,12 @@ String& Params::getSoundFontPath() {
 //int Params::getBank() {
 //    return bank;
 //}
-int Params::getUiWidth() {
-    return uiWidth;
-}
-int Params::getUiHeight() {
-    return uiHeight;
-}
+// int Params::getUiWidth() {
+//     return uiWidth;
+// }
+// int Params::getUiHeight() {
+//     return uiHeight;
+// }
 //int Params::getAttack() {
 //    return attack;
 //}
@@ -126,12 +126,12 @@ int Params::getUiHeight() {
 //void Params::setBank(int value) {
 //    bank = value;
 //}
-void Params::setUiWidth(int value) {
-    uiWidth = value;
-}
-void Params::setUiHeight(int value) {
-    uiHeight = value;
-}
+// void Params::setUiWidth(int value) {
+//     uiWidth = value;
+// }
+// void Params::setUiHeight(int value) {
+//     uiHeight = value;
+// }
 //void Params::setAttack(int value) {
 //    attack = value;
 //}

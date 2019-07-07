@@ -115,11 +115,11 @@ void SlidersComponent::acceptMidiControlEvent(int controller, int value) {
 // }
 
 SlidersComponent::SlidersComponent(
-    SharesParams& sharedParams,
+    // SharesParams& sharedParams,
     AudioProcessorValueTreeState& valueTreeState,
     FluidSynthModel& fluidSynthModel)
-: sharedParams{sharedParams}
-, valueTreeState{valueTreeState}
+// : sharedParams{sharedParams}
+: valueTreeState{valueTreeState}
 , fluidSynthModel{fluidSynthModel}
 , envelopeGroup{"envelopeGroup", "Envelope"}
 , filterGroup{"filterGroup", "Filter"}

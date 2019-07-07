@@ -17,7 +17,7 @@
 #include "Util.h"
 #include "SharesParams.h"
 #include "Params.h"
-#include "MidiConstants.h"
+#include "GuiConstants.h"
 
 using namespace std;
 using Parameter = AudioProcessorValueTreeState::Parameter;
@@ -29,13 +29,13 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 //, sharedParams{static_pointer_cast<SharesParams>(make_shared<Params>())}
 JuicySFAudioProcessor::JuicySFAudioProcessor()
 : AudioProcessor{getBusesProperties()}
-, sharedParams{}
+// , sharedParams{}
 , valueTreeState{
     *this,
     nullptr,
     { "MYPLUGINSETTINGS" },
     createParameterLayout()}
-, fluidSynthModel{valueTreeState, sharedParams}
+, fluidSynthModel{valueTreeState, valueTree}
 //, fluidSynthModel{*this}
 //, pluginEditor(nullptr)
 {
@@ -53,15 +53,22 @@ AudioProcessorValueTreeState::ParameterLayout JuicySFAudioProcessor::createParam
 
     // https://stackoverflow.com/a/8469002/5257399
     unique_ptr<AudioParameterInt> params[] {
-        make_unique<AudioParameterInt>("bank", "which bank is selected in the soundfont", 0, 127, 0, "Bank" ),
+        // make_unique<AudioParameterInt>("uiWidthPersist", "width of this plugin's GUI. Editor listens for changes (e.g. on load)", GuiConstants::minWidth, GuiConstants::maxWidth, GuiConstants::minWidth, "UI Width Persist" ),
+        // make_unique<AudioParameterInt>("uiHeightPersist", "height of this plugin's GUI. Editor listens for changes (e.g. on load)", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height Persist" ),
+        // make_unique<AudioParameterInt>("uiWidthTemp", "width of this plugin's GUI. Editor writes here on change (e.g. on window resize). Processor copies this into Persist before any save.", GuiConstants::minWidth, GuiConstants::maxWidth, GuiConstants::minWidth, "UI Width Temp" ),
+        // make_unique<AudioParameterInt>("uiHeightTemp", "height of this plugin's GUI. Editor writes here on change (e.g. on window resize). Processor copies this into Persist before any save.", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height Temp" ),
+        make_unique<AudioParameterInt>("uiWidth", "width of this plugin's GUI", GuiConstants::minWidth, GuiConstants::maxWidth, GuiConstants::minWidth, "UI Width" ),
+        make_unique<AudioParameterInt>("uiHeight", "height of this plugin's GUI", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height" ),
+        // todo: check whether bank really is 0-127
+        make_unique<AudioParameterInt>("bank", "which bank is selected in the soundfont", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "Bank" ),
         // note: banks may be sparse, and lack a 0th preset. so defend against this.
-        make_unique<AudioParameterInt>("preset", "which patch (aka patch, program, instrument) is selected in the soundfont", 0, 127, 0, "Preset" ),
-        make_unique<AudioParameterInt>("attack", "volume envelope attack time", 0, 127, 0, "A" ),
-        make_unique<AudioParameterInt>("decay", "volume envelope sustain attentuation", 0, 127, 0, "D" ),
-        make_unique<AudioParameterInt>("sustain", "volume envelope decay time", 0, 127, 0, "S" ),
-        make_unique<AudioParameterInt>("release", "volume envelope release time", 0, 127, 0, "R" ),
-        make_unique<AudioParameterInt>("filterCutOff", "low-pass filter cut-off frequency", 0, 127, 0, "Cut" ),
-        make_unique<AudioParameterInt>("filterResonance", "low-pass filter resonance attentuation", 0, 127, 0, "Res" ),
+        make_unique<AudioParameterInt>("preset", "which patch (aka patch, program, instrument) is selected in the soundfont", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "Preset" ),
+        make_unique<AudioParameterInt>("attack", "volume envelope attack time", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "A" ),
+        make_unique<AudioParameterInt>("decay", "volume envelope sustain attentuation", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "D" ),
+        make_unique<AudioParameterInt>("sustain", "volume envelope decay time", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "S" ),
+        make_unique<AudioParameterInt>("release", "volume envelope release time", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "R" ),
+        make_unique<AudioParameterInt>("filterCutOff", "low-pass filter cut-off frequency", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "Cut" ),
+        make_unique<AudioParameterInt>("filterResonance", "low-pass filter resonance attentuation", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "Res" ),
     };
     
     return {
@@ -215,7 +222,7 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
             fluid_midi_event_set_control(midi_event, m.getControllerNumber());
             fluid_midi_event_set_value(midi_event, m.getControllerValue());
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
             delete_fluid_midi_event(midi_event);
             
             switch(static_cast<fluid_midi_control_change>(m.getControllerNumber())) {
@@ -274,21 +281,21 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             fluid_midi_event_set_type(midi_event, static_cast<int>(PROGRAM_CHANGE));
             fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
             fluid_midi_event_set_program(midi_event, m.getProgramChangeNumber());
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
             delete_fluid_midi_event(midi_event);
         } else if (m.isPitchWheel()) {
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
             fluid_midi_event_set_type(midi_event, static_cast<int>(PITCH_BEND));
             fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
             fluid_midi_event_set_pitch(midi_event, m.getPitchWheelValue());
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
             delete_fluid_midi_event(midi_event);
         } else if (m.isChannelPressure()) {
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
             fluid_midi_event_set_type(midi_event, static_cast<int>(CHANNEL_PRESSURE));
             fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
             fluid_midi_event_set_program(midi_event, m.getChannelPressureValue());
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
             delete_fluid_midi_event(midi_event);
         } else if (m.isAftertouch()) {
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
@@ -296,12 +303,12 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
             fluid_midi_event_set_key(midi_event, m.getNoteNumber());
             fluid_midi_event_set_value(midi_event, m.getAfterTouchValue());
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
             delete_fluid_midi_event(midi_event);
 //        } else if (m.isMetaEvent()) {
 //            fluid_midi_event_t *midi_event(new_fluid_midi_event());
 //            fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSTEM_RESET));
-//            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+//            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
 //            delete_fluid_midi_event(midi_event);
         } else if (m.isSysEx()) {
             fluid_midi_event_t *midi_event(new_fluid_midi_event());
@@ -309,7 +316,7 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             // I assume that the MidiMessage's sysex buffer would be freed anyway when MidiMessage is destroyed, so set dynamic=false
             // to ensure that fluidsynth does not attempt to free the sysex buffer during delete_fluid_midi_event()
             fluid_midi_event_set_sysex(midi_event, const_cast<juce::uint8*>(m.getSysExData()), m.getSysExDataSize(), static_cast<int>(false));
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
+            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
             delete_fluid_midi_event(midi_event);
         }
     }
@@ -324,7 +331,7 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
 
     // and now get our synth to process these midi events and generate its output.
     synth.renderNextBlock (buffer, midiMessages, 0, numSamples);
-    fluid_synth_process(fluidSynth, numSamples, 0, nullptr, buffer.getNumChannels(), buffer.getArrayOfWritePointers());
+    fluid_synth_process(fluidSynthModel.getSynth().get(), numSamples, 0, nullptr, buffer.getNumChannels(), buffer.getArrayOfWritePointers());
 
     // (see juce_VST3_Wrapper.cpp for the assertion this would trip otherwise)
     // we are !JucePlugin_ProducesMidiOutput, so clear remaining MIDI messages from our buffer
@@ -364,7 +371,7 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
 //    sharedParams->setAttributesOnXml(xml);
     auto state{valueTreeState.copyState()};
     shared_ptr<XmlElement> xml{state.createXml()};
-    sharedParams.setAttributesOnXml(xml);
+//    sharedParams.setAttributesOnXml(xml);
 
 //    list<StateChangeSubscriber*>::iterator p;
 //    for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
@@ -399,7 +406,7 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
 //            }
 
             // ok, now pull out our last window size..
-           sharedParams.loadAttributesFromXml(xmlState);
+//           sharedParams.loadAttributesFromXml(xmlState);
 
             // Now reload our parameters..
             
@@ -448,9 +455,9 @@ FluidSynthModel& JuicySFAudioProcessor::getFluidSynthModel() {
     return fluidSynthModel;
 }
 
-SharesParams& JuicySFAudioProcessor::getSharedParams() {
-    return sharedParams;
-}
+//SharesParams& JuicySFAudioProcessor::getSharedParams() {
+//    return sharedParams;
+//}
 
 //==============================================================================
 // This creates new instances of the plugin..
