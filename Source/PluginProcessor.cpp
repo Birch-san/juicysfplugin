@@ -33,12 +33,19 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
 , valueTreeState{
     *this,
     nullptr,
-    { "MYPLUGINSETTINGS" },
+    "MYPLUGINSETTINGS",
     createParameterLayout()}
 , fluidSynthModel{valueTreeState, valueTree}
 //, fluidSynthModel{*this}
 //, pluginEditor(nullptr)
 {
+    valueTreeState.state.appendChild({ "uiState", {
+            { "width", GuiConstants::minWidth },
+            { "height", GuiConstants::minHeight }
+        }, {} }, nullptr);
+    valueTreeState.state.setProperty("soundFontPath", "", nullptr);
+//    valueTreeState.state.appendChild({ "soundFontPath", {} }, nullptr);
+    
     initialiseSynth();
 }
 
@@ -57,8 +64,8 @@ AudioProcessorValueTreeState::ParameterLayout JuicySFAudioProcessor::createParam
         // make_unique<AudioParameterInt>("uiHeightPersist", "height of this plugin's GUI. Editor listens for changes (e.g. on load)", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height Persist" ),
         // make_unique<AudioParameterInt>("uiWidthTemp", "width of this plugin's GUI. Editor writes here on change (e.g. on window resize). Processor copies this into Persist before any save.", GuiConstants::minWidth, GuiConstants::maxWidth, GuiConstants::minWidth, "UI Width Temp" ),
         // make_unique<AudioParameterInt>("uiHeightTemp", "height of this plugin's GUI. Editor writes here on change (e.g. on window resize). Processor copies this into Persist before any save.", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height Temp" ),
-        make_unique<AudioParameterInt>("uiWidth", "width of this plugin's GUI", GuiConstants::minWidth, GuiConstants::maxWidth, GuiConstants::minWidth, "UI Width" ),
-        make_unique<AudioParameterInt>("uiHeight", "height of this plugin's GUI", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height" ),
+    //    make_unique<AudioParameterInt>("uiWidth", "width of this plugin's GUI", GuiConstants::minWidth, GuiConstants::maxWidth, GuiConstants::minWidth, "UI Width" ),
+    //    make_unique<AudioParameterInt>("uiHeight", "height of this plugin's GUI", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height" ),
         // todo: check whether bank really is 0-127
         make_unique<AudioParameterInt>("bank", "which bank is selected in the soundfont", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "Bank" ),
         // note: banks may be sparse, and lack a 0th preset. so defend against this.
@@ -227,7 +234,11 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
             
             switch(static_cast<fluid_midi_control_change>(m.getControllerNumber())) {
                 case SOUND_CTRL2: { // MIDI CC 71 Timbre/Harmonic Intensity (filter resonance)
-                    valueTreeState.state.setProperty({"filterResonance"}, m.getControllerValue(), nullptr);
+                    // valueTreeState.state.setProperty({"filterResonance"}, m.getControllerValue(), nullptr);
+                    RangedAudioParameter *param {valueTreeState.getParameter("filterResonance")};
+                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+                    *castParam = m.getControllerValue();
                     break;
                 }
                 case SOUND_CTRL3: { // MIDI CC 72 Release time
@@ -382,9 +393,11 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
     // for (auto* param : getParameters())
     //     if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param))
     //         xml->setAttribute (p->paramID, p->getValue());
-
+    
     // then use this helper function to stuff it into the binary blob and return it..
-    copyXmlToBinary (*xml, destData);
+    if (xml.get() != nullptr) {
+        copyXmlToBinary(*xml, destData);
+    }
 }
 
 void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -399,7 +412,41 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
         // make sure that it's actually our type of XML object..
 //        if (xmlState->hasTagName ("MYPLUGINSETTINGS")) {
         if (xmlState->hasTagName(valueTreeState.state.getType())) {
-            valueTreeState.replaceState(ValueTree::fromXml(*xmlState));
+            // valueTreeState.replaceState(ValueTree::fromXml(*xmlState));
+            for (auto* param : getParameters())
+                if (auto* p = dynamic_cast<AudioProcessorParameterWithID*>(param))
+                    p->setValue(static_cast<float>(xmlState->getDoubleAttribute(p->paramID, p->getValue())));
+            
+            {
+                Value value{valueTreeState.state.getPropertyAsValue("soundFontPath", nullptr)};
+                value = xmlState->getStringAttribute("soundFontPath", value.getValue());
+                // valueTreeState.getParameter("soundFontPath")->getValue()
+                // valueTreeState.getParameter("soundFontPath")->getValue();
+                // RangedAudioParameter *param {valueTreeState.getParameter("release")};
+                // jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+                // AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+                // *castParam = m.getControllerValue();
+            }
+            {
+                ValueTree tree{valueTreeState.state.getChildWithName("uiState")};
+                XmlElement* uiState{xmlState->getChildByName("uiState")};
+                if (uiState) {
+                    {
+                        Value value{tree.getPropertyAsValue("width", nullptr)};
+                        value = uiState->getIntAttribute("width", value.getValue());
+                    }
+                    {
+                        Value value{tree.getPropertyAsValue("height", nullptr)};
+                        value = uiState->getIntAttribute("height", value.getValue());
+                    }
+                }
+                
+//                tree.getPropertyAsValue("width", nullptr)
+//                tree.
+//                valueTreeState.replaceState(ValueTree::fromXml(*xmlState))
+//                value = xmlState->getStringAttribute("soundFontPath", value.getValue());
+            }
+
 //            list<StateChangeSubscriber*>::iterator p;
 //            for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
 //                (*p)->setStateInformation(xmlState);

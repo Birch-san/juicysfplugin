@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1AD8392A4CF90A2094A07A34"
-               BuildableName = "juicysfplugin.vst3"
-               BlueprintName = "juicysfplugin - VST3"
+               BlueprintIdentifier = "48A570326AA09CE818BE1901"
+               BuildableName = "juicysfplugin.vst"
+               BlueprintName = "juicysfplugin - VST"
                ReferencedContainer = "container:juicysfplugin.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -49,9 +49,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1AD8392A4CF90A2094A07A34"
-            BuildableName = "juicysfplugin.vst3"
-            BlueprintName = "juicysfplugin - VST3"
+            BlueprintIdentifier = "48A570326AA09CE818BE1901"
+            BuildableName = "juicysfplugin.vst"
+            BlueprintName = "juicysfplugin - VST"
             ReferencedContainer = "container:juicysfplugin.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -67,9 +67,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1AD8392A4CF90A2094A07A34"
-            BuildableName = "juicysfplugin.vst3"
-            BlueprintName = "juicysfplugin - VST3"
+            BlueprintIdentifier = "48A570326AA09CE818BE1901"
+            BuildableName = "juicysfplugin.vst"
+            BlueprintName = "juicysfplugin - VST"
             ReferencedContainer = "container:juicysfplugin.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -26,7 +26,8 @@
 class JuicySFAudioProcessorEditor
 : public AudioProcessorEditor
 // , public AudioProcessorValueTreeState::Listener
-, public ValueTree::Listener
+, private Value::Listener
+// , public ValueTree::Listener
                       /*,
                                      , public ExposesComponents
                                      public StateChangeSubscriber*/
@@ -55,19 +56,20 @@ public:
     // int getWidth();
     // int getHeight();
 
-    virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
-                                           const Identifier& property) override;
-    inline virtual void valueTreeChildAdded (ValueTree& parentTree,
-                                             ValueTree& childWhichHasBeenAdded) override {};
-    inline virtual void valueTreeChildRemoved (ValueTree& parentTree,
-                                               ValueTree& childWhichHasBeenRemoved,
-                                               int indexFromWhichChildWasRemoved) override {};
-    inline virtual void valueTreeChildOrderChanged (ValueTree& parentTreeWhoseChildrenHaveMoved,
-                                                    int oldIndex, int newIndex) override {};
-    inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
-    inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
+    // virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
+    //                                        const Identifier& property) override;
+    // inline virtual void valueTreeChildAdded (ValueTree& parentTree,
+    //                                          ValueTree& childWhichHasBeenAdded) override {};
+    // inline virtual void valueTreeChildRemoved (ValueTree& parentTree,
+    //                                            ValueTree& childWhichHasBeenRemoved,
+    //                                            int indexFromWhichChildWasRemoved) override {};
+    // inline virtual void valueTreeChildOrderChanged (ValueTree& parentTreeWhoseChildrenHaveMoved,
+    //                                                 int oldIndex, int newIndex) override {};
+    // inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
+    // inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
 
 private:
+    void valueChanged (Value&) override;
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
@@ -75,6 +77,11 @@ private:
 
     AudioProcessorValueTreeState& valueTreeState;
     // SharesParams& sharedParams;
+
+    // these are used to persist the UI's size - the values are stored along with the
+    // filter's other parameters, and the UI component will update them when it gets
+    // resized.
+    Value lastUIWidth, lastUIHeight;
 
     SurjectiveMidiKeyboardComponent midiKeyboard;
     TablesComponent tablesComponent;
