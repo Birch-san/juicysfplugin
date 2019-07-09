@@ -196,21 +196,22 @@ void FluidSynthModel::initialise() {
     fluid_mod_set_amount(mod.get(), 1000.0f);
     fluid_synth_add_default_mod(synth.get(), mod.get(), FLUID_SYNTH_ADD);
     
-    valueTree.sendPropertyChangeMessage("soundFontPath");
+    valueTreeState.state.sendPropertyChangeMessage("soundFontPath");
+    // valueTree.sendPropertyChangeMessage("soundFontPath");
 
     // initialised = true;
 }
 
 void FluidSynthModel::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged,
                                                const Identifier& property) {
-    if (&treeWhosePropertyHasChanged == &valueTree) {
+    // if (&treeWhosePropertyHasChanged == &valueTree) {
         if (property == Identifier("soundFontPath")) {
             String soundFontPath{treeWhosePropertyHasChanged.getProperty("soundFontPath", "")};
             if (soundFontPath.isNotEmpty()) {
                 loadFont(soundFontPath);
             }
         }
-    }
+    // }
 }
 
 void FluidSynthModel::setControllerValue(int controller, int value) {
@@ -318,7 +319,8 @@ void FluidSynthModel::onFileNameChanged(const String &absPath, int bank, int pre
     }
     unloadAndLoadFont(absPath);
     changePreset(bank, preset);
-    valueTree.setPropertyExcludingListener(this, "soundFontPath", absPath, nullptr);
+    valueTreeState.state.setPropertyExcludingListener(this, "soundFontPath", absPath, nullptr);
+    // valueTree.setPropertyExcludingListener(this, "soundFontPath", absPath, nullptr);
 //    sharedParams.setSoundFontPath(absPath);
     eventListeners.call(&FluidSynthModel::Listener::fontChanged, this, absPath);
 }
