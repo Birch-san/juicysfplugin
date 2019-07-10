@@ -27,11 +27,11 @@ FluidSynthModel::FluidSynthModel(
 , channel{0}/*,
 mod(nullptr)*/
 {
-    valueTreeState.state.getChildWithName("soundFont").addListener(this);
+    valueTreeState.state.addListener(this);
 }
 
 FluidSynthModel::~FluidSynthModel() {
-    valueTreeState.state.getChildWithName("soundFont").removeListener(this);
+    valueTreeState.state.removeListener(this);
     // if (initialised) {
 //        delete_fluid_audio_driver(driver);
         // delete_fluid_synth(synth);
@@ -196,7 +196,7 @@ void FluidSynthModel::initialise() {
     fluid_mod_set_amount(mod.get(), 1000.0f);
     fluid_synth_add_default_mod(synth.get(), mod.get(), FLUID_SYNTH_ADD);
     
-    valueTreeState.state.sendPropertyChangeMessage("soundFont");
+    valueTreeState.state.getChildWithName("soundFont").sendPropertyChangeMessage("path");
     // valueTree.sendPropertyChangeMessage("soundFontPath");
 
     // initialised = true;

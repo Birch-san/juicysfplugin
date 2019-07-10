@@ -76,7 +76,7 @@ private:
 
 //    Params sharedParams;
     AudioProcessorValueTreeState valueTreeState;
-    ValueTree valueTree;
+    // ValueTree valueTree;
 
     FluidSynthModel fluidSynthModel;
     // fluid_synth_t* fluidSynth;
