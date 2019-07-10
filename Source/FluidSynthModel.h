@@ -20,9 +20,9 @@ using namespace std;
 class FluidSynthModel: public ValueTree::Listener {
 public:
     FluidSynthModel(
-        AudioProcessorValueTreeState& valueTreeState,
+        AudioProcessorValueTreeState& valueTreeState
         // SharesParams& sharedParams
-        ValueTree& valueTree
+        // ValueTree& valueTree
         );
      ~FluidSynthModel();
 
@@ -106,7 +106,7 @@ private:
 
     AudioProcessorValueTreeState& valueTreeState;
     // SharesParams& sharedParams;
-    ValueTree& valueTree;
+    // ValueTree& valueTree;
 
     // https://stackoverflow.com/questions/38980315/is-stdunique-ptr-deletion-order-guaranteed
     // members are destroyed in reverse of the order they're declared

@@ -35,7 +35,7 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
     nullptr,
     "MYPLUGINSETTINGS",
     createParameterLayout()}
-, fluidSynthModel{valueTreeState, valueTree}
+, fluidSynthModel{valueTreeState}
 //, fluidSynthModel{*this}
 //, pluginEditor(nullptr)
 {
@@ -43,7 +43,10 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
             { "width", GuiConstants::minWidth },
             { "height", GuiConstants::minHeight }
         }, {} }, nullptr);
-    valueTreeState.state.setProperty("soundFontPath", "", nullptr);
+    valueTreeState.state.appendChild({ "soundFont", {
+        { "path", "" },
+    }, {} }, nullptr);
+    // valueTreeState.state.setProperty("soundFontPath", "", nullptr);
 //    valueTreeState.state.appendChild({ "soundFontPath", {} }, nullptr);
     
     initialiseSynth();
@@ -407,7 +410,20 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
     // This getXmlFromBinary() helper function retrieves our XML from the binary blob..
     shared_ptr<XmlElement> xmlState{getXmlFromBinary(data, sizeInBytes)};
 //    unique_ptr<XmlElement> xmlState{getXmlFromBinary(data, sizeInBytes)};
-
+    DEBUG_PRINT(xmlState->createDocument("",false,false));
+/*
+ <MYPLUGINSETTINGS soundFontPath="">
+ <PARAM id="attack" value="0.0"/>
+ <PARAM id="bank" value="0.0"/>
+ <PARAM id="decay" value="0.0"/>
+ <PARAM id="filterCutOff" value="0.0"/>
+ <PARAM id="filterResonance" value="0.0"/>
+ <PARAM id="preset" value="0.0"/>
+ <PARAM id="release" value="0.0"/>
+ <PARAM id="sustain" value="0.0"/>
+ <uiState width="722" height="300"/>
+ </MYPLUGINSETTINGS>
+ */
     if (xmlState.get() != nullptr) {
         // make sure that it's actually our type of XML object..
 //        if (xmlState->hasTagName ("MYPLUGINSETTINGS")) {
@@ -418,8 +434,15 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
                     p->setValue(static_cast<float>(xmlState->getDoubleAttribute(p->paramID, p->getValue())));
             
             {
-                Value value{valueTreeState.state.getPropertyAsValue("soundFontPath", nullptr)};
-                value = xmlState->getStringAttribute("soundFontPath", value.getValue());
+                // Value value{valueTreeState.state.getPropertyAsValue("soundFontPath", nullptr)};
+                // value = xmlState->getStringAttribute("soundFontPath", value.getValue());
+                ValueTree tree{valueTreeState.state.getChildWithName("soundFont")};
+                XmlElement* xmlElement{xmlState->getChildByName("soundFont")};
+                if (xmlElement) {
+                    Value value{tree.getPropertyAsValue("path", nullptr)};
+                    value = xmlState->getStringAttribute("path", value.getValue());
+                }
+
                 // valueTreeState.getParameter("soundFontPath")->getValue()
                 // valueTreeState.getParameter("soundFontPath")->getValue();
                 // RangedAudioParameter *param {valueTreeState.getParameter("release")};
@@ -429,15 +452,15 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
             }
             {
                 ValueTree tree{valueTreeState.state.getChildWithName("uiState")};
-                XmlElement* uiState{xmlState->getChildByName("uiState")};
-                if (uiState) {
+                XmlElement* xmlElement{xmlState->getChildByName("uiState")};
+                if (xmlElement) {
                     {
                         Value value{tree.getPropertyAsValue("width", nullptr)};
-                        value = uiState->getIntAttribute("width", value.getValue());
+                        value = xmlElement->getIntAttribute("width", value.getValue());
                     }
                     {
                         Value value{tree.getPropertyAsValue("height", nullptr)};
-                        value = uiState->getIntAttribute("height", value.getValue());
+                        value = xmlElement->getIntAttribute("height", value.getValue());
                     }
                 }
                 
