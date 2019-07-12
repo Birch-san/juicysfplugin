@@ -27,12 +27,12 @@ FilePicker::FilePicker(
     setOpaque (true);
 
     // setDisplayedFilePath(fluidSynthModel.getCurrentSoundFontAbsPath());
-    setDisplayedFilePath("");
+    setDisplayedFilePath(valueTreeState.state.getChildWithName("soundFont").getProperty("path", ""));
 
     addAndMakeVisible (fileChooser);
     fileChooser.addListener (this);
     valueTreeState.state.addListener(this);
-    valueTreeState.state.getChildWithName("soundFont").sendPropertyChangeMessage("path");
+//    valueTreeState.state.getChildWithName("soundFont").sendPropertyChangeMessage("path");
 }
 FilePicker::~FilePicker() {
     fileChooser.removeListener (this);
@@ -65,7 +65,7 @@ void FilePicker::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged
     // if (&treeWhosePropertyHasChanged == &valueTree) {
         if (property == StringRef("path")) {
             String soundFontPath{treeWhosePropertyHasChanged.getProperty("path", "")};
-            DEBUG_PRINT(soundFontPath);
+            // DEBUG_PRINT(soundFontPath);
             // if (soundFontPath.isNotEmpty()) {
             //     loadFont(soundFontPath);
             // }

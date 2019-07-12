@@ -20,20 +20,22 @@ TablesComponent::TablesComponent(
     selectedBank = -1;
     int selectedPreset = -1;
 
+    
+
     if (currentPreset != nullptr) {
         selectedBank = fluid_preset_get_banknum(currentPreset);
         selectedPreset = fluid_preset_get_num(currentPreset);
     }
 
-    auto rowToPresetMapper = [this](const vector<string> &row) {
-        return stoi(row[0]);
-    };
+    // auto rowToPresetMapper = [this](const vector<string> &row) {
+    //     return stoi(row[0]);
+    // };
     auto itemToBankMapper = [](const string &item) {
         return stoi(item);
     };
 
     presetTable = new TableComponent(
-            {"#", "Name"},
+            // {"#", "Name"},
             mapPresets(
                     banksToPresets,
                     selectedBank
@@ -41,7 +43,7 @@ TablesComponent::TablesComponent(
             [this](int preset){
                 this->onPresetSelected(preset);
             },
-            rowToPresetMapper,
+            // rowToPresetMapper,
             presetToIndexMapper(selectedPreset)
     );
     banks = new Pills(

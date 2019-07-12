@@ -339,6 +339,42 @@ void FluidSynthModel::loadFont(const String &absPath) {
     currentSoundFontAbsPath = absPath;
     sfont_id++;
     fluid_synth_sfload(synth.get(), absPath.toStdString().c_str(), 1);
+    fluid_sfont_t* sfont {fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
+    ValueTree banks{"banks"};
+    ValueTree presets{"presets"};
+    if (sfont != nullptr) {
+        int initialBankOffset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+        banks.appendChild({ "bank", {
+            { "num", initialBankOffset },
+        }, {} }, nullptr);
+
+        fluid_sfont_iteration_start(sfont);
+
+        for(fluid_preset_t* preset {fluid_sfont_iteration_next(sfont)};
+        preset != nullptr;
+        preset = fluid_sfont_iteration_next(sfont)) {
+            int bankOffset{fluid_preset_get_banknum(preset) + initialBankOffset};
+            // ValueTree preset{"preset"};
+            // banksToPresets.insert(BanksToPresets::value_type(
+            //         fluid_preset_get_banknum(preset) + bankOffset,
+            //         *new Preset(
+            //                 fluid_preset_get_num(preset),
+            //                 fluid_preset_get_name(preset)
+            //         )
+            // ));
+            if (bankOffset > initialBankOffset) {
+                banks.appendChild({ "bank", {
+                    { "num", bankOffset },
+                }, {} }, nullptr);
+            }
+            presets.appendChild({ "preset", {
+                { "num", fluid_preset_get_num(preset) },
+                { "name", String{fluid_preset_get_name(preset)} }
+            }, {} }, nullptr);
+        }
+    }
+    valueTreeState.state.getChildWithName("banks") = banks;
+    valueTreeState.state.getChildWithName("presets") = presets;
 }
 
 FluidSynthModel::Listener::~Listener() {

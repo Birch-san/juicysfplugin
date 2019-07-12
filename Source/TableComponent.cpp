@@ -15,17 +15,18 @@ using namespace std;
     This class shows how to implement a TableListBoxModel to show in a TableListBox.
 */
 TableComponent::TableComponent(
-        const vector<string> &columns,
-        const vector<vector<string>> &rows,
-        const function<void (int)> &onRowSelected,
-        const function<int (const vector<string>&)> &rowToIDMapper,
-        int initiallySelectedRow
+    AudioProcessorValueTreeState& valueTreeState,
+    // const vector<string> &columns,
+    const vector<vector<string>> &rows,
+    const function<void (int)> &onRowSelected,
+    // const function<int (const vector<string>&)> &rowToIDMapper,
+    int initiallySelectedRow
 )
-        : font (14.0f),
-          columns(columns),
-          rows(rows),
-          onRowSelected(onRowSelected),
-          rowToIDMapper(rowToIDMapper)
+: font (14.0f)
+, columns(columns)
+, rows(rows)
+, onRowSelected(onRowSelected)/*,
+rowToIDMapper(rowToIDMapper)*/
 {
     // Create our table component and add it to this component..
     addAndMakeVisible (table);
@@ -38,31 +39,81 @@ TableComponent::TableComponent(
     int columnIx = 1;
 
     // Add some columns to the table header, based on the column list in our database..
-    for (auto &column : columns) // access by reference to avoid copying
-    {
-        const int colWidth{ columnIx == 1 ? 30 : 200 };
-        table.getHeader().addColumn (
-                String(column),
-                columnIx++,
-                colWidth, // column width
-                30, // min width
-                400, // max width
-                TableHeaderComponent::defaultFlags
-        );
-    }
+    // for (auto &column : columns) // access by reference to avoid copying
+    // {
+    //     const int colWidth{ columnIx == 1 ? 30 : 200 };
+    //     table.getHeader().addColumn (
+    //             String(column),
+    //             columnIx++,
+    //             colWidth, // column width
+    //             30, // min width
+    //             400, // max width
+    //             TableHeaderComponent::defaultFlags
+    //     );
+    // }
+    table.getHeader().addColumn (
+            String("#"),
+            columnIx++,
+            30, // column width
+            30, // min width
+            400, // max width
+            TableHeaderComponent::defaultFlags
+    );
+    table.getHeader().addColumn (
+            String("Name"),
+            columnIx++,
+            200, // column width
+            30, // min width
+            400, // max width
+            TableHeaderComponent::defaultFlags
+    );
 
     table.setWantsKeyboardFocus(false);
 
     table.selectRow(initiallySelectedRow);
 
     // we could now change some initial settings..
-    table.getHeader().setSortColumnId (1, false); // sort ascending by ID column
+    table.getHeader().setSortColumnId(1, false); // sort ascending by ID column
 //    table.getHeader().setColumnVisible (7, false); // hide the "length" column until the user shows it
 
     // un-comment this line to have a go of stretch-to-fit mode
     // table.getHeader().setStretchToFitActive (true);
 
 //    table.setMultipleSelectionEnabled (false);
+    valueTreeState.state.addListener(this);
+}
+
+TableComponent::~TableComponent() {
+    valueTreeState.state.removeListener(this);
+}
+
+// void TableComponent::parameterChanged(const String& parameterID, float newValue) {
+//     // valueTreeState.getParameter
+//     RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+//     if (parameterID == "bank") {
+//         jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+//         AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+//         int value{castParam->get()};
+//     } else if (parameterID == "preset") {
+//         jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+//         AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+//         int value{castParam->get()};
+//     }
+// }
+
+void TableComponent::valueTreePropertyChanged(
+    ValueTree& treeWhosePropertyHasChanged,
+    const Identifier& property) {
+    if (treeWhosePropertyHasChanged.getType() == StringRef("soundFont")) {
+    // if (&treeWhosePropertyHasChanged == &valueTree) {
+        if (property == StringRef("path")) {
+            String soundFontPath{treeWhosePropertyHasChanged.getProperty("path", "")};
+            // DEBUG_PRINT(soundFontPath);
+            // if (soundFontPath.isNotEmpty()) {
+            //     loadFont(soundFontPath);
+            // }
+        }
+    }
 }
 
 void TableComponent::setRows(const vector<vector<string>>& rows, int initiallySelectedRow) {
@@ -148,10 +199,8 @@ void TableComponent::sortOrderChanged (
 // This is overloaded from TableListBoxModel, and should choose the best width for the specified
 // column.
 int TableComponent::getColumnAutoSizeWidth (int columnId) {
-//    if (columnId == 5)
-//        return 100; // (this is the ratings column, containing a custom combobox component)
     if (columnId == 1)
-        return 30; // (this is the ratings column, containing a custom combobox component)
+        return 30;
 
     
     int widest = 32;
@@ -201,7 +250,13 @@ void TableComponent::selectedRowsChanged (int row) {
     if (row < 0) {
         return;
     }
-    onRowSelected(rowToIDMapper(rows[row]));
+    // onRowSelected(rowToIDMapper(rows[row]));
+    // onRowSelected(stoi(rows[row][0]));
+    int newPreset{stoi(rows[row][0])};
+    RangedAudioParameter *param {valueTreeState.getParameter("preset")};
+    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+    *castParam = newPreset;
 }
 
 bool TableComponent::keyPressed(const KeyPress &key) {
