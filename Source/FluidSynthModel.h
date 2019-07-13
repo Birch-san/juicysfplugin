@@ -43,26 +43,26 @@ public:
 
         @see Button::addListener, Button::removeListener
     */
-    class Listener
-    {
-    public:
-        /** Destructor. */
-        virtual ~Listener();
+    // class Listener
+    // {
+    // public:
+    //     /** Destructor. */
+    //     virtual ~Listener();
 
-        /** Called when the button is clicked. */
-        virtual void fontChanged (FluidSynthModel*, const String &absPath);
-    };
+    //     /** Called when the button is clicked. */
+    //     virtual void fontChanged (FluidSynthModel*, const String &absPath);
+    // };
 
     /** Registers a listener to receive events when this button's state changes.
         If the listener is already registered, this will not register it again.
         @see removeListener
     */
-    void addListener (Listener* newListener);
+    // void addListener (Listener* newListener);
 
     /** Removes a previously-registered button listener
         @see addListener
     */
-    void removeListener (Listener* listener);
+    // void removeListener (Listener* listener);
 
     void setSampleRate(float sampleRate);
 
@@ -137,7 +137,7 @@ private:
 
 //    fluid_mod_t* mod;
 
-    ListenerList<Listener> eventListeners;
+    // ListenerList<Listener> eventListeners;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FluidSynthModel)
 };

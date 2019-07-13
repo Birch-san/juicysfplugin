@@ -15,6 +15,21 @@
 
 using namespace std;
 
+class TableRow {
+public:
+    TableRow(
+             int preset,
+             String name
+             );
+private:
+    int preset;
+    String name;
+    
+    friend class TableComponent;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TableRow)
+};
+
+
 class TableComponent    : public Component,
                           public TableListBoxModel,
                           public ValueTree::Listener/*,
@@ -23,7 +38,7 @@ public:
     TableComponent(
             AudioProcessorValueTreeState& valueTreeState,
         //     const vector<string> &columns,
-            const vector<vector<string>> &rows,
+        //     const vector<TableRow> &rows,
             const function<void (int)> &onRowSelected,
         //     const function<int (const vector<string>&)> &rowToIDMapper,
             int initiallySelectedRow
@@ -56,7 +71,7 @@ public:
 
     void resized() override;
 
-    void setRows(const vector<vector<string>>& rows, int initiallySelectedRow);
+//     void setRows(const vector<TableRow>& rows, int initiallySelectedRow);
 
     bool keyPressed(const KeyPress &key) override;
 
@@ -79,8 +94,8 @@ private:
     TableListBox table;     // the table component itself
     Font font;
 
-    vector<string> columns;
-    vector<vector<string>> rows;
+//     vector<string> columns;
+    vector<TableRow> rows;
 
     function<void (int)> onRowSelected;
 //     function<int (const vector<string>&)> rowToIDMapper;
@@ -94,8 +109,8 @@ private:
         );
 
         bool operator ()(
-                vector<string> first,
-                vector<string> second
+                TableRow first,
+                TableRow second
         );
 
     private:

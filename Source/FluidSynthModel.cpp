@@ -324,7 +324,7 @@ void FluidSynthModel::onFileNameChanged(const String &absPath, int bank, int pre
     valueTree.setPropertyExcludingListener(this, "path", absPath, nullptr);
     // valueTree.setPropertyExcludingListener(this, "soundFontPath", absPath, nullptr);
 //    sharedParams.setSoundFontPath(absPath);
-    eventListeners.call(&FluidSynthModel::Listener::fontChanged, this, absPath);
+    // eventListeners.call(&FluidSynthModel::Listener::fontChanged, this, absPath);
 }
 
 void FluidSynthModel::unloadAndLoadFont(const String &absPath) {
@@ -377,8 +377,8 @@ void FluidSynthModel::loadFont(const String &absPath) {
     valueTreeState.state.getChildWithName("presets") = presets;
 }
 
-FluidSynthModel::Listener::~Listener() {
-}
+// FluidSynthModel::Listener::~Listener() {
+// }
 
 bool FluidSynthModel::shouldLoadFont(const String &absPath) {
     if (absPath.isEmpty()) {
@@ -390,23 +390,23 @@ bool FluidSynthModel::shouldLoadFont(const String &absPath) {
     return true;
 }
 
-void FluidSynthModel::Listener::fontChanged(FluidSynthModel * model, const String &absPath) {
-}
+// void FluidSynthModel::Listener::fontChanged(FluidSynthModel * model, const String &absPath) {
+// }
 
 const String& FluidSynthModel::getCurrentSoundFontAbsPath() {
     return currentSoundFontAbsPath;
 }
 
 //==============================================================================
-void FluidSynthModel::addListener (FluidSynthModel::Listener* const newListener)
-{
-    eventListeners.add(newListener);
-}
+// void FluidSynthModel::addListener (FluidSynthModel::Listener* const newListener)
+// {
+//     eventListeners.add(newListener);
+// }
 
-void FluidSynthModel::removeListener (FluidSynthModel::Listener* const listener)
-{
-    eventListeners.remove(listener);
-}
+// void FluidSynthModel::removeListener (FluidSynthModel::Listener* const listener)
+// {
+//     eventListeners.remove(listener);
+// }
 
 void FluidSynthModel::setSampleRate(float sampleRate) {
     currentSampleRate = sampleRate;

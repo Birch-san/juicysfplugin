@@ -15,8 +15,8 @@
 
 using namespace std;
 
-class TablesComponent : public Component,
-                        public FluidSynthModel::Listener
+class TablesComponent : public Component/*,
+                        public FluidSynthModel::Listener */
 {
 public:
     TablesComponent(
@@ -28,7 +28,7 @@ public:
     void resized() override;
 
     bool keyPressed(const KeyPress &key) override;
-    void fontChanged(FluidSynthModel *, const String &) override;
+    // void fontChanged(FluidSynthModel *, const String &) override;
 
 private:
     AudioProcessorValueTreeState& valueTreeState;
