@@ -20,10 +20,10 @@ class TablesComponent : public Component/*,
 {
 public:
     TablesComponent(
-        AudioProcessorValueTreeState& valueTreeState,
-        FluidSynthModel& fluidSynthModel
+        AudioProcessorValueTreeState& valueTreeState
+        // FluidSynthModel& fluidSynthModel
     );
-    ~TablesComponent();
+    // ~TablesComponent();
 
     void resized() override;
 
@@ -32,25 +32,25 @@ public:
 
 private:
     AudioProcessorValueTreeState& valueTreeState;
-    FluidSynthModel& fluidSynthModel;
-    int selectedBank;
+    // FluidSynthModel& fluidSynthModel;
+    // int selectedBank;
 
     Pills banks;
     TableComponent presetTable;
 
-    BanksToPresets banksToPresets;
+    // BanksToPresets banksToPresets;
 
     // static vector<vector<string>> mapPresets(const BanksToPresets &banksToPresets, int bank);
-    static vector<string> mapBanks(const BanksToPresets &banksToPresets);
+    // static vector<string> mapBanks(const BanksToPresets &banksToPresets);
 
-    void onBankSelected(int bank);
-    void onPresetSelected(int preset);
-    int presetToIndexMapper(int preset);
+    // void onBankSelected(int bank);
+    // void onPresetSelected(int preset);
+    // int presetToIndexMapper(int preset);
 
-    fluid_preset_t* getCurrentPreset();
-    Preset getFirstPresetInBank(int bank);
+    // fluid_preset_t* getCurrentPreset();
+    // Preset getFirstPresetInBank(int bank);
 
-    bool initialised;
+    // bool initialised;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TablesComponent)
 };

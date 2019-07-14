@@ -32,8 +32,7 @@ private:
     TextButton textButton;
 
     friend class Pills;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pill)
-}
+};
 
 class Pills
 : public Component

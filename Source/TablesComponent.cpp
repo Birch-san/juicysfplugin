@@ -8,105 +8,107 @@ using namespace std;
 using namespace placeholders;
 
 TablesComponent::TablesComponent(
-    AudioProcessorValueTreeState& valueTreeState,
-    FluidSynthModel& fluidSynthModel
+    AudioProcessorValueTreeState& valueTreeState
+    // FluidSynthModel& fluidSynthModel
 )
 : valueTreeState{valueTreeState}
-, fluidSynthModel{fluidSynthModel}
-, banksToPresets{fluidSynthModel.getBanks()}
-, initialised{false}
+// , fluidSynthModel{fluidSynthModel}
+, banks{valueTreeState}
+, presetTable{valueTreeState}
+// , banksToPresets{fluidSynthModel.getBanks()}
+// , initialised{false}
 {
-    fluid_preset_t* currentPreset = getCurrentPreset();
-    selectedBank = -1;
-    int selectedPreset = -1;
+    // fluid_preset_t* currentPreset = getCurrentPreset();
+    // selectedBank = -1;
+    // int selectedPreset = -1;
 
     
 
-    if (currentPreset != nullptr) {
-        selectedBank = fluid_preset_get_banknum(currentPreset);
-        selectedPreset = fluid_preset_get_num(currentPreset);
-    }
+    // if (currentPreset != nullptr) {
+    //     selectedBank = fluid_preset_get_banknum(currentPreset);
+    //     selectedPreset = fluid_preset_get_num(currentPreset);
+    // }
 
     // auto rowToPresetMapper = [this](const vector<string> &row) {
     //     return stoi(row[0]);
     // };
-    auto itemToBankMapper = [](const string &item) {
-        return stoi(item);
-    };
+    // auto itemToBankMapper = [](const string &item) {
+    //     return stoi(item);
+    // };
 
-    presetTable = new TableComponent(
-             valueTreeState,
-            // {"#", "Name"},
-            // mapPresets(
-            //         banksToPresets,
-            //         selectedBank
-            // ),
-            // [this](int preset){
-            //     this->onPresetSelected(preset);
-            // },
-            // rowToPresetMapper,
-            // presetToIndexMapper(selectedPreset)
-    );
-    banks = new Pills(
-            "Banks",
-            mapBanks(banksToPresets),
-            [this](int bank){
-                this->onBankSelected(bank);
-            },
-            itemToBankMapper,
-            selectedBank
-    );
+    // presetTable = new TableComponent(
+    //          valueTreeState,
+    //         // {"#", "Name"},
+    //         // mapPresets(
+    //         //         banksToPresets,
+    //         //         selectedBank
+    //         // ),
+    //         // [this](int preset){
+    //         //     this->onPresetSelected(preset);
+    //         // },
+    //         // rowToPresetMapper,
+    //         // presetToIndexMapper(selectedPreset)
+    // );
+    // banks = new Pills(
+    //         "Banks",
+    //         mapBanks(banksToPresets),
+    //         [this](int bank){
+    //             this->onBankSelected(bank);
+    //         },
+    //         itemToBankMapper,
+    //         selectedBank
+    // );
 
-    presetTable->setWantsKeyboardFocus(false);
+    presetTable.setWantsKeyboardFocus(false);
 
     addAndMakeVisible(presetTable);
 
     addAndMakeVisible(banks);
 
-    initialised = true;
+    // initialised = true;
 
-    fluidSynthModel.addListener(this);
+    // fluidSynthModel.addListener(this);
 }
 
-fluid_preset_t* TablesComponent::getCurrentPreset() {
-    shared_ptr<fluid_synth_t> synth {fluidSynthModel.getSynth()};
+// fluid_preset_t* TablesComponent::getCurrentPreset() {
+//     shared_ptr<fluid_synth_t> synth {fluidSynthModel.getSynth()};
 
-    return fluid_synth_get_channel_preset(synth.get(), fluidSynthModel.getChannel());
-}
+//     return fluid_synth_get_channel_preset(synth.get(), fluidSynthModel.getChannel());
+// }
 
-Preset TablesComponent::getFirstPresetInBank(int bank) {
-    pair<BanksToPresets::const_iterator, BanksToPresets::const_iterator> iterators = banksToPresets.equal_range(bank);
-    BanksToPresets::const_iterator it = iterators.first;
-    return it->second;
-}
+// Preset TablesComponent::getFirstPresetInBank(int bank) {
+//     pair<BanksToPresets::const_iterator, BanksToPresets::const_iterator> iterators = banksToPresets.equal_range(bank);
+//     BanksToPresets::const_iterator it = iterators.first;
+//     return it->second;
+// }
 
-void TablesComponent::onBankSelected(int bank) {
-    if (!initialised || bank == -1) {
-        return;
-    }
-    cout << "Bank " << bank << endl;
-    selectedBank = bank;
-    Preset firstPresetInBank = getFirstPresetInBank(bank);
-    presetTable->setRows(
-            mapPresets(
-                    banksToPresets,
-                    bank
-            ),
-            presetToIndexMapper(firstPresetInBank.getPreset())
-    );
-}
+// void TablesComponent::onBankSelected(int bank) {
+//     if (!initialised || bank == -1) {
+//         return;
+//     }
+//     cout << "Bank " << bank << endl;
+//     selectedBank = bank;
+//     Preset firstPresetInBank = getFirstPresetInBank(bank);
+//     presetTable->setRows(
+//             mapPresets(
+//                     banksToPresets,
+//                     bank
+//             ),
+//             presetToIndexMapper(firstPresetInBank.getPreset())
+//     );
+// }
 
-int TablesComponent::presetToIndexMapper(int preset) {
-    int ix = 0;
-    pair<BanksToPresets::const_iterator, BanksToPresets::const_iterator> iterators = this->banksToPresets.equal_range(this->selectedBank);
-    for (auto it = iterators.first; it != iterators.second; ++it, ix++) {
-        Preset b = it->second;
-        if (preset == b.getPreset()) {
-            return ix;
-        }
-    }
-    return 0;
-}
+// int TablesComponent::presetToIndexMapper(int preset) {
+//     int ix = 0;
+//     pair<BanksToPresets::const_iterator, BanksToPresets::const_iterator> iterators = this->banksToPresets.equal_range(this->selectedBank);
+//     for (auto it = iterators.first; it != iterators.second; ++it, ix++) {
+//         Preset b = it->second;
+//         if (preset == b.getPreset()) {
+//             return ix;
+//         }
+//     }
+//     return 0;
+// }
 
 // void TablesComponent::onPresetSelected(int preset) {
 //     if (!initialised || preset == -1) {
@@ -117,25 +119,25 @@ int TablesComponent::presetToIndexMapper(int preset) {
 //     fluidSynthModel.changePreset(selectedBank, preset);
 // }
 
-TablesComponent::~TablesComponent() {
-    delete presetTable;
-    delete banks;
-    // fluidSynthModel.removeListener(this);
-}
+// TablesComponent::~TablesComponent() {
+//     delete presetTable;
+//     delete banks;
+//     // fluidSynthModel.removeListener(this);
+// }
 
-vector<string> TablesComponent::mapBanks(const BanksToPresets &banksToPresets) {
-    vector<string> rows;
+// vector<string> TablesComponent::mapBanks(const BanksToPresets &banksToPresets) {
+//     vector<string> rows;
 
-    const auto compareKey = [](const BanksToPresets::value_type& lhs, const BanksToPresets::value_type& rhs) {
-        return lhs.first < rhs.first;
-    };
+//     const auto compareKey = [](const BanksToPresets::value_type& lhs, const BanksToPresets::value_type& rhs) {
+//         return lhs.first < rhs.first;
+//     };
 
-    for(auto i = banksToPresets.begin(); i != banksToPresets.end(); i = std::upper_bound(i, banksToPresets.end(), *i, compareKey)) {
-        rows.push_back(to_string(i->first));
-    }
+//     for(auto i = banksToPresets.begin(); i != banksToPresets.end(); i = std::upper_bound(i, banksToPresets.end(), *i, compareKey)) {
+//         rows.push_back(to_string(i->first));
+//     }
 
-    return rows;
-}
+//     return rows;
+// }
 
 
 // vector<vector<string>> TablesComponent::mapPresets(const BanksToPresets &banksToPresets, int bank) {
@@ -156,18 +158,18 @@ vector<string> TablesComponent::mapBanks(const BanksToPresets &banksToPresets) {
 
 void TablesComponent::resized() {
     Rectangle<int> r (getLocalBounds());
-    banks->setBounds (r.removeFromTop(27).reduced(5,0));
+    banks.setBounds (r.removeFromTop(27).reduced(5,0));
 
-    presetTable->setBounds (r);
+    presetTable.setBounds (r);
 }
 
 bool TablesComponent::keyPressed(const KeyPress &key) {
     if (key.getKeyCode() == KeyPress::leftKey
             || key.getKeyCode() == KeyPress::rightKey) {
-        banks->cycle(key.getKeyCode() == KeyPress::rightKey);
+        banks.cycle(key.getKeyCode() == KeyPress::rightKey);
         return true;
     }
-    return presetTable->keyPressed(key);
+    return presetTable.keyPressed(key);
 }
 
 // void TablesComponent::fontChanged(FluidSynthModel *, const String &) {

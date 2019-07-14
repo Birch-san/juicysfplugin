@@ -7,8 +7,8 @@
 #include "Util.h"
 
 FilePicker::FilePicker(
-    AudioProcessorValueTreeState& valueTreeState,
-    FluidSynthModel& fluidSynthModel
+    AudioProcessorValueTreeState& valueTreeState
+    // FluidSynthModel& fluidSynthModel
 )
 : fileChooser{
     "File",
@@ -20,7 +20,7 @@ FilePicker::FilePicker(
     String(),
     "Choose a Soundfont file to load into the synthesizer"}
 , valueTreeState{valueTreeState}
-, fluidSynthModel{fluidSynthModel}
+// , fluidSynthModel{fluidSynthModel}
 // , currentPath{}
 {
     // faster (rounded edges introduce transparency)

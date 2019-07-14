@@ -17,7 +17,7 @@ using namespace Util;
     This class shows how to implement a TableListBoxModel to show in a TableListBox.
 */
 TableComponent::TableComponent(
-    AudioProcessorValueTreeState& valueTreeState,
+    AudioProcessorValueTreeState& valueTreeState
     // const vector<string> &columns,
 //    const vector<TableRow> &rows,
     // const function<void (int)> &onRowSelected,
@@ -74,7 +74,8 @@ TableComponent::TableComponent(
     table.setWantsKeyboardFocus(false);
 
     // table.selectRow();
-    loadModelFrom(valueTreeState.state.getChildWithName("presets"));
+    ValueTree presets{valueTreeState.state.getChildWithName("presets")};
+    loadModelFrom(presets);
     // selectCurrentPreset();
 
     // we could now change some initial settings..
@@ -160,9 +161,9 @@ void TableComponent::paintRowBackground (
 
 String TableRow::getStringContents(int columnId) {
     if (columnId <= 1) {
-        return String(row.preset);
+        return String(preset);
     }
-    return row.name;
+    return name;
 }
 
 // This is overloaded from TableListBoxModel, and must paint any cells that aren't using custom

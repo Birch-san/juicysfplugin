@@ -4,6 +4,7 @@
 
 #include "Pills.h"
 #include "MyColours.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -14,7 +15,8 @@ Pill::Pill(
     bool isLast
 )
 // : pills{pills}
-: bank{bank}
+: valueTreeState{valueTreeState}
+, bank{bank}
 , textButton{String(bank)}
 {
     textButton.setConnectedEdges (
@@ -25,16 +27,18 @@ Pill::Pill(
     loadToggleState();
     textButton.setClickingTogglesState(true);
     
-    valueTreeState.state.addListener(this);
+    valueTreeState.addParameterListener("bank", this);
+//    valueTreeState.state.addListener(this);
     textButton.addListener(this);
 }
 
 Pill::~Pill() {
-    valueTreeState.state.removeListener(this);
+    valueTreeState.removeParameterListener("bank", this);
+//    valueTreeState.state.removeListener(this);
     textButton.removeListener(this);
 }
 
-Pill::loadToggleState() {
+void Pill::loadToggleState() {
     RangedAudioParameter *param {valueTreeState.getParameter("bank")};
     jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
     AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
@@ -57,13 +61,13 @@ void Pill::parameterChanged(const String& parameterID, float newValue) {
     }
 }
 
-void Pill::valueTreePropertyChanged(
-    ValueTree& treeWhosePropertyHasChanged,
-    const Identifier& property) {
-    if (treeWhosePropertyHasChanged.getType() == StringRef("presets")) {
-        loadModelFrom(treeWhosePropertyHasChanged);
-    }
-}
+// void Pill::valueTreePropertyChanged(
+//     ValueTree& treeWhosePropertyHasChanged,
+//     const Identifier& property) {
+//     if (treeWhosePropertyHasChanged.getType() == StringRef("presets")) {
+//         loadModelFrom(treeWhosePropertyHasChanged);
+//     }
+// }
 
 Pills::Pills(
     AudioProcessorValueTreeState& valueTreeState
@@ -83,7 +87,8 @@ Pills::Pills(
     setOpaque (true);
 
     // populate(initiallySelectedItem);
-    loadModelFrom(valueTreeState.state.getChildWithName("banks"));
+    ValueTree banks{valueTreeState.state.getChildWithName("banks")};
+    loadModelFrom(banks);
 
     valueTreeState.state.addListener(this);
 }
@@ -109,11 +114,12 @@ void Pills::loadModelFrom(ValueTree& banks) {
         // rows.push_back(unique_ptr<Pill>(new Pill(), [](Pill* pill) {
         //     pill->remo
         // }));
-        pills.emplace_back(
-            this.valueTreeState,
+        pills.push_back(
+           make_unique<Pill>(
+            valueTreeState,
             num,
             i == 0,
-            i == numChildren - 1);
+            i == numChildren - 1));
     }
 }
 
@@ -160,21 +166,51 @@ void Pills::loadModelFrom(ValueTree& banks) {
 // }
 
 void Pills::cycle(bool right) {
-    // TODO: base this on valueTree
-    int currentIx = static_cast<const int>(distance(pills.begin(), find(pills.begin(), pills.end(), selected)));
+    RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+    int currentlySelectedBank{castParam->get()};
+
+    ValueTree banks{valueTreeState.state.getChildWithName("banks")};
+//    int numChildren{banks.getNumChildren()};
+
+    vector<int> bankInts;
+    bankInts.resize(banks.getNumChildren());
+
+    transform(banks.begin(), banks.end(), bankInts.begin(), [](ValueTree bank) -> int {
+        return bank.getProperty("num");
+    });
+    
+//    int closestBank{currentlySelectedBank};
+//    for(int i{0}; i < numChildren; i++) {
+//        ValueTree child{banks.getChild(i)};
+//        int proposedBank{child.getProperty("num")};
+//        if (right && proposedBank > currentlySelectedBank) {
+//            closestBank = jmin(closestBank, proposedBank);
+//        } else if (left )
+//    }
+
+    int currentIx{static_cast<const int>(distance(bankInts.begin(), find(bankInts.begin(), bankInts.end(), currentlySelectedBank)))};
     currentIx += right ? 1 : pills.size()-1;
-    pills[currentIx % pills.size()]->textButton.triggerClick();
+    // pills[currentIx % pills.size()]->textButton.triggerClick();
+    *castParam = bankInts[currentIx % bankInts.size()];
+
+
+    // TODO: base this on valueTree
+    // int currentIx = static_cast<const int>(distance(pills.begin(), find(pills.begin(), pills.end(), selected)));
+    // currentIx += right ? 1 : pills.size()-1;
+    // pills[currentIx % pills.size()]->textButton.triggerClick();
 }
 
 void Pills::resized() {
     int index = 0;
     Rectangle<int> r (getLocalBounds());
-    const int equalWidth = r.proportionOfWidth(buttons.size() <= 0 ? 1.0 : 1.0f/buttons.size());
-    for(TextButton* t : buttons) {
+    const int equalWidth = r.proportionOfWidth(pills.size() <= 0 ? 1.0 : 1.0f/pills.size());
+    for(auto& pill : pills) {
         Rectangle<int> r2 (getLocalBounds());
         r2.removeFromLeft(equalWidth * index);
-        r2.removeFromRight(equalWidth * (buttons.size()-index-1));
-        t->setBounds (r2);
+        r2.removeFromRight(equalWidth * (static_cast<int>(pills.size())-index-1));
+        pill->textButton.setBounds (r2);
         index++;
     }
 }
