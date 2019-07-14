@@ -22,6 +22,9 @@ public:
              String name
              );
 private:
+    /** 1-indexed */
+    String getStringContents(int columnId);
+
     int preset;
     String name;
     
@@ -32,16 +35,16 @@ private:
 
 class TableComponent    : public Component,
                           public TableListBoxModel,
-                          public ValueTree::Listener/*,
-                          public AudioProcessorValueTreeState::Listener */ {
+                          public ValueTree::Listener,
+                          public AudioProcessorValueTreeState::Listener {
 public:
     TableComponent(
-            AudioProcessorValueTreeState& valueTreeState,
+            AudioProcessorValueTreeState& valueTreeState
         //     const vector<string> &columns,
         //     const vector<TableRow> &rows,
-            const function<void (int)> &onRowSelected,
+            // const function<void (int)> &onRowSelected,
         //     const function<int (const vector<string>&)> &rowToIDMapper,
-            int initiallySelectedRow
+            // int initiallySelectedRow
     );
     ~TableComponent();
 
@@ -75,7 +78,7 @@ public:
 
     bool keyPressed(const KeyPress &key) override;
 
-//     virtual void parameterChanged (const String& parameterID, float newValue) override;
+    virtual void parameterChanged (const String& parameterID, float newValue) override;
 
     virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
                                            const Identifier& property) override;
@@ -89,6 +92,9 @@ public:
     inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
     inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
 private:
+    void loadModelFrom(ValueTree& presets);
+    void selectCurrentPreset();
+
     AudioProcessorValueTreeState& valueTreeState;
 
     TableListBox table;     // the table component itself
@@ -97,7 +103,7 @@ private:
 //     vector<string> columns;
     vector<TableRow> rows;
 
-    function<void (int)> onRowSelected;
+    // function<void (int)> onRowSelected;
 //     function<int (const vector<string>&)> rowToIDMapper;
 
     // A comparator used to sort our data when the user clicks a column header

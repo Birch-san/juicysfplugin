@@ -20,16 +20,16 @@ TableComponent::TableComponent(
     AudioProcessorValueTreeState& valueTreeState,
     // const vector<string> &columns,
 //    const vector<TableRow> &rows,
-    const function<void (int)> &onRowSelected,
+    // const function<void (int)> &onRowSelected,
     // const function<int (const vector<string>&)> &rowToIDMapper,
-    int initiallySelectedRow
+    // int initiallySelectedRow
 )
 : valueTreeState{valueTreeState}
 , font{14.0f}
 //, columns{columns}
 //, rows{rows}
-, onRowSelected{onRowSelected}/*,
-rowToIDMapper(rowToIDMapper)*/
+// , onRowSelected{onRowSelected}
+// rowToIDMapper(rowToIDMapper)
 {
     // Create our table component and add it to this component..
     addAndMakeVisible (table);
@@ -73,7 +73,9 @@ rowToIDMapper(rowToIDMapper)*/
 
     table.setWantsKeyboardFocus(false);
 
-    table.selectRow(initiallySelectedRow);
+    // table.selectRow();
+    loadModelFrom(valueTreeState.state.getChildWithName("presets"));
+    // selectCurrentPreset();
 
     // we could now change some initial settings..
     table.getHeader().setSortColumnId(1, false); // sort ascending by ID column
@@ -90,40 +92,38 @@ TableComponent::~TableComponent() {
     valueTreeState.state.removeListener(this);
 }
 
-// void TableComponent::parameterChanged(const String& parameterID, float newValue) {
-//     // valueTreeState.getParameter
-//     RangedAudioParameter *param {valueTreeState.getParameter("bank")};
-//     if (parameterID == "bank") {
-//         jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-//         AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-//         int value{castParam->get()};
-//     } else if (parameterID == "preset") {
-//         jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-//         AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-//         int value{castParam->get()};
-//     }
-// }
+void TableComponent::loadModelFrom(ValueTree& presets) {
+    rows.clear();
+    int numChildren{presets.getNumChildren()};
+    for(int i{0}; i<numChildren; i++) {
+        ValueTree child{presets.getChild(i)};
+        int num{child.getProperty("num")};
+        String name{child.getProperty("name")};
+        rows.emplace_back(num, name);
+    }
+    table.deselectAllRows();
+    table.updateContent();
+    table.getHeader().setSortColumnId(0, true);
+    selectCurrentPreset();
+    table.repaint();
+}
+
+void TableComponent::parameterChanged(const String& parameterID, float newValue) {
+    // valueTreeState.getParameter
+    if (parameterID == "preset") {
+        selectCurrentPreset();
+        // RangedAudioParameter *param {valueTreeState.getParameter("preset")};
+        // jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+        // AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+        // int value{castParam->get()};
+    }
+}
 
 void TableComponent::valueTreePropertyChanged(
     ValueTree& treeWhosePropertyHasChanged,
     const Identifier& property) {
     if (treeWhosePropertyHasChanged.getType() == StringRef("presets")) {
-        rows.clear();
-        int numChildren{treeWhosePropertyHasChanged.getNumChildren()};
-        for(int i{0}; i<numChildren; i++) {
-            ValueTree child{treeWhosePropertyHasChanged.getChild(i)};
-            int num{child.getProperty("num")};
-            String name{child.getProperty("name")};
-            rows.emplace_back(num, name);
-        }
-    // if (&treeWhosePropertyHasChanged == &valueTree) {
-        // if (property == StringRef("path")) {
-            // String soundFontPath{treeWhosePropertyHasChanged.getProperty("path", "")};
-            // DEBUG_PRINT(soundFontPath);
-            // if (soundFontPath.isNotEmpty()) {
-            //     loadFont(soundFontPath);
-            // }
-        // }
+        loadModelFrom(treeWhosePropertyHasChanged);
     }
 }
 
@@ -158,6 +158,13 @@ void TableComponent::paintRowBackground (
         g.fillAll (alternateColour);
 }
 
+String TableRow::getStringContents(int columnId) {
+    if (columnId <= 1) {
+        return String(row.preset);
+    }
+    return row.name;
+}
+
 // This is overloaded from TableListBoxModel, and must paint any cells that aren't using custom
 // components.
 void TableComponent::paintCell (
@@ -172,12 +179,7 @@ void TableComponent::paintCell (
     g.setFont (font);
 
     TableRow& row{rows[rowNumber]};
-    String text;
-    if (columnId <= 1) {
-        text = String(row.preset);
-    } else {
-        text = row.name;
-    }
+    String text{row.getStringContents(columnId)};
     g.drawText (text, 2, 0, width - 4, height, Justification::centredLeft, true);
 
     g.setColour (getLookAndFeel().findColour (ListBox::backgroundColourId));
@@ -191,7 +193,7 @@ void TableComponent::sortOrderChanged (
         bool isForwards
 ) {
     if (newSortColumnId != 0) {
-        int selectedRowIx = table.getSelectedRow();
+        // int selectedRowIx = table.getSelectedRow();
         // TableRow* selectedRow;
         // if (selectedRowIx >= 0) {
         //     selectedRow = &rows[selectedRowIx];
@@ -201,20 +203,32 @@ void TableComponent::sortOrderChanged (
         sort(rows.begin(), rows.end(), sorter);
 
         table.updateContent();
+        selectCurrentPreset();
 
-        RangedAudioParameter *param {valueTreeState.getParameter("preset")};
-        jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-        AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-        int value{castParam->get()};
+        // if (selectedRowIx >= 0) {
+        //     for (auto it = rows.begin(); it != rows.end(); ++it) {
+        //         if(it->preset == value) {
+        //             int index {static_cast<int>(std::distance(rows.begin(), it))};
+        //             table.selectRow(index);
+        //             break;
+        //         }
+        //     }
+        // }
+    }
+}
 
-        if (selectedRowIx >= 0) {
-            for (auto it = rows.begin(); it != rows.end(); ++it) {
-                if(it->preset == value) {
-                    int index {static_cast<int>(std::distance(rows.begin(), it))};
-                    table.selectRow(index);
-                    break;
-                }
-            }
+void TableComponent::selectCurrentPreset() {
+    table.deselectAllRows();
+    RangedAudioParameter *param {valueTreeState.getParameter("preset")};
+    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+    int value{castParam->get()};
+
+    for (auto it = rows.begin(); it != rows.end(); ++it) {
+        if(it->preset == value) {
+            int index {static_cast<int>(std::distance(rows.begin(), it))};
+            table.selectRow(index);
+            break;
         }
     }
 }
@@ -231,12 +245,7 @@ int TableComponent::getColumnAutoSizeWidth (int columnId) {
     // find the widest bit of text in this column..
     for (int i{getNumRows()}; --i >= 0;) {
         TableRow& row{rows[i]};
-        String text;
-        if (columnId <= 1) {
-            text = String(row.preset);
-        } else {
-            text = row.name;
-        }
+        String text{row.getStringContents(columnId)};
         widest = jmax (widest, font.getStringWidth (text));
     }
 
@@ -302,5 +311,5 @@ TableRow::TableRow(
     String name
 )
 : preset{preset}
-: name{name}
+, name{name}
 {}

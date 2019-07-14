@@ -35,12 +35,12 @@ private:
     FluidSynthModel& fluidSynthModel;
     int selectedBank;
 
-    Pills* banks;
-    TableComponent* presetTable;
+    Pills banks;
+    TableComponent presetTable;
 
     BanksToPresets banksToPresets;
 
-    static vector<vector<string>> mapPresets(const BanksToPresets &banksToPresets, int bank);
+    // static vector<vector<string>> mapPresets(const BanksToPresets &banksToPresets, int bank);
     static vector<string> mapBanks(const BanksToPresets &banksToPresets);
 
     void onBankSelected(int bank);

@@ -41,11 +41,11 @@ TablesComponent::TablesComponent(
             //         banksToPresets,
             //         selectedBank
             // ),
-            [this](int preset){
-                this->onPresetSelected(preset);
-            },
+            // [this](int preset){
+            //     this->onPresetSelected(preset);
+            // },
             // rowToPresetMapper,
-            presetToIndexMapper(selectedPreset)
+            // presetToIndexMapper(selectedPreset)
     );
     banks = new Pills(
             "Banks",
@@ -108,19 +108,19 @@ int TablesComponent::presetToIndexMapper(int preset) {
     return 0;
 }
 
-void TablesComponent::onPresetSelected(int preset) {
-    if (!initialised || preset == -1) {
-        return;
-    }
-    cout << "Preset " << preset << endl;
-//    selectedPreset = preset;
-    fluidSynthModel.changePreset(selectedBank, preset);
-}
+// void TablesComponent::onPresetSelected(int preset) {
+//     if (!initialised || preset == -1) {
+//         return;
+//     }
+//     cout << "Preset " << preset << endl;
+// //    selectedPreset = preset;
+//     fluidSynthModel.changePreset(selectedBank, preset);
+// }
 
 TablesComponent::~TablesComponent() {
     delete presetTable;
     delete banks;
-    fluidSynthModel.removeListener(this);
+    // fluidSynthModel.removeListener(this);
 }
 
 vector<string> TablesComponent::mapBanks(const BanksToPresets &banksToPresets) {
@@ -138,21 +138,21 @@ vector<string> TablesComponent::mapBanks(const BanksToPresets &banksToPresets) {
 }
 
 
-vector<vector<string>> TablesComponent::mapPresets(const BanksToPresets &banksToPresets, int bank) {
-    vector<vector<string>> rows;
+// vector<vector<string>> TablesComponent::mapPresets(const BanksToPresets &banksToPresets, int bank) {
+//     vector<vector<string>> rows;
 
-    pair<BanksToPresets::const_iterator, BanksToPresets::const_iterator> iterators = banksToPresets.equal_range(bank);
-    for (auto it = iterators.first; it != iterators.second; ++it) {
-        Preset b = it->second;
-        vector<string> row;
-        row.push_back(to_string(b.getPreset()));
-        row.push_back(b.getName());
+//     pair<BanksToPresets::const_iterator, BanksToPresets::const_iterator> iterators = banksToPresets.equal_range(bank);
+//     for (auto it = iterators.first; it != iterators.second; ++it) {
+//         Preset b = it->second;
+//         vector<string> row;
+//         row.push_back(to_string(b.getPreset()));
+//         row.push_back(b.getName());
 
-        rows.push_back(row);
-    }
+//         rows.push_back(row);
+//     }
 
-    return rows;
-}
+//     return rows;
+// }
 
 void TablesComponent::resized() {
     Rectangle<int> r (getLocalBounds());
