@@ -347,6 +347,7 @@ void FluidSynthModel::loadFont(const String &absPath) {
         banks.appendChild({ "bank", {
             { "num", initialBankOffset },
         }, {} }, nullptr);
+        int greatestPersistedBank{initialBankOffset};
 
         fluid_sfont_iteration_start(sfont);
 
@@ -362,10 +363,11 @@ void FluidSynthModel::loadFont(const String &absPath) {
             //                 fluid_preset_get_name(preset)
             //         )
             // ));
-            if (bankOffset > initialBankOffset) {
+            if (bankOffset > greatestPersistedBank) {
                 banks.appendChild({ "bank", {
                     { "num", bankOffset },
                 }, {} }, nullptr);
+                greatestPersistedBank = bankOffset;
             }
             presets.appendChild({ "preset", {
                 { "num", fluid_preset_get_num(preset) },
@@ -373,8 +375,15 @@ void FluidSynthModel::loadFont(const String &absPath) {
             }, {} }, nullptr);
         }
     }
-    valueTreeState.state.getChildWithName("banks") = banks;
-    valueTreeState.state.getChildWithName("presets") = presets;
+//    valueTreeState.state.getChildWithName("banks") = banks;
+//    valueTreeState.state.getChildWithName("presets") = presets;
+    valueTreeState.state.getChildWithName("banks").copyPropertiesAndChildrenFrom(banks, nullptr);
+    valueTreeState.state.getChildWithName("presets").copyPropertiesAndChildrenFrom(presets, nullptr);
+    
+#if JUCE_DEBUG
+    unique_ptr<XmlElement> xml{valueTreeState.state.createXml()};
+    Logger::outputDebugString(xml->createDocument("",false,false));
+#endif
 }
 
 // FluidSynthModel::Listener::~Listener() {

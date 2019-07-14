@@ -120,11 +120,17 @@ void TableComponent::parameterChanged(const String& parameterID, float newValue)
     }
 }
 
-void TableComponent::valueTreePropertyChanged(
-    ValueTree& treeWhosePropertyHasChanged,
-    const Identifier& property) {
-    if (treeWhosePropertyHasChanged.getType() == StringRef("presets")) {
-        loadModelFrom(treeWhosePropertyHasChanged);
+// void TableComponent::valueTreePropertyChanged(
+//     ValueTree& treeWhosePropertyHasChanged,
+//     const Identifier& property) {
+//     if (treeWhosePropertyHasChanged.getType() == StringRef("presets")) {
+//         loadModelFrom(treeWhosePropertyHasChanged);
+//     }
+// }
+
+void TableComponent::valueTreeParentChanged(ValueTree& treeWhoseParentHasChanged) {
+    if (treeWhoseParentHasChanged.getType() == StringRef("presets")) {
+        loadModelFrom(treeWhoseParentHasChanged);
     }
 }
 

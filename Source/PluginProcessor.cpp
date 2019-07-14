@@ -388,7 +388,7 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
 //    XmlElement xml{"MYPLUGINSETTINGS"};
 //    sharedParams->setAttributesOnXml(xml);
     auto state{valueTreeState.copyState()};
-    shared_ptr<XmlElement> xml{state.createXml()};
+    unique_ptr<XmlElement> xml{state.createXml()};
 //    sharedParams.setAttributesOnXml(xml);
 
 //    list<StateChangeSubscriber*>::iterator p;

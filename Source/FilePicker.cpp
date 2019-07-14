@@ -56,7 +56,8 @@ void FilePicker::filenameComponentChanged (FilenameComponent*) {
     // currentPath = fileChooser.getCurrentFile().getFullPathName();
     // fluidSynthModel.onFileNameChanged(fileChooser.getCurrentFile().getFullPathName(), -1, -1);
     Value value{valueTreeState.state.getChildWithName("soundFont").getPropertyAsValue("path", nullptr)};
-    value = fileChooser.getCurrentFile().getFullPathName();
+    value.setValue(fileChooser.getCurrentFile().getFullPathName());
+//    value = fileChooser.getCurrentFile().getFullPathName();
 }
 
 void FilePicker::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged,
