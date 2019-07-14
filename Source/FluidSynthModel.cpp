@@ -379,6 +379,8 @@ void FluidSynthModel::loadFont(const String &absPath) {
 //    valueTreeState.state.getChildWithName("presets") = presets;
     valueTreeState.state.getChildWithName("banks").copyPropertiesAndChildrenFrom(banks, nullptr);
     valueTreeState.state.getChildWithName("presets").copyPropertiesAndChildrenFrom(presets, nullptr);
+    valueTreeState.state.getChildWithName("banks").sendPropertyChangeMessage("synthetic");
+    valueTreeState.state.getChildWithName("presets").sendPropertyChangeMessage("synthetic");
     
 #if JUCE_DEBUG
     unique_ptr<XmlElement> xml{valueTreeState.state.createXml()};

@@ -79,8 +79,8 @@ public:
 
     virtual void parameterChanged (const String& parameterID, float newValue) override;
 
-    inline virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
-                                           const Identifier& property) override {};
+    virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
+                                           const Identifier& property) override;
     inline virtual void valueTreeChildAdded (ValueTree& parentTree,
                                              ValueTree& childWhichHasBeenAdded) override {};
     inline virtual void valueTreeChildRemoved (ValueTree& parentTree,
@@ -88,7 +88,7 @@ public:
                                                int indexFromWhichChildWasRemoved) override {};
     inline virtual void valueTreeChildOrderChanged (ValueTree& parentTreeWhoseChildrenHaveMoved,
                                                     int oldIndex, int newIndex) override {};
-    virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override;
+    inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
     inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
 private:
     void loadModelFrom(ValueTree& presets);

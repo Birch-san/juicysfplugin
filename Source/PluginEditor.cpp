@@ -73,7 +73,7 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor(
     tablesComponent.setWantsKeyboardFocus(false);
 
     setWantsKeyboardFocus(true);
-    addAndMakeVisible (midiKeyboard);
+    addAndMakeVisible(midiKeyboard);
 
     addAndMakeVisible(slidersComponent);
     addAndMakeVisible(tablesComponent);

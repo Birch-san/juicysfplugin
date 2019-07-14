@@ -9,7 +9,8 @@
 using namespace std;
 
 class Pill
-: public Button::Listener
+: public Component
+, public Button::Listener
 , public AudioProcessorValueTreeState::Listener
 {
 public:
@@ -22,6 +23,9 @@ public:
     ~Pill();
 
     void buttonClicked (Button* button) override;
+
+    void resized() override;
+    void paint(Graphics& g) override;
 
     virtual void parameterChanged (const String& parameterID, float newValue) override;
 private:

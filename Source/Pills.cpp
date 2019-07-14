@@ -19,6 +19,7 @@ Pill::Pill(
 , bank{bank}
 , textButton{String(bank)}
 {
+    setOpaque(true);
     textButton.setConnectedEdges (
             (isFirst ? 0 : Button::ConnectedOnLeft)
             | (isLast ? 0 : Button::ConnectedOnRight)
@@ -26,10 +27,22 @@ Pill::Pill(
     textButton.setRadioGroupId(34567);
     loadToggleState();
     textButton.setClickingTogglesState(true);
+
+    addAndMakeVisible(textButton);
     
     valueTreeState.addParameterListener("bank", this);
 //    valueTreeState.state.addListener(this);
     textButton.addListener(this);
+}
+
+void Pill::paint (Graphics& g)
+{
+    // (Our component is opaque, so we must completely fill the background with a solid colour)
+    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+}
+
+void Pill::resized() {
+    textButton.setBounds(getLocalBounds());
 }
 
 Pill::~Pill() {
@@ -101,7 +114,9 @@ void Pills::valueTreePropertyChanged(
     ValueTree& treeWhosePropertyHasChanged,
     const Identifier& property) {
     if (treeWhosePropertyHasChanged.getType() == StringRef("banks")) {
-        loadModelFrom(treeWhosePropertyHasChanged);
+        if (property == StringRef("synthetic")) {
+            loadModelFrom(treeWhosePropertyHasChanged);
+        }
     }
 }
 
@@ -114,13 +129,15 @@ void Pills::loadModelFrom(ValueTree& banks) {
         // rows.push_back(unique_ptr<Pill>(new Pill(), [](Pill* pill) {
         //     pill->remo
         // }));
-        pills.push_back(
-           make_unique<Pill>(
+        unique_ptr<Pill> pill{make_unique<Pill>(
             valueTreeState,
             num,
             i == 0,
-            i == numChildren - 1));
+            i == numChildren - 1)};
+        addAndMakeVisible(pill.get());
+        pills.push_back(move(pill));
     }
+    resized();
 }
 
 // void Pills::populate(int initiallySelectedItem) {
@@ -210,7 +227,7 @@ void Pills::resized() {
         Rectangle<int> r2 (getLocalBounds());
         r2.removeFromLeft(equalWidth * index);
         r2.removeFromRight(equalWidth * (static_cast<int>(pills.size())-index-1));
-        pill->textButton.setBounds (r2);
+        pill->setBounds(r2);
         index++;
     }
 }

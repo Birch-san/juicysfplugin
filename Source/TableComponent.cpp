@@ -120,19 +120,52 @@ void TableComponent::parameterChanged(const String& parameterID, float newValue)
     }
 }
 
-// void TableComponent::valueTreePropertyChanged(
-//     ValueTree& treeWhosePropertyHasChanged,
-//     const Identifier& property) {
-//     if (treeWhosePropertyHasChanged.getType() == StringRef("presets")) {
-//         loadModelFrom(treeWhosePropertyHasChanged);
+void TableComponent::valueTreePropertyChanged(
+    ValueTree& treeWhosePropertyHasChanged,
+    const Identifier& property) {
+    if (treeWhosePropertyHasChanged.getType() == StringRef("presets")) {
+        if (property == StringRef("synthetic")) {
+            loadModelFrom(treeWhosePropertyHasChanged);
+        }
+    }
+}
+
+// void TableComponent::valueTreeParentChanged(ValueTree& treeWhoseParentHasChanged) {
+//     if (treeWhoseParentHasChanged.getType() == StringRef("presets")) {
+//         loadModelFrom(treeWhoseParentHasChanged);
 //     }
 // }
 
-void TableComponent::valueTreeParentChanged(ValueTree& treeWhoseParentHasChanged) {
-    if (treeWhoseParentHasChanged.getType() == StringRef("presets")) {
-        loadModelFrom(treeWhoseParentHasChanged);
-    }
-}
+// void TableComponent::valueTreePropertyChanged(
+//     ValueTree& treeWhosePropertyHasChanged,
+//     const Identifier& property) {
+//     DEBUG_PRINT(treeWhosePropertyHasChanged.getType().toString());
+// }
+// void TableComponent::valueTreeChildAdded(
+//     ValueTree& parentTree,
+//     ValueTree& childWhichHasBeenAdded) {
+//     DEBUG_PRINT(parentTree.getType().toString());
+// }
+// void TableComponent::valueTreeChildRemoved(
+//     ValueTree& parentTree,
+//     ValueTree& childWhichHasBeenRemoved,
+//     int indexFromWhichChildWasRemoved) {
+//     DEBUG_PRINT(parentTree.getType().toString());
+// }
+// void TableComponent::valueTreeChildOrderChanged(
+//     ValueTree& parentTreeWhoseChildrenHaveMoved,
+//     int oldIndex,
+//     int newIndex) {
+//     DEBUG_PRINT(parentTreeWhoseChildrenHaveMoved.getType().toString());
+// }
+// void TableComponent::valueTreeParentChanged(
+//     ValueTree& treeWhoseParentHasChanged) {
+//     DEBUG_PRINT(treeWhoseParentHasChanged.getType().toString());
+// }
+// void TableComponent::valueTreeRedirected(
+//     ValueTree& treeWhichHasBeenChanged) {
+//     DEBUG_PRINT(treeWhichHasBeenChanged.getType().toString());
+// }
 
 // void TableComponent::setRows(const vector<vector<string>>& rows, int initiallySelectedRow) {
 //     this->rows = rows;

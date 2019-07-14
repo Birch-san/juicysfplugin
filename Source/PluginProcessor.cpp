@@ -73,8 +73,8 @@ AudioProcessorValueTreeState::ParameterLayout JuicySFAudioProcessor::createParam
         // make_unique<AudioParameterInt>("uiHeightTemp", "height of this plugin's GUI. Editor writes here on change (e.g. on window resize). Processor copies this into Persist before any save.", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height Temp" ),
     //    make_unique<AudioParameterInt>("uiWidth", "width of this plugin's GUI", GuiConstants::minWidth, GuiConstants::maxWidth, GuiConstants::minWidth, "UI Width" ),
     //    make_unique<AudioParameterInt>("uiHeight", "height of this plugin's GUI", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height" ),
-        // todo: check whether bank really is 0-127
-        make_unique<AudioParameterInt>("bank", "which bank is selected in the soundfont", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "Bank" ),
+        // SoundFont 2.4 spec section 7.2: zero through 127, or 128.
+        make_unique<AudioParameterInt>("bank", "which bank is selected in the soundfont", MidiConstants::midiMinValue, 128, MidiConstants::midiMinValue, "Bank" ),
         // note: banks may be sparse, and lack a 0th preset. so defend against this.
         make_unique<AudioParameterInt>("preset", "which patch (aka patch, program, instrument) is selected in the soundfont", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "Preset" ),
         make_unique<AudioParameterInt>("attack", "volume envelope attack time", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "A" ),
