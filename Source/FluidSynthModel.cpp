@@ -208,11 +208,32 @@ void FluidSynthModel::initialise() {
 
 void FluidSynthModel::parameterChanged(const String& parameterID, float newValue) {
     if (parameterID == "bank") {
-        RangedAudioParameter *param {valueTreeState.getParameter("bank")};
-        jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-        AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-        int value{castParam->get()};
-        fluid_synth_bank_select(synth.get(), channel, value);
+        // RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+        // jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+        // AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+        // int value{castParam->get()};
+
+        int bank, preset;
+        {
+            RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+            jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+            AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+            bank = castParam->get();
+        }
+        {
+            RangedAudioParameter *param {valueTreeState.getParameter("preset")};
+            jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+            AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+            preset = castParam->get();
+        }
+        fluid_synth_program_select(
+            synth.get(),
+            channel,
+            sfont_id,
+            static_cast<unsigned int>(bank),
+            static_cast<unsigned int>(preset));
+
+        // fluid_synth_bank_select(synth.get(), channel, value);
         refreshPresets();
         // fluid_sfont_t* sfont{fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
         // fluid_sfont_iteration_start(sfont);
@@ -221,10 +242,26 @@ void FluidSynthModel::parameterChanged(const String& parameterID, float newValue
         // int bank{fluid_preset_get_banknum(presetObj) + offset};
         // int preset{fluid_preset_get_num(presetObj)};
     } else if (parameterID == "preset") {
-        RangedAudioParameter *param {valueTreeState.getParameter("preset")};
-        jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-        AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-        int value{castParam->get()};
+        int bank, preset;
+        {
+            RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+            jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+            AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+            bank = castParam->get();
+        }
+        {
+            RangedAudioParameter *param {valueTreeState.getParameter("preset")};
+            jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+            AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+            preset = castParam->get();
+        }
+        // int bank{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+        fluid_synth_program_select(
+            synth.get(),
+            channel,
+            sfont_id,
+            static_cast<unsigned int>(bank),
+            static_cast<unsigned int>(preset));
     }
 }
 
@@ -372,18 +409,19 @@ void FluidSynthModel::refreshBanks() {
     fluid_sfont_t* sfont {fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
     ValueTree banks{"banks"};
     if (sfont != nullptr) {
-        int initialBank{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+        // int initialBankOffset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
         banks.appendChild({ "bank", {
-            { "num", initialBank },
+            { "num", /* initialBankOffset */ 0 },
         }, {} }, nullptr);
-        int greatestPersistedBank{initialBank};
+        // int greatestPersistedBank{initialBankOffset};
+        int greatestPersistedBank{0};
 
         fluid_sfont_iteration_start(sfont);
 
         for(fluid_preset_t* preset {fluid_sfont_iteration_next(sfont)};
         preset != nullptr;
         preset = fluid_sfont_iteration_next(sfont)) {
-            int bank{fluid_preset_get_banknum(preset) + initialBank};
+            int bank{fluid_preset_get_banknum(preset) /* + initialBankOffset */};
             if (bank > greatestPersistedBank) {
                 banks.appendChild({ "bank", {
                     { "num", bank },
@@ -406,14 +444,14 @@ void FluidSynthModel::refreshPresets() {
         AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
         int value{castParam->get()};
 
-        int initialBank{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+        // int initialBank{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
 
         fluid_sfont_iteration_start(sfont);
 
         for(fluid_preset_t* preset {fluid_sfont_iteration_next(sfont)};
         preset != nullptr;
         preset = fluid_sfont_iteration_next(sfont)) {
-            int bank{fluid_preset_get_banknum(preset) + initialBank};
+            int bank{fluid_preset_get_banknum(preset) /* + initialBank */};
             if (bank == value) {
                 presets.appendChild({ "preset", {
                     { "num", fluid_preset_get_num(preset) },
