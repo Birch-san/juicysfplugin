@@ -27,10 +27,14 @@ FluidSynthModel::FluidSynthModel(
 , channel{0}/*,
 mod(nullptr)*/
 {
+    valueTreeState.addParameterListener("bank", this);
+    valueTreeState.addParameterListener("preset", this);
     valueTreeState.state.addListener(this);
 }
 
 FluidSynthModel::~FluidSynthModel() {
+    valueTreeState.removeParameterListener("bank", this);
+    valueTreeState.removeParameterListener("preset", this);
     valueTreeState.state.removeListener(this);
     // if (initialised) {
 //        delete_fluid_audio_driver(driver);
@@ -202,6 +206,28 @@ void FluidSynthModel::initialise() {
     // initialised = true;
 }
 
+void FluidSynthModel::parameterChanged(const String& parameterID, float newValue) {
+    if (parameterID == "bank") {
+        RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+        jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+        AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+        int value{castParam->get()};
+        fluid_synth_bank_select(synth.get(), channel, value);
+        refreshPresets();
+        // fluid_sfont_t* sfont{fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
+        // fluid_sfont_iteration_start(sfont);
+        // fluid_preset_t* presetObj{fluid_sfont_iteration_next(sfont)};
+        // int offset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+        // int bank{fluid_preset_get_banknum(presetObj) + offset};
+        // int preset{fluid_preset_get_num(presetObj)};
+    } else if (parameterID == "preset") {
+        RangedAudioParameter *param {valueTreeState.getParameter("preset")};
+        jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+        AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+        int value{castParam->get()};
+    }
+}
+
 void FluidSynthModel::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged,
                                                const Identifier& property) {
     if (treeWhosePropertyHasChanged.getType() == StringRef("soundFont")) {
@@ -339,54 +365,116 @@ void FluidSynthModel::loadFont(const String &absPath) {
     currentSoundFontAbsPath = absPath;
     sfont_id++;
     fluid_synth_sfload(synth.get(), absPath.toStdString().c_str(), 1);
+    refreshBanks();
+}
+
+void FluidSynthModel::refreshBanks() {
     fluid_sfont_t* sfont {fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
     ValueTree banks{"banks"};
-    ValueTree presets{"presets"};
     if (sfont != nullptr) {
-        int initialBankOffset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+        int initialBank{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
         banks.appendChild({ "bank", {
-            { "num", initialBankOffset },
+            { "num", initialBank },
         }, {} }, nullptr);
-        int greatestPersistedBank{initialBankOffset};
+        int greatestPersistedBank{initialBank};
 
         fluid_sfont_iteration_start(sfont);
 
         for(fluid_preset_t* preset {fluid_sfont_iteration_next(sfont)};
         preset != nullptr;
         preset = fluid_sfont_iteration_next(sfont)) {
-            int bankOffset{fluid_preset_get_banknum(preset) + initialBankOffset};
-            // ValueTree preset{"preset"};
-            // banksToPresets.insert(BanksToPresets::value_type(
-            //         fluid_preset_get_banknum(preset) + bankOffset,
-            //         *new Preset(
-            //                 fluid_preset_get_num(preset),
-            //                 fluid_preset_get_name(preset)
-            //         )
-            // ));
-            if (bankOffset > greatestPersistedBank) {
+            int bank{fluid_preset_get_banknum(preset) + initialBank};
+            if (bank > greatestPersistedBank) {
                 banks.appendChild({ "bank", {
-                    { "num", bankOffset },
+                    { "num", bank },
                 }, {} }, nullptr);
-                greatestPersistedBank = bankOffset;
+                greatestPersistedBank = bank;
             }
-            presets.appendChild({ "preset", {
-                { "num", fluid_preset_get_num(preset) },
-                { "name", String{fluid_preset_get_name(preset)} }
-            }, {} }, nullptr);
         }
     }
-//    valueTreeState.state.getChildWithName("banks") = banks;
-//    valueTreeState.state.getChildWithName("presets") = presets;
     valueTreeState.state.getChildWithName("banks").copyPropertiesAndChildrenFrom(banks, nullptr);
-    valueTreeState.state.getChildWithName("presets").copyPropertiesAndChildrenFrom(presets, nullptr);
     valueTreeState.state.getChildWithName("banks").sendPropertyChangeMessage("synthetic");
-    valueTreeState.state.getChildWithName("presets").sendPropertyChangeMessage("synthetic");
-    
-#if JUCE_DEBUG
-    unique_ptr<XmlElement> xml{valueTreeState.state.createXml()};
-    Logger::outputDebugString(xml->createDocument("",false,false));
-#endif
+    refreshPresets();
 }
+
+void FluidSynthModel::refreshPresets() {
+    fluid_sfont_t* sfont {fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
+    ValueTree presets{"presets"};
+    if (sfont != nullptr) {
+        RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+        jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+        AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+        int value{castParam->get()};
+
+        int initialBank{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+
+        fluid_sfont_iteration_start(sfont);
+
+        for(fluid_preset_t* preset {fluid_sfont_iteration_next(sfont)};
+        preset != nullptr;
+        preset = fluid_sfont_iteration_next(sfont)) {
+            int bank{fluid_preset_get_banknum(preset) + initialBank};
+            if (bank == value) {
+                presets.appendChild({ "preset", {
+                    { "num", fluid_preset_get_num(preset) },
+                    { "name", String{fluid_preset_get_name(preset)} }
+                }, {} }, nullptr);
+            }
+        }
+    }
+    valueTreeState.state.getChildWithName("presets").copyPropertiesAndChildrenFrom(presets, nullptr);
+    valueTreeState.state.getChildWithName("presets").sendPropertyChangeMessage("synthetic");
+}
+
+// void FluidSynthModel::refreshBanksAndPresets() {
+//     fluid_sfont_t* sfont {fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
+//     ValueTree banks{"banks"};
+//     ValueTree presets{"presets"};
+//     if (sfont != nullptr) {
+//         int initialBankOffset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+//         banks.appendChild({ "bank", {
+//             { "num", initialBankOffset },
+//         }, {} }, nullptr);
+//         int greatestPersistedBank{initialBankOffset};
+
+//         fluid_sfont_iteration_start(sfont);
+
+//         for(fluid_preset_t* preset {fluid_sfont_iteration_next(sfont)};
+//         preset != nullptr;
+//         preset = fluid_sfont_iteration_next(sfont)) {
+//             int bankOffset{fluid_preset_get_banknum(preset) + initialBankOffset};
+//             // ValueTree preset{"preset"};
+//             // banksToPresets.insert(BanksToPresets::value_type(
+//             //         fluid_preset_get_banknum(preset) + bankOffset,
+//             //         *new Preset(
+//             //                 fluid_preset_get_num(preset),
+//             //                 fluid_preset_get_name(preset)
+//             //         )
+//             // ));
+//             if (bankOffset > greatestPersistedBank) {
+//                 banks.appendChild({ "bank", {
+//                     { "num", bankOffset },
+//                 }, {} }, nullptr);
+//                 greatestPersistedBank = bankOffset;
+//             }
+//             presets.appendChild({ "preset", {
+//                 { "num", fluid_preset_get_num(preset) },
+//                 { "name", String{fluid_preset_get_name(preset)} }
+//             }, {} }, nullptr);
+//         }
+//     }
+// //    valueTreeState.state.getChildWithName("banks") = banks;
+// //    valueTreeState.state.getChildWithName("presets") = presets;
+//     valueTreeState.state.getChildWithName("banks").copyPropertiesAndChildrenFrom(banks, nullptr);
+//     valueTreeState.state.getChildWithName("presets").copyPropertiesAndChildrenFrom(presets, nullptr);
+//     valueTreeState.state.getChildWithName("banks").sendPropertyChangeMessage("synthetic");
+//     valueTreeState.state.getChildWithName("presets").sendPropertyChangeMessage("synthetic");
+    
+// #if JUCE_DEBUG
+//     unique_ptr<XmlElement> xml{valueTreeState.state.createXml()};
+//     Logger::outputDebugString(xml->createDocument("",false,false));
+// #endif
+// }
 
 // FluidSynthModel::Listener::~Listener() {
 // }

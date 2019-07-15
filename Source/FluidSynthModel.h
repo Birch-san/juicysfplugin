@@ -17,7 +17,9 @@
 
 using namespace std;
 
-class FluidSynthModel: public ValueTree::Listener {
+class FluidSynthModel
+: public ValueTree::Listener
+, public AudioProcessorValueTreeState::Listener {
 public:
     FluidSynthModel(
         AudioProcessorValueTreeState& valueTreeState
@@ -68,6 +70,7 @@ public:
 
     const String& getCurrentSoundFontAbsPath();
     
+    virtual void parameterChanged (const String& parameterID, float newValue) override;
     
     virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
                                            const Identifier& property) override;
@@ -101,6 +104,9 @@ private:
 //    };
 
     int handleMidiEvent(void* data, fluid_midi_event_t* event);
+    void refreshBanks();
+    void refreshPresets();
+    // void refreshBanksAndPresets();
     
 //    ValueTreeListener valueTreeListener;
 
