@@ -94,6 +94,7 @@ public:
 private:
     // void loadModelFrom(ValueTree& presets);
     void loadModelFrom(ValueTree& banks);
+    void repopulateTable();
     void selectCurrentPreset();
 
     AudioProcessorValueTreeState& valueTreeState;

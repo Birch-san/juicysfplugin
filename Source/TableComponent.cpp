@@ -91,9 +91,13 @@ TableComponent::TableComponent(
 
 //    table.setMultipleSelectionEnabled (false);
     valueTreeState.state.addListener(this);
+    valueTreeState.addParameterListener("bank", this);
+    valueTreeState.addParameterListener("preset", this);
 }
 
 TableComponent::~TableComponent() {
+    valueTreeState.removeParameterListener("bank", this);
+    valueTreeState.removeParameterListener("preset", this);
     valueTreeState.state.removeListener(this);
 }
 
@@ -114,7 +118,6 @@ TableComponent::~TableComponent() {
 // }
 
 void TableComponent::loadModelFrom(ValueTree& banks) {
-    rows.clear();
     banksToPresets.clear();
     int banksChildren{banks.getNumChildren()};
     for(int bankIx{0}; bankIx<banksChildren; bankIx++) {
@@ -132,44 +135,48 @@ void TableComponent::loadModelFrom(ValueTree& banks) {
             banksToPresets.emplace(bankNum, move(row));
         }
     }
-    {
-        RangedAudioParameter *param{valueTreeState.getParameter("bank")};
-        jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
-        AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
-        int bank{castParam->get()};
-
-        BanksToPresets::iterator lowerBound{banksToPresets.lower_bound(bank)};
-        BanksToPresets::iterator upperBound{banksToPresets.upper_bound(bank)};
-        
-        // basic syntaxes for a lambda which return's a pair's .second
-        // https://stackoverflow.com/questions/2568194/populate-a-vector-with-all-multimap-values-with-a-given-key
-        // shorter syntax with mem_fn()
-        // https://stackoverflow.com/a/36775400/5257399
-        transform(
-            lowerBound,
-            upperBound,
-            back_inserter(rows),
-            mem_fn(&BanksToPresets::value_type::second)
-//            [](BanksToPresets::value_type element){return element.second;}
-                  );
-    }
-
-    table.deselectAllRows();
-    table.updateContent();
-    table.getHeader().setSortColumnId(0, true);
-    selectCurrentPreset();
-    table.repaint();
+    repopulateTable();
 }
 
 void TableComponent::parameterChanged(const String& parameterID, float newValue) {
     // valueTreeState.getParameter
-    if (parameterID == "preset") {
+    if (parameterID == "bank") {
+        repopulateTable();
+    } else if (parameterID == "preset") {
         selectCurrentPreset();
         // RangedAudioParameter *param {valueTreeState.getParameter("preset")};
         // jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
         // AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
         // int value{castParam->get()};
     }
+}
+
+void TableComponent::repopulateTable() {
+    rows.clear();
+    RangedAudioParameter *param{valueTreeState.getParameter("bank")};
+    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+    AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+    int bank{castParam->get()};
+
+    BanksToPresets::iterator lowerBound{banksToPresets.lower_bound(bank)};
+    BanksToPresets::iterator upperBound{banksToPresets.upper_bound(bank)};
+    
+    // basic syntaxes for a lambda which return's a pair's .second
+    // https://stackoverflow.com/questions/2568194/populate-a-vector-with-all-multimap-values-with-a-given-key
+    // shorter syntax with mem_fn()
+    // https://stackoverflow.com/a/36775400/5257399
+    transform(
+        lowerBound,
+        upperBound,
+        back_inserter(rows),
+        mem_fn(&BanksToPresets::value_type::second)
+        // [](BanksToPresets::value_type element){return element.second;}
+        );
+    table.deselectAllRows();
+    table.updateContent();
+    table.getHeader().setSortColumnId(0, true);
+    selectCurrentPreset();
+    table.repaint();
 }
 
 void TableComponent::valueTreePropertyChanged(
@@ -323,7 +330,7 @@ void TableComponent::selectCurrentPreset() {
 
     for (auto it = rows.begin(); it != rows.end(); ++it) {
         if(it->preset == value) {
-            int index {static_cast<int>(std::distance(rows.begin(), it))};
+            int index {static_cast<int>(distance(rows.begin(), it))};
             table.selectRow(index);
             break;
         }

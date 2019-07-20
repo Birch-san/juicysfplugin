@@ -226,11 +226,12 @@ void FluidSynthModel::parameterChanged(const String& parameterID, float newValue
             AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
             preset = castParam->get();
         }
+        int bankOffset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
         fluid_synth_program_select(
             synth.get(),
             channel,
             sfont_id,
-            static_cast<unsigned int>(bank),
+            static_cast<unsigned int>(bankOffset + bank),
             static_cast<unsigned int>(preset));
 
         // fluid_synth_bank_select(synth.get(), channel, value);
@@ -255,12 +256,12 @@ void FluidSynthModel::parameterChanged(const String& parameterID, float newValue
             AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
             preset = castParam->get();
         }
-        // int bank{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+        int bankOffset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
         fluid_synth_program_select(
             synth.get(),
             channel,
             sfont_id,
-            static_cast<unsigned int>(bank),
+            static_cast<unsigned int>(bankOffset + bank),
             static_cast<unsigned int>(preset));
     }
 }
