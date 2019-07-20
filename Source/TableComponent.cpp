@@ -8,6 +8,9 @@
 
 #include "TableComponent.h"
 #include "Util.h"
+#include <functional>
+#include <iterator>
+#include <map>
 
 using namespace std;
 using namespace Util;
@@ -74,8 +77,9 @@ TableComponent::TableComponent(
     table.setWantsKeyboardFocus(false);
 
     // table.selectRow();
-    ValueTree presets{valueTreeState.state.getChildWithName("presets")};
-    loadModelFrom(presets);
+    // ValueTree presets{valueTreeState.state.getChildWithName("presets")};
+    ValueTree banks{valueTreeState.state.getChildWithName("banks")};
+    loadModelFrom(banks);
     // selectCurrentPreset();
 
     // we could now change some initial settings..
@@ -93,15 +97,63 @@ TableComponent::~TableComponent() {
     valueTreeState.state.removeListener(this);
 }
 
-void TableComponent::loadModelFrom(ValueTree& presets) {
+// void TableComponent::loadModelFrom(ValueTree& presets) {
+//     rows.clear();
+//     int numChildren{presets.getNumChildren()};
+//     for(int i{0}; i<numChildren; i++) {
+//         ValueTree child{presets.getChild(i)};
+//         int num{child.getProperty("num")};
+//         String name{child.getProperty("name")};
+//         rows.emplace_back(num, name);
+//     }
+//     table.deselectAllRows();
+//     table.updateContent();
+//     table.getHeader().setSortColumnId(0, true);
+//     selectCurrentPreset();
+//     table.repaint();
+// }
+
+void TableComponent::loadModelFrom(ValueTree& banks) {
     rows.clear();
-    int numChildren{presets.getNumChildren()};
-    for(int i{0}; i<numChildren; i++) {
-        ValueTree child{presets.getChild(i)};
-        int num{child.getProperty("num")};
-        String name{child.getProperty("name")};
-        rows.emplace_back(num, name);
+    banksToPresets.clear();
+    int banksChildren{banks.getNumChildren()};
+    for(int bankIx{0}; bankIx<banksChildren; bankIx++) {
+        // vector<TableRow> presets;
+        ValueTree bank{banks.getChild(bankIx)};
+        int bankNum{bank.getProperty("num")};
+        int bankChildren{bank.getNumChildren()};
+        for(int presetIx{0}; presetIx<bankChildren; presetIx++) {
+            ValueTree preset{bank.getChild(presetIx)};
+            int presetNum{preset.getProperty("num")};
+            String presetName{preset.getProperty("name")};
+            // presets.emplace_back(presetNum, presetName);
+            TableRow row{presetNum, move(presetName)};
+            // banksToPresets.insert(BanksToPresets::value_type(bankNum, move(row)));
+            banksToPresets.emplace(bankNum, move(row));
+        }
     }
+    {
+        RangedAudioParameter *param{valueTreeState.getParameter("bank")};
+        jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+        AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+        int bank{castParam->get()};
+
+        BanksToPresets::iterator lowerBound{banksToPresets.lower_bound(bank)};
+        BanksToPresets::iterator upperBound{banksToPresets.upper_bound(bank)};
+        
+        // basic syntaxes for a lambda which return's a pair's .second
+        // https://stackoverflow.com/questions/2568194/populate-a-vector-with-all-multimap-values-with-a-given-key
+        // shorter syntax with mem_fn()
+        // https://stackoverflow.com/a/36775400/5257399
+        transform(
+            lowerBound,
+            upperBound,
+            back_inserter(rows),
+            mem_fn(&BanksToPresets::value_type::second)
+//            [](BanksToPresets::value_type element){return element.second;}
+                  );
+    }
+
     table.deselectAllRows();
     table.updateContent();
     table.getHeader().setSortColumnId(0, true);
@@ -123,7 +175,12 @@ void TableComponent::parameterChanged(const String& parameterID, float newValue)
 void TableComponent::valueTreePropertyChanged(
     ValueTree& treeWhosePropertyHasChanged,
     const Identifier& property) {
-    if (treeWhosePropertyHasChanged.getType() == StringRef("presets")) {
+    // if (treeWhosePropertyHasChanged.getType() == StringRef("presets")) {
+    //     if (property == StringRef("synthetic")) {
+    //         loadModelFrom(treeWhosePropertyHasChanged);
+    //     }
+    // }
+    if (treeWhosePropertyHasChanged.getType() == StringRef("banks")) {
         if (property == StringRef("synthetic")) {
             loadModelFrom(treeWhosePropertyHasChanged);
         }

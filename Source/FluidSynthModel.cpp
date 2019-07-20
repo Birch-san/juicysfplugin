@@ -234,7 +234,7 @@ void FluidSynthModel::parameterChanged(const String& parameterID, float newValue
             static_cast<unsigned int>(preset));
 
         // fluid_synth_bank_select(synth.get(), channel, value);
-        refreshPresets();
+//        refreshPresets();
         // fluid_sfont_t* sfont{fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
         // fluid_sfont_iteration_start(sfont);
         // fluid_preset_t* presetObj{fluid_sfont_iteration_next(sfont)};
@@ -409,60 +409,99 @@ void FluidSynthModel::refreshBanks() {
     fluid_sfont_t* sfont {fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
     ValueTree banks{"banks"};
     if (sfont != nullptr) {
-        // int initialBankOffset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
-        banks.appendChild({ "bank", {
-            { "num", /* initialBankOffset */ 0 },
-        }, {} }, nullptr);
-        // int greatestPersistedBank{initialBankOffset};
-        int greatestPersistedBank{0};
+        int greatestEncounteredBank{-1};
+        ValueTree bank;
 
         fluid_sfont_iteration_start(sfont);
-
         for(fluid_preset_t* preset {fluid_sfont_iteration_next(sfont)};
         preset != nullptr;
         preset = fluid_sfont_iteration_next(sfont)) {
-            int bank{fluid_preset_get_banknum(preset) /* + initialBankOffset */};
-            if (bank > greatestPersistedBank) {
-                banks.appendChild({ "bank", {
-                    { "num", bank },
-                }, {} }, nullptr);
-                greatestPersistedBank = bank;
+            int bankNum{fluid_preset_get_banknum(preset)};
+            if (bankNum > greatestEncounteredBank) {
+                if (greatestEncounteredBank > -1) {
+                    banks.appendChild(bank, nullptr);
+                }
+                bank = { "bank", {
+                    { "num", bankNum }
+                } };
+                greatestEncounteredBank = bankNum;
             }
+            bank.appendChild({ "preset", {
+                { "num", fluid_preset_get_num(preset) },
+                { "name", String{fluid_preset_get_name(preset)} }
+            }, {} }, nullptr);
+        }
+        if (greatestEncounteredBank > -1) {
+            banks.appendChild(bank, nullptr);
         }
     }
     valueTreeState.state.getChildWithName("banks").copyPropertiesAndChildrenFrom(banks, nullptr);
     valueTreeState.state.getChildWithName("banks").sendPropertyChangeMessage("synthetic");
-    refreshPresets();
+    
+#if JUCE_DEBUG
+    unique_ptr<XmlElement> xml{valueTreeState.state.createXml()};
+    Logger::outputDebugString(xml->createDocument("",false,false));
+#endif
 }
 
-void FluidSynthModel::refreshPresets() {
-    fluid_sfont_t* sfont {fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
-    ValueTree presets{"presets"};
-    if (sfont != nullptr) {
-        RangedAudioParameter *param {valueTreeState.getParameter("bank")};
-        jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-        AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-        int value{castParam->get()};
+// void FluidSynthModel::refreshBanks() {
+//     fluid_sfont_t* sfont {fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
+//     ValueTree banks{"banks"};
+//     if (sfont != nullptr) {
+//         // int initialBankOffset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+//         banks.appendChild({ "bank", {
+//             { "num", /* initialBankOffset */ 0 },
+//         }, {} }, nullptr);
+//         // int greatestPersistedBank{initialBankOffset};
+//         int greatestPersistedBank{0};
 
-        // int initialBank{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+//         fluid_sfont_iteration_start(sfont);
 
-        fluid_sfont_iteration_start(sfont);
+//         for(fluid_preset_t* preset {fluid_sfont_iteration_next(sfont)};
+//         preset != nullptr;
+//         preset = fluid_sfont_iteration_next(sfont)) {
+//             int bank{fluid_preset_get_banknum(preset) /* + initialBankOffset */};
+//             if (bank > greatestPersistedBank) {
+//                 banks.appendChild({ "bank", {
+//                     { "num", bank },
+//                 }, {} }, nullptr);
+//                 greatestPersistedBank = bank;
+//             }
+//         }
+//     }
+//     valueTreeState.state.getChildWithName("banks").copyPropertiesAndChildrenFrom(banks, nullptr);
+//     valueTreeState.state.getChildWithName("banks").sendPropertyChangeMessage("synthetic");
+//     refreshPresets();
+// }
 
-        for(fluid_preset_t* preset {fluid_sfont_iteration_next(sfont)};
-        preset != nullptr;
-        preset = fluid_sfont_iteration_next(sfont)) {
-            int bank{fluid_preset_get_banknum(preset) /* + initialBank */};
-            if (bank == value) {
-                presets.appendChild({ "preset", {
-                    { "num", fluid_preset_get_num(preset) },
-                    { "name", String{fluid_preset_get_name(preset)} }
-                }, {} }, nullptr);
-            }
-        }
-    }
-    valueTreeState.state.getChildWithName("presets").copyPropertiesAndChildrenFrom(presets, nullptr);
-    valueTreeState.state.getChildWithName("presets").sendPropertyChangeMessage("synthetic");
-}
+// void FluidSynthModel::refreshPresets() {
+//     fluid_sfont_t* sfont {fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
+//     ValueTree presets{"presets"};
+//     if (sfont != nullptr) {
+//         RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+//         jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+//         AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+//         int value{castParam->get()};
+
+//         // int initialBank{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
+
+//         fluid_sfont_iteration_start(sfont);
+
+//         for(fluid_preset_t* preset {fluid_sfont_iteration_next(sfont)};
+//         preset != nullptr;
+//         preset = fluid_sfont_iteration_next(sfont)) {
+//             int bank{fluid_preset_get_banknum(preset) /* + initialBank */};
+//             if (bank == value) {
+//                 presets.appendChild({ "preset", {
+//                     { "num", fluid_preset_get_num(preset) },
+//                     { "name", String{fluid_preset_get_name(preset)} }
+//                 }, {} }, nullptr);
+//             }
+//         }
+//     }
+//     valueTreeState.state.getChildWithName("presets").copyPropertiesAndChildrenFrom(presets, nullptr);
+//     valueTreeState.state.getChildWithName("presets").sendPropertyChangeMessage("synthetic");
+// }
 
 // void FluidSynthModel::refreshBanksAndPresets() {
 //     fluid_sfont_t* sfont {fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};

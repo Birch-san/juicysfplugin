@@ -105,7 +105,7 @@ private:
 
     int handleMidiEvent(void* data, fluid_midi_event_t* event);
     void refreshBanks();
-    void refreshPresets();
+    // void refreshPresets();
     // void refreshBanksAndPresets();
     
 //    ValueTreeListener valueTreeListener;

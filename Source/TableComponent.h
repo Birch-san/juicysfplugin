@@ -12,6 +12,7 @@
 #include "PresetsToBanks.h"
 #include <memory>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -91,13 +92,17 @@ public:
     inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
     inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
 private:
-    void loadModelFrom(ValueTree& presets);
+    // void loadModelFrom(ValueTree& presets);
+    void loadModelFrom(ValueTree& banks);
     void selectCurrentPreset();
 
     AudioProcessorValueTreeState& valueTreeState;
 
     TableListBox table;     // the table component itself
     Font font;
+
+    typedef multimap<int, TableRow> BanksToPresets;
+    BanksToPresets banksToPresets;
 
 //     vector<string> columns;
     vector<TableRow> rows;

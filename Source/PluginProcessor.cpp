@@ -47,7 +47,7 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
         { "path", "" },
     }, {} }, nullptr);
     // no properties, no subtrees (yet)
-    valueTreeState.state.appendChild({ "presets", {}, {} }, nullptr);
+    // valueTreeState.state.appendChild({ "presets", {}, {} }, nullptr);
     // no properties, no subtrees (yet)
     valueTreeState.state.appendChild({ "banks", {}, {} }, nullptr);
     // valueTreeState.state.setProperty("soundFontPath", "", nullptr);
