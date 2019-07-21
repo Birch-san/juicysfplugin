@@ -62,13 +62,35 @@ void Pill::bankChanged(int bank) {
 //     textButton.setToggleState(value == bank, dontSendNotification);
 // }
 
-void Pill::buttonClicked (Button* button) {
+void Pill::buttonClicked(Button* button) {
+    ValueTree banks{valueTreeState.state.getChildWithName("banks")};
+    int banksChildren{banks.getNumChildren()};
+    ValueTree bank;
+    for(int bankIx{0}; bankIx<banksChildren; bankIx++) {
+        ValueTree currentBank{banks.getChild(bankIx)};
+        int bankNum{currentBank.getProperty("num")};
+        if (bankNum == this->bank) {
+            bank = currentBank;
+            break;
+        }
+    }
+    ValueTree preset{bank.getChild(0)};
+    int presetNum{preset.getProperty("num")};
+
     // selected = button;
     // onItemSelected(itemToIDMapper(button->getName().toStdString()));
-    RangedAudioParameter *param {valueTreeState.getParameter("bank")};
-    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-    *castParam = bank;
+    {
+        RangedAudioParameter *param{valueTreeState.getParameter("bank")};
+        jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+        AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+        *castParam = this->bank;
+    }
+    {
+        RangedAudioParameter *param{valueTreeState.getParameter("preset")};
+        jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+        AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+        *castParam = presetNum;
+    }
 }
 
 // void Pill::parameterChanged(const String& parameterID, float newValue) {
@@ -208,31 +230,41 @@ void Pills::cycle(bool right) {
     RangedAudioParameter *param {valueTreeState.getParameter("bank")};
     jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
     AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-    int currentlySelectedBank{castParam->get()};
+    int bank{castParam->get()};
 
-    ValueTree banks{valueTreeState.state.getChildWithName("banks")};
+    // ValueTree banks{valueTreeState.state.getChildWithName("banks")};
 //    int numChildren{banks.getNumChildren()};
 
-    vector<int> bankInts;
-    bankInts.resize(banks.getNumChildren());
+    // vector<int> bankInts;
+    // bankInts.resize(banks.getNumChildren());
 
-    transform(banks.begin(), banks.end(), bankInts.begin(), [](ValueTree bank) -> int {
-        return bank.getProperty("num");
-    });
+    // transform(banks.begin(), banks.end(), bankInts.begin(), [](ValueTree bank) -> int {
+    //     return bank.getProperty("num");
+    // });
     
-//    int closestBank{currentlySelectedBank};
+//    int closestBank{bank};
 //    for(int i{0}; i < numChildren; i++) {
 //        ValueTree child{banks.getChild(i)};
 //        int proposedBank{child.getProperty("num")};
-//        if (right && proposedBank > currentlySelectedBank) {
+//        if (right && proposedBank > bank) {
 //            closestBank = jmin(closestBank, proposedBank);
 //        } else if (left )
 //    }
 
-    int currentIx{static_cast<const int>(distance(bankInts.begin(), find(bankInts.begin(), bankInts.end(), currentlySelectedBank)))};
+    // int currentIx{static_cast<const int>(distance(bankInts.begin(), find(bankInts.begin(), bankInts.end(), currentlySelectedBank)))};
+    // currentIx += right ? 1 : pills.size()-1;
+    // // pills[currentIx % pills.size()]->textButton.triggerClick();
+    // *castParam = bankInts[currentIx % bankInts.size()];
+
+    int currentIx = static_cast<const int>(
+        distance(
+            pills.begin(),
+            find_if(
+                pills.begin(),
+                pills.end(),
+                [bank](unique_ptr<Pill>& pill){return pill->bank == bank;})));
     currentIx += right ? 1 : pills.size()-1;
-    // pills[currentIx % pills.size()]->textButton.triggerClick();
-    *castParam = bankInts[currentIx % bankInts.size()];
+    pills[currentIx % pills.size()]->textButton.triggerClick();
 
 
     // TODO: base this on valueTree
