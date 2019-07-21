@@ -11,7 +11,7 @@ using namespace std;
 class Pill
 : public Component
 , public Button::Listener
-, public AudioProcessorValueTreeState::Listener
+// , public AudioProcessorValueTreeState::Listener
 {
 public:
     Pill(
@@ -22,14 +22,16 @@ public:
     );
     ~Pill();
 
-    void buttonClicked (Button* button) override;
+    void buttonClicked(Button* button) override;
 
     void resized() override;
     void paint(Graphics& g) override;
 
-    virtual void parameterChanged (const String& parameterID, float newValue) override;
+    void bankChanged(int bank);
+
+    // virtual void parameterChanged (const String& parameterID, float newValue) override;
 private:
-    void loadToggleState();
+    // void loadToggleState();
 
     AudioProcessorValueTreeState& valueTreeState;
     int bank;
@@ -41,6 +43,7 @@ private:
 class Pills
 : public Component
 , public ValueTree::Listener
+, public AudioProcessorValueTreeState::Listener
 {
 public:
     Pills(
@@ -60,6 +63,8 @@ public:
 
     // void buttonClicked (Button* button) override;
     void cycle(bool right);
+
+    virtual void parameterChanged (const String& parameterID, float newValue) override;
 
     virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
                                            const Identifier& property) override;
@@ -86,6 +91,8 @@ private:
     Button *selected;
 
     // Pill* addToList (Pill* newButton);
+
+    void updatePillToggleStates();
 
     void populate(int initiallySelectedItem);
     void resized() override;

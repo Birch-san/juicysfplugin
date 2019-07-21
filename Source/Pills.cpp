@@ -25,20 +25,19 @@ Pill::Pill(
             | (isLast ? 0 : Button::ConnectedOnRight)
     );
     textButton.setRadioGroupId(34567);
-    loadToggleState();
+    // loadToggleState();
     textButton.setClickingTogglesState(true);
 
     addAndMakeVisible(textButton);
     
-    valueTreeState.addParameterListener("bank", this);
+    // valueTreeState.addParameterListener("bank", this);
 //    valueTreeState.state.addListener(this);
     textButton.addListener(this);
 }
 
-void Pill::paint (Graphics& g)
-{
+void Pill::paint (Graphics& g) {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 }
 
 void Pill::resized() {
@@ -46,18 +45,22 @@ void Pill::resized() {
 }
 
 Pill::~Pill() {
-    valueTreeState.removeParameterListener("bank", this);
+    // valueTreeState.removeParameterListener("bank", this);
 //    valueTreeState.state.removeListener(this);
     textButton.removeListener(this);
 }
 
-void Pill::loadToggleState() {
-    RangedAudioParameter *param {valueTreeState.getParameter("bank")};
-    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-    int value{castParam->get()};
-    textButton.setToggleState(value == bank, dontSendNotification);
+void Pill::bankChanged(int bank) {
+    textButton.setToggleState(this->bank == bank, dontSendNotification);
 }
+
+// void Pill::loadToggleState() {
+//     RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+//     jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+//     AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+//     int value{castParam->get()};
+//     textButton.setToggleState(value == bank, dontSendNotification);
+// }
 
 void Pill::buttonClicked (Button* button) {
     // selected = button;
@@ -68,11 +71,11 @@ void Pill::buttonClicked (Button* button) {
     *castParam = bank;
 }
 
-void Pill::parameterChanged(const String& parameterID, float newValue) {
-    if (parameterID == "bank") {
-        loadToggleState();
-    }
-}
+// void Pill::parameterChanged(const String& parameterID, float newValue) {
+//     if (parameterID == "bank") {
+//         loadToggleState();
+//     }
+// }
 
 // void Pill::valueTreePropertyChanged(
 //     ValueTree& treeWhosePropertyHasChanged,
@@ -104,10 +107,28 @@ Pills::Pills(
     loadModelFrom(banks);
 
     valueTreeState.state.addListener(this);
+    valueTreeState.addParameterListener("bank", this);
 }
 
 Pills::~Pills() {
+    valueTreeState.removeParameterListener("bank", this);
     valueTreeState.state.removeListener(this);
+}
+
+void Pills::parameterChanged(const String& parameterID, float newValue) {
+    if (parameterID == "bank") {
+        updatePillToggleStates();
+    }
+}
+
+void Pills::updatePillToggleStates() {
+    RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+    int bank{castParam->get()};
+    for (auto& pill: pills) {
+        pill->bankChanged(bank);
+    }
 }
 
 void Pills::valueTreePropertyChanged(
@@ -137,6 +158,7 @@ void Pills::loadModelFrom(ValueTree& banks) {
         addAndMakeVisible(pill.get());
         pills.push_back(move(pill));
     }
+    updatePillToggleStates();
     resized();
 }
 
