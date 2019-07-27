@@ -20,10 +20,10 @@ FluidSynthModel::FluidSynthModel(
 // , sharedParams{sharedParams}
 //, synth{nullptr}
 , settings{nullptr, nullptr}
-, currentSoundFontAbsPath{}
+//, currentSoundFontAbsPath{}
 , currentSampleRate{44100}
-, initialised{false}
-, sfont_id{0}
+//, initialised{false}
+, sfont_id{-1}
 , channel{0}/*,
 mod(nullptr)*/
 {
@@ -97,12 +97,15 @@ void FluidSynthModel::initialise() {
 //        loadFont(sharedParams.getSoundFontPath());
 //        changePreset(sharedParams->getBank(), sharedParams->getPreset());
 //    }
+    ValueTree soundFont{valueTreeState.state.getChildWithName("soundFont")};
+    String path{soundFont.getProperty("path", "")};
+    loadFont(path);
 
     fluid_synth_set_gain(synth.get(), 2.0);
     
-    for(int i{SOUND_CTRL1}; i <= SOUND_CTRL10; i++)
-    {
-        setControllerValue(i, 0);
+    fluid_midi_control_change controllers[]{SOUND_CTRL2, SOUND_CTRL3, SOUND_CTRL4, SOUND_CTRL5, SOUND_CTRL6, SOUND_CTRL10};
+    for(fluid_midi_control_change controller : controllers) {
+        setControllerValue(static_cast<int>(controller), 0);
     }
 
 //    fluid_synth_bank_select(synth, 0, 3);
@@ -116,7 +119,7 @@ void FluidSynthModel::initialise() {
 //    float env_amount(12000.0f);
     
 //     http://www.synthfont.com/SoundFont_NRPNs.PDF
-    float env_amount(20000.0f);
+    float env_amount{20000.0f};
 //    float env_amount(24000.0f);
     
     // note: fluid_chan.c#fluid_channel_init_ctrl()
@@ -200,7 +203,7 @@ void FluidSynthModel::initialise() {
     fluid_mod_set_amount(mod.get(), 1000.0f);
     fluid_synth_add_default_mod(synth.get(), mod.get(), FLUID_SYNTH_ADD);
     
-    valueTreeState.state.getChildWithName("soundFont").sendPropertyChangeMessage("path");
+//    valueTreeState.state.getChildWithName("soundFont").sendPropertyChangeMessage("path");
     // valueTree.sendPropertyChangeMessage("soundFontPath");
 
     // initialised = true;
@@ -273,7 +276,7 @@ void FluidSynthModel::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasCh
         if (property == StringRef("path")) {
             String soundFontPath{treeWhosePropertyHasChanged.getProperty("path", "")};
             if (soundFontPath.isNotEmpty()) {
-                loadFont(soundFontPath);
+                unloadAndLoadFont(soundFontPath);
             }
         }
     }
@@ -294,82 +297,82 @@ int FluidSynthModel::getChannel() {
     return channel;
 }
 
-void FluidSynthModel::changePreset(int bank, int preset) {
-    if (bank == -1 || preset == -1) {
-        unique_ptr<BankAndPreset> bankAndPreset = getFirstBankAndPreset();
-        bank = bankAndPreset->getBank();
-        preset = bankAndPreset->getPreset();
-    }
-    changePresetImpl(bank, preset);
-//    sharedParams->setPreset(preset);
-//    sharedParams->setBank(bank);
-}
+//void FluidSynthModel::changePreset(int bank, int preset) {
+//    if (bank == -1 || preset == -1) {
+//        unique_ptr<BankAndPreset> bankAndPreset = getFirstBankAndPreset();
+//        bank = bankAndPreset->getBank();
+//        preset = bankAndPreset->getPreset();
+//    }
+//    changePresetImpl(bank, preset);
+////    sharedParams->setPreset(preset);
+////    sharedParams->setBank(bank);
+//}
 
-void FluidSynthModel::changePresetImpl(int bank, int preset) {
-    fluid_synth_program_select(synth.get(), channel, sfont_id, static_cast<unsigned int>(bank), static_cast<unsigned int>(preset));
-}
+//void FluidSynthModel::changePresetImpl(int bank, int preset) {
+//    fluid_synth_program_select(synth.get(), channel, sfont_id, static_cast<unsigned int>(bank), static_cast<unsigned int>(preset));
+//}
 
-fluid_preset_t* FluidSynthModel::getFirstPreset() {
-    fluid_sfont_t* sfont = fluid_synth_get_sfont_by_id(synth.get(), sfont_id);
+//fluid_preset_t* FluidSynthModel::getFirstPreset() {
+//    fluid_sfont_t* sfont = fluid_synth_get_sfont_by_id(synth.get(), sfont_id);
+//
+//    jassert(sfont != nullptr);
+//    fluid_sfont_iteration_start(sfont);
+//
+//    return fluid_sfont_iteration_next(sfont);
+//}
+//
+//unique_ptr<BankAndPreset> FluidSynthModel::getFirstBankAndPreset() {
+//    fluid_preset_t* preset = getFirstPreset();
+//
+//    int offset = fluid_synth_get_bank_offset(synth.get(), sfont_id);
+//
+//    return make_unique<BankAndPreset>(fluid_preset_get_banknum(preset) + offset, fluid_preset_get_num(preset));
+//};
+//
+//void FluidSynthModel::selectFirstPreset() {
+//    fluid_preset_t* preset = getFirstPreset();
+//
+//    int offset = fluid_synth_get_bank_offset(synth.get(), sfont_id);
+//
+//    changePreset(fluid_preset_get_banknum(preset) + offset, fluid_preset_get_num(preset));
+//}
 
-    jassert(sfont != nullptr);
-    fluid_sfont_iteration_start(sfont);
-
-    return fluid_sfont_iteration_next(sfont);
-}
-
-unique_ptr<BankAndPreset> FluidSynthModel::getFirstBankAndPreset() {
-    fluid_preset_t* preset = getFirstPreset();
-
-    int offset = fluid_synth_get_bank_offset(synth.get(), sfont_id);
-
-    return make_unique<BankAndPreset>(fluid_preset_get_banknum(preset) + offset, fluid_preset_get_num(preset));
-};
-
-void FluidSynthModel::selectFirstPreset() {
-    fluid_preset_t* preset = getFirstPreset();
-
-    int offset = fluid_synth_get_bank_offset(synth.get(), sfont_id);
-
-    changePreset(fluid_preset_get_banknum(preset) + offset, fluid_preset_get_num(preset));
-}
-
-BanksToPresets FluidSynthModel::getBanks() {
-    BanksToPresets banksToPresets;
-
-    int soundfontCount = fluid_synth_sfcount(synth.get());
-
-    if (soundfontCount == 0) {
-        // no soundfont selected
-        return banksToPresets;
-    }
-
-    fluid_sfont_t* sfont = fluid_synth_get_sfont_by_id(synth.get(), sfont_id);
-    if(sfont == nullptr) {
-        // no soundfont found by that ID
-        // the above guard (soundfontCount) protects us for the
-        // main case we're expecting. this guard is just defensive programming.
-        return banksToPresets;
-    }
-
-    int offset = fluid_synth_get_bank_offset(synth.get(), sfont_id);
-
-    fluid_sfont_iteration_start(sfont);
-
-    for(fluid_preset_t* preset = fluid_sfont_iteration_next(sfont);
-    preset != nullptr;
-    preset = fluid_sfont_iteration_next(sfont)) {
-        banksToPresets.insert(BanksToPresets::value_type(
-                fluid_preset_get_banknum(preset) + offset,
-                *new Preset(
-                        fluid_preset_get_num(preset),
-                        fluid_preset_get_name(preset)
-                )
-        ));
-    }
-
-    return banksToPresets;
-}
+//BanksToPresets FluidSynthModel::getBanks() {
+//    BanksToPresets banksToPresets;
+//
+//    int soundfontCount = fluid_synth_sfcount(synth.get());
+//
+//    if (soundfontCount == 0) {
+//        // no soundfont selected
+//        return banksToPresets;
+//    }
+//
+//    fluid_sfont_t* sfont = fluid_synth_get_sfont_by_id(synth.get(), sfont_id);
+//    if(sfont == nullptr) {
+//        // no soundfont found by that ID
+//        // the above guard (soundfontCount) protects us for the
+//        // main case we're expecting. this guard is just defensive programming.
+//        return banksToPresets;
+//    }
+//
+//    int offset = fluid_synth_get_bank_offset(synth.get(), sfont_id);
+//
+//    fluid_sfont_iteration_start(sfont);
+//
+//    for(fluid_preset_t* preset = fluid_sfont_iteration_next(sfont);
+//    preset != nullptr;
+//    preset = fluid_sfont_iteration_next(sfont)) {
+//        banksToPresets.insert(BanksToPresets::value_type(
+//                fluid_preset_get_banknum(preset) + offset,
+//                *new Preset(
+//                        fluid_preset_get_num(preset),
+//                        fluid_preset_get_name(preset)
+//                )
+//        ));
+//    }
+//
+//    return banksToPresets;
+//}
 
 shared_ptr<fluid_synth_t> FluidSynthModel::getSynth() {
     // https://msdn.microsoft.com/en-us/library/hh279669.aspx
@@ -378,38 +381,50 @@ shared_ptr<fluid_synth_t> FluidSynthModel::getSynth() {
     return synth;
 }
 
-void FluidSynthModel::onFileNameChanged(const String &absPath, int bank, int preset) {
-    if (!shouldLoadFont(absPath)) {
-        return;
-    }
-    unloadAndLoadFont(absPath);
-    changePreset(bank, preset);
-    ValueTree valueTree{valueTreeState.state.getChildWithName("soundFont")};
-    valueTree.setPropertyExcludingListener(this, "path", absPath, nullptr);
-    // valueTree.setPropertyExcludingListener(this, "soundFontPath", absPath, nullptr);
-//    sharedParams.setSoundFontPath(absPath);
-    // eventListeners.call(&FluidSynthModel::Listener::fontChanged, this, absPath);
-}
+//void FluidSynthModel::onFileNameChanged(const String &absPath, int bank, int preset) {
+//    if (!shouldLoadFont(absPath)) {
+//        return;
+//    }
+//    unloadAndLoadFont(absPath);
+//    changePreset(bank, preset);
+//    ValueTree valueTree{valueTreeState.state.getChildWithName("soundFont")};
+//    valueTree.setPropertyExcludingListener(this, "path", absPath, nullptr);
+//    // valueTree.setPropertyExcludingListener(this, "soundFontPath", absPath, nullptr);
+////    sharedParams.setSoundFontPath(absPath);
+//    // eventListeners.call(&FluidSynthModel::Listener::fontChanged, this, absPath);
+//}
 
 void FluidSynthModel::unloadAndLoadFont(const String &absPath) {
     // in the base case, there is no font loaded
     if (fluid_synth_sfcount(synth.get()) > 0) {
+        // if -1 is returned, that indicates failure
+        // not really sure how to handle "fail to unload"
         fluid_synth_sfunload(synth.get(), sfont_id, 1);
+        sfont_id = -1;
     }
     loadFont(absPath);
 }
 
 void FluidSynthModel::loadFont(const String &absPath) {
-    currentSoundFontAbsPath = absPath;
-    sfont_id++;
-    fluid_synth_sfload(synth.get(), absPath.toStdString().c_str(), 1);
+//    currentSoundFontAbsPath = absPath;
+//    sfont_id++;
+//    fluid_synth_sfunload(synth.get(), sfont_id, 1);
+    if (!absPath.isEmpty()) {
+        sfont_id = fluid_synth_sfload(synth.get(), absPath.toStdString().c_str(), 1);
+        // if -1 is returned, that indicates failure
+    }
+    // refresh regardless of success, if only to clear the table
     refreshBanks();
 }
 
 void FluidSynthModel::refreshBanks() {
-    fluid_sfont_t* sfont {fluid_synth_get_sfont_by_id(synth.get(), sfont_id)};
     ValueTree banks{"banks"};
-    if (sfont != nullptr) {
+    fluid_sfont_t* sfont{
+        sfont_id == -1
+        ? nullptr
+        : fluid_synth_get_sfont_by_id(synth.get(), sfont_id)
+    };
+    if (sfont) {
         int greatestEncounteredBank{-1};
         ValueTree bank;
 
@@ -440,8 +455,8 @@ void FluidSynthModel::refreshBanks() {
     valueTreeState.state.getChildWithName("banks").sendPropertyChangeMessage("synthetic");
     
 #if JUCE_DEBUG
-    unique_ptr<XmlElement> xml{valueTreeState.state.createXml()};
-    Logger::outputDebugString(xml->createDocument("",false,false));
+//    unique_ptr<XmlElement> xml{valueTreeState.state.createXml()};
+//    Logger::outputDebugString(xml->createDocument("",false,false));
 #endif
 }
 
@@ -557,22 +572,22 @@ void FluidSynthModel::refreshBanks() {
 // FluidSynthModel::Listener::~Listener() {
 // }
 
-bool FluidSynthModel::shouldLoadFont(const String &absPath) {
-    if (absPath.isEmpty()) {
-        return false;
-    }
-    if (absPath == currentSoundFontAbsPath) {
-        return false;
-    }
-    return true;
-}
+//bool FluidSynthModel::shouldLoadFont(const String &absPath) {
+//    if (absPath.isEmpty()) {
+//        return false;
+//    }
+////    if (absPath == currentSoundFontAbsPath) {
+////        return false;
+////    }
+//    return true;
+//}
 
 // void FluidSynthModel::Listener::fontChanged(FluidSynthModel * model, const String &absPath) {
 // }
 
-const String& FluidSynthModel::getCurrentSoundFontAbsPath() {
-    return currentSoundFontAbsPath;
-}
+//const String& FluidSynthModel::getCurrentSoundFontAbsPath() {
+//    return currentSoundFontAbsPath;
+//}
 
 //==============================================================================
 // void FluidSynthModel::addListener (FluidSynthModel::Listener* const newListener)

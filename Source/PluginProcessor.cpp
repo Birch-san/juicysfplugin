@@ -218,7 +218,7 @@ void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     int time;
     MidiMessage m;
     
-    // TODO: factor into a MidiCollector
+    // TODO: factor into a MidiMessageCollector
     for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);) {
         DEBUG_PRINT ( m.getDescription() );
         
@@ -385,10 +385,10 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
     // as intermediaries to make it easy to save and load complex data.
 
     // Create an outer XML element..
-//    XmlElement xml{"MYPLUGINSETTINGS"};
+    XmlElement xml{"MYPLUGINSETTINGS"};
 //    sharedParams->setAttributesOnXml(xml);
-    auto state{valueTreeState.copyState()};
-    unique_ptr<XmlElement> xml{state.createXml()};
+//    auto state{valueTreeState.copyState()};
+//    unique_ptr<XmlElement> xml{state.createXml()};
 //    sharedParams.setAttributesOnXml(xml);
 
 //    list<StateChangeSubscriber*>::iterator p;
@@ -397,14 +397,44 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
 //    }
 
     // Store the values of all our parameters, using their param ID as the XML attribute
-    // for (auto* param : getParameters())
-    //     if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param))
-    //         xml->setAttribute (p->paramID, p->getValue());
+    XmlElement* params{xml.createNewChildElement("params")};
+    for (auto* param : getParameters()) {
+         if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param)) {
+//             xml.setAttribute(p->paramID, p->getValue());
+//             XmlElement* param{params->createNewChildElement("PARAM")};
+//             param->setAttribute(p->paramID, p->getValue());
+             params->setAttribute(p->paramID, p->getValue());
+         }
+    }
+    {
+        ValueTree tree{valueTreeState.state.getChildWithName("uiState")};
+        XmlElement* newElement{xml.createNewChildElement("uiState")};
+//        Value value{tree.getPropertyAsValue("width", nullptr)};
+        {
+            double value{tree.getProperty("width", GuiConstants::minWidth)};
+            newElement->setAttribute("width", value);
+        }
+        {
+            double value{tree.getProperty("height", GuiConstants::minHeight)};
+            newElement->setAttribute("height", value);
+        }
+    }
+    {
+        ValueTree tree{valueTreeState.state.getChildWithName("soundFont")};
+        XmlElement* newElement{xml.createNewChildElement("soundFont")};
+        {
+            String value{tree.getProperty("path", "")};
+            newElement->setAttribute("path", value);
+        }
+    }
+    
+    DEBUG_PRINT(xml.createDocument("",false,false));
     
     // then use this helper function to stuff it into the binary blob and return it..
-    if (xml.get() != nullptr) {
-        copyXmlToBinary(*xml, destData);
-    }
+//    if (xml.get() != nullptr) {
+//        copyXmlToBinary(*xml, destData);
+//    }
+    copyXmlToBinary(xml, destData);
 }
 
 void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -433,16 +463,24 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
 //        if (xmlState->hasTagName ("MYPLUGINSETTINGS")) {
         if (xmlState->hasTagName(valueTreeState.state.getType())) {
             // valueTreeState.replaceState(ValueTree::fromXml(*xmlState));
-            for (auto* param : getParameters())
-                if (auto* p = dynamic_cast<AudioProcessorParameterWithID*>(param))
-                    p->setValue(static_cast<float>(xmlState->getDoubleAttribute(p->paramID, p->getValue())));
+//            for (auto* param : getParameters())
+//                if (auto* p = dynamic_cast<AudioProcessorParameterWithID*>(param))
+//                    p->setValue(static_cast<float>(xmlState->getDoubleAttribute(p->paramID, p->getValue())));
+            XmlElement* params{xmlState->getChildByName("params")};
+            if (params) {
+                for (auto* param : getParameters())
+                    if (auto* p = dynamic_cast<AudioProcessorParameterWithID*>(param))
+    //                    XmlElement* xmlParam{params->getChildByAttribute("id", p->paramID)};
+    //                    p->setValue(static_cast<float>(xmlState->getDoubleAttribute(p->paramID, p->getValue())));
+                        p->setValue(static_cast<float>(params->getDoubleAttribute(p->paramID, p->getValue())));
+            }
             
             {
                 // Value value{valueTreeState.state.getPropertyAsValue("soundFontPath", nullptr)};
                 // value = xmlState->getStringAttribute("soundFontPath", value.getValue());
-                ValueTree tree{valueTreeState.state.getChildWithName("soundFont")};
                 XmlElement* xmlElement{xmlState->getChildByName("soundFont")};
                 if (xmlElement) {
+                    ValueTree tree{valueTreeState.state.getChildWithName("soundFont")};
                     Value value{tree.getPropertyAsValue("path", nullptr)};
                     value = xmlState->getStringAttribute("path", value.getValue());
                 }

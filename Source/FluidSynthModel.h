@@ -31,12 +31,12 @@ public:
     shared_ptr<fluid_synth_t> getSynth();
     void initialise();
 
-    BanksToPresets getBanks();
+//    BanksToPresets getBanks();
 
-    void changePreset(int bank, int preset);
+//    void changePreset(int bank, int preset);
     int getChannel();
 
-    void onFileNameChanged(const String &absPath, int bank, int preset);
+//    void onFileNameChanged(const String &absPath, int bank, int preset);
     void setControllerValue(int controller, int value);
 
     //==============================================================================
@@ -68,7 +68,7 @@ public:
 
     void setSampleRate(float sampleRate);
 
-    const String& getCurrentSoundFontAbsPath();
+//    const String& getCurrentSoundFontAbsPath();
     
     virtual void parameterChanged (const String& parameterID, float newValue) override;
     
@@ -123,7 +123,7 @@ private:
     shared_ptr<fluid_synth_t> synth;
     // unique_ptr<fluid_midi_driver_t, decltype(&delete_fluid_midi_driver)> midiDriver;
 
-    String currentSoundFontAbsPath;
+//    String currentSoundFontAbsPath;
 
     float currentSampleRate;
 
@@ -133,12 +133,12 @@ private:
 
     void unloadAndLoadFont(const String &absPath);
     void loadFont(const String &absPath);
-    bool shouldLoadFont(const String &absPath);
+//    bool shouldLoadFont(const String &absPath);
 
     void changePresetImpl(int bank, int preset);
 
-    bool initialised;
-    unsigned int sfont_id;
+//    bool initialised;
+    int sfont_id;
     unsigned int channel;
 
 //    fluid_mod_t* mod;
