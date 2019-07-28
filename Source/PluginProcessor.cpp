@@ -101,14 +101,14 @@ void JuicySFAudioProcessor::initialiseSynth() {
 
 //    fluidSynth = fluidSynthModel.getSynth();
 
-    const int numVoices = 8;
+    // const int numVoices = 8;
 
     // Add some voices...
-    for (int i = numVoices; --i >= 0;)
-        synth.addVoice(new SoundfontSynthVoice(fluidSynthModel.getSynth()));
+    // for (int i = numVoices; --i >= 0;)
+    //     synth.addVoice(new SoundfontSynthVoice(fluidSynthModel.getSynth()));
 
     // ..and give the synth a sound to play
-    synth.addSound(new SoundfontSynthSound());
+    // synth.addSound(new SoundfontSynthSound());
 }
 
 //==============================================================================
@@ -208,148 +208,16 @@ AudioProcessor::BusesProperties JuicySFAudioProcessor::getBusesProperties() {
 
 void JuicySFAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
     jassert (!isUsingDoublePrecision());
-    const int numSamples = buffer.getNumSamples();
+    const int numSamples{buffer.getNumSamples()};
 
     // Now pass any incoming midi messages to our keyboard state object, and let it
     // add messages to the buffer if the user is clicking on the on-screen keys
-    keyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
+    keyboardState.processNextMidiBuffer(midiMessages, 0, numSamples, true);
     
-    MidiBuffer processedMidi;
-    int time;
-    MidiMessage m;
-    
-    // TODO: factor into a MidiMessageCollector
-    for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);) {
-        DEBUG_PRINT ( m.getDescription() );
-        
-        // explicitly not handling note_on/off, or pitch_bend, because these are (for better or worse)
-        // responsibilities of SoundfontSynthVoice.
-        // well, by that logic maybe I should move program change onto Voice. but it doesn't feel like a per-voice concern.
-        if (m.isController()) {
-            // shared_ptr<fluid_midi_event_t> midi_event{
-            //     new_fluid_midi_event(),
-            //     [](fluid_midi_event_t *event) {
-            //         delete_fluid_midi_event(midi_event);
-            //     }};
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(CONTROL_CHANGE));
-            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
-            fluid_midi_event_set_control(midi_event, m.getControllerNumber());
-            fluid_midi_event_set_value(midi_event, m.getControllerValue());
-            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
-            delete_fluid_midi_event(midi_event);
-            
-            switch(static_cast<fluid_midi_control_change>(m.getControllerNumber())) {
-                case SOUND_CTRL2: { // MIDI CC 71 Timbre/Harmonic Intensity (filter resonance)
-                    // valueTreeState.state.setProperty({"filterResonance"}, m.getControllerValue(), nullptr);
-                    RangedAudioParameter *param {valueTreeState.getParameter("filterResonance")};
-                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                case SOUND_CTRL3: { // MIDI CC 72 Release time
-                    RangedAudioParameter *param {valueTreeState.getParameter("release")};
-                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                case SOUND_CTRL4: { // MIDI CC 73 Attack time
-                    RangedAudioParameter *param {valueTreeState.getParameter("release")};
-                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                case SOUND_CTRL5: { // MIDI CC 74 Brightness (cutoff frequency, FILTERFC)
-                    RangedAudioParameter *param {valueTreeState.getParameter("filterCutOff")};
-                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                case SOUND_CTRL6: { // MIDI CC 75 Decay Time
-                    RangedAudioParameter *param {valueTreeState.getParameter("decay")};
-                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                case SOUND_CTRL10: { // MIDI CC 79 undefined
-                    RangedAudioParameter *param {valueTreeState.getParameter("sustain")};
-                    jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                default: {
-                    break;
-                }
-            }
-            
-            // sharedParams->acceptMidiControlEvent(m.getControllerNumber(), m.getControllerValue());
-            
-            // AudioProcessorEditor* editor{getActiveEditor()};
-            // jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
-            // ExposesComponents* exposesComponents{dynamic_cast<ExposesComponents*>(editor)};
-            // exposesComponents->getSliders().acceptMidiControlEvent(m.getControllerNumber(), m.getControllerValue());
-        } else if (m.isProgramChange()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(PROGRAM_CHANGE));
-            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
-            fluid_midi_event_set_program(midi_event, m.getProgramChangeNumber());
-            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
-            delete_fluid_midi_event(midi_event);
-        } else if (m.isPitchWheel()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(PITCH_BEND));
-            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
-            fluid_midi_event_set_pitch(midi_event, m.getPitchWheelValue());
-            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
-            delete_fluid_midi_event(midi_event);
-        } else if (m.isChannelPressure()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(CHANNEL_PRESSURE));
-            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
-            fluid_midi_event_set_program(midi_event, m.getChannelPressureValue());
-            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
-            delete_fluid_midi_event(midi_event);
-        } else if (m.isAftertouch()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(KEY_PRESSURE));
-            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
-            fluid_midi_event_set_key(midi_event, m.getNoteNumber());
-            fluid_midi_event_set_value(midi_event, m.getAfterTouchValue());
-            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
-            delete_fluid_midi_event(midi_event);
-//        } else if (m.isMetaEvent()) {
-//            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-//            fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSTEM_RESET));
-//            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
-//            delete_fluid_midi_event(midi_event);
-        } else if (m.isSysEx()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSEX));
-            // I assume that the MidiMessage's sysex buffer would be freed anyway when MidiMessage is destroyed, so set dynamic=false
-            // to ensure that fluidsynth does not attempt to free the sysex buffer during delete_fluid_midi_event()
-            fluid_midi_event_set_sysex(midi_event, const_cast<juce::uint8*>(m.getSysExData()), m.getSysExDataSize(), static_cast<int>(false));
-            fluid_synth_handle_midi_event(fluidSynthModel.getSynth().get(), midi_event);
-            delete_fluid_midi_event(midi_event);
-        }
-    }
-    
-//    int pval;
-    // 73: 64 attack
-    // 75: decay
-    // 79: sustain
-    // 72: 64 release
-//    fluid_synth_get_cc(fluidSynth, 0, 73, &pval);
-//    Logger::outputDebugString ( juce::String::formatted("hey: %d\n", pval) );
+    fluidSynthModel.processBlock(buffer, midiMessages);
 
     // and now get our synth to process these midi events and generate its output.
-    synth.renderNextBlock (buffer, midiMessages, 0, numSamples);
-    fluid_synth_process(fluidSynthModel.getSynth().get(), numSamples, 0, nullptr, buffer.getNumChannels(), buffer.getArrayOfWritePointers());
+    // synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
 
     // (see juce_VST3_Wrapper.cpp for the assertion this would trip otherwise)
     // we are !JucePlugin_ProducesMidiOutput, so clear remaining MIDI messages from our buffer

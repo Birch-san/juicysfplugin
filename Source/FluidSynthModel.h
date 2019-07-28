@@ -39,6 +39,8 @@ public:
 //    void onFileNameChanged(const String &absPath, int bank, int preset);
     void setControllerValue(int controller, int value);
 
+    void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
+
     //==============================================================================
     /**
         Used to receive callbacks when a button is clicked.

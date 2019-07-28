@@ -610,3 +610,133 @@ void FluidSynthModel::setSampleRate(float sampleRate) {
     }
     fluid_synth_set_sample_rate(synth.get(), sampleRate);
 }
+
+void FluidSynthModel::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
+    MidiBuffer processedMidi;
+    int time;
+    MidiMessage m;
+
+    for (MidiBuffer::Iterator i{midiMessages}; i.getNextEvent(m, time);) {
+        DEBUG_PRINT(m.getDescription());
+        
+        if (m.isNoteOn()) {
+            fluid_synth_noteon(
+                synth.get(),
+                channel,
+                m.getNoteNumber(),
+                m.getVelocity());
+        } else if (m.isNoteOff()) {
+            fluid_synth_noteoff(
+                synth.get(),
+                channel,
+                m.getNoteNumber());
+        } else if (m.isController()) {
+            fluid_synth_cc(
+                synth.get(),
+                channel,
+                m.getControllerNumber(),
+                m.getControllerValue());
+            
+            switch(static_cast<fluid_midi_control_change>(m.getControllerNumber())) {
+                case SOUND_CTRL2: { // MIDI CC 71 Timbre/Harmonic Intensity (filter resonance)
+                    // valueTreeState.state.setProperty({"filterResonance"}, m.getControllerValue(), nullptr);
+                    RangedAudioParameter *param{valueTreeState.getParameter("filterResonance")};
+                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*>(param)};
+                    *castParam = m.getControllerValue();
+                    break;
+                }
+                case SOUND_CTRL3: { // MIDI CC 72 Release time
+                    RangedAudioParameter *param{valueTreeState.getParameter("release")};
+                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*>(param)};
+                    *castParam = m.getControllerValue();
+                    break;
+                }
+                case SOUND_CTRL4: { // MIDI CC 73 Attack time
+                    RangedAudioParameter *param{valueTreeState.getParameter("release")};
+                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*>(param)};
+                    *castParam = m.getControllerValue();
+                    break;
+                }
+                case SOUND_CTRL5: { // MIDI CC 74 Brightness (cutoff frequency, FILTERFC)
+                    RangedAudioParameter *param{valueTreeState.getParameter("filterCutOff")};
+                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*>(param)};
+                    *castParam = m.getControllerValue();
+                    break;
+                }
+                case SOUND_CTRL6: { // MIDI CC 75 Decay Time
+                    RangedAudioParameter *param{valueTreeState.getParameter("decay")};
+                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*>(param)};
+                    *castParam = m.getControllerValue();
+                    break;
+                }
+                case SOUND_CTRL10: { // MIDI CC 79 undefined
+                    RangedAudioParameter *param {valueTreeState.getParameter("sustain")};
+                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+                    *castParam = m.getControllerValue();
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        } else if (m.isProgramChange()) {
+            int result{fluid_synth_program_change(
+                synth.get(),
+                channel,
+                m.getProgramChangeNumber())};
+            if (result == FLUID_OK) {
+                RangedAudioParameter *param{valueTreeState.getParameter("preset")};
+                jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+                AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+                *castParam = m.getProgramChangeNumber();
+            }
+        } else if (m.isPitchWheel()) {
+            fluid_synth_pitch_bend(
+                synth.get(),
+                channel,
+                m.getPitchWheelValue());
+        } else if (m.isChannelPressure()) {
+            fluid_synth_channel_pressure(
+                synth.get(),
+                channel,
+                m.getChannelPressureValue());
+        } else if (m.isAftertouch()) {
+            fluid_synth_key_pressure(
+                synth.get(),
+                channel,
+                m.getNoteNumber(),
+                m.getAfterTouchValue());
+//        } else if (m.isMetaEvent()) {
+//            fluid_midi_event_t *midi_event{new_fluid_midi_event()};
+//            fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSTEM_RESET));
+//            fluid_synth_handle_midi_event(synth.get(), midi_event);
+//            delete_fluid_midi_event(midi_event);
+        } else if (m.isSysEx()) {
+            fluid_synth_sysex(
+                synth.get(),
+                reinterpret_cast<const char*>(m.getSysExData()),
+                m.getSysExDataSize(),
+                nullptr, // no response pointer because we have no interest in handling response currently
+                nullptr, // no response_len pointer because we have no interest in handling response currently
+                nullptr, // no handled pointer because we have no interest in handling response currently
+                static_cast<int>(false));
+        }
+    }
+
+    // fluid_synth_get_cc(fluidSynth, 0, 73, &pval);
+    // Logger::outputDebugString ( juce::String::formatted("hey: %d\n", pval) );
+
+    fluid_synth_process(
+        synth.get(),
+        buffer.getNumSamples(),
+        0,
+        nullptr,
+        buffer.getNumChannels(),
+        buffer.getArrayOfWritePointers());
+}
