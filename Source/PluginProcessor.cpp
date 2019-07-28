@@ -206,7 +206,7 @@ AudioProcessor::BusesProperties JuicySFAudioProcessor::getBusesProperties() {
             .withOutput ("Output", AudioChannelSet::stereo(), true);
 }
 
-void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
+void JuicySFAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
     jassert (!isUsingDoublePrecision());
     const int numSamples = buffer.getNumSamples();
 
@@ -482,7 +482,7 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
                 if (xmlElement) {
                     ValueTree tree{valueTreeState.state.getChildWithName("soundFont")};
                     Value value{tree.getPropertyAsValue("path", nullptr)};
-                    value = xmlState->getStringAttribute("path", value.getValue());
+                    value = xmlElement->getStringAttribute("path", value.getValue());
                 }
 
                 // valueTreeState.getParameter("soundFontPath")->getValue()
