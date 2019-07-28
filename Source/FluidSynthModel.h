@@ -56,7 +56,6 @@ public:
     void changeProgramName(int index, const String& newName);
 
 private:
-    int handleMidiEvent(void* data, fluid_midi_event_t* event);
     void refreshBanks();
 
     AudioProcessorValueTreeState& valueTreeState;
@@ -66,9 +65,7 @@ private:
     // http://www.fluidsynth.org/api/
     // in their examples, they destroy the synth before destroying the settings
     unique_ptr<fluid_settings_t, decltype(&delete_fluid_settings)> settings;
-    // TODO: shared_ptr may ruin our guarantee of synth's being destroyed first, so consider changing the access we expose
-    shared_ptr<fluid_synth_t> synth;
-    // unique_ptr<fluid_midi_driver_t, decltype(&delete_fluid_midi_driver)> midiDriver;
+    unique_ptr<fluid_synth_t, decltype(&delete_fluid_synth)> synth;
 
     float currentSampleRate;
 
@@ -78,8 +75,6 @@ private:
 
     void unloadAndLoadFont(const String &absPath);
     void loadFont(const String &absPath);
-
-    void changePresetImpl(int bank, int preset);
     
     int sfont_id;
     unsigned int channel;
