@@ -10,11 +10,8 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "ExposesComponents.h"
 #include "MidiConstants.h"
 #include "Util.h"
-#include "SharesParams.h"
-#include "Params.h"
 #include "GuiConstants.h"
 
 using namespace std;

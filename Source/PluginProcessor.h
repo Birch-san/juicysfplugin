@@ -12,9 +12,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FluidSynthModel.h"
-#include "StateChangeSubscriber.h"
-#include "SharesParams.h"
-#include "Params.h"
 #include <list>
 
 using namespace std;

@@ -5,11 +5,8 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "SharesParams.h"
 #include <fluidsynth.h>
 #include <memory>
-#include "BankAndPreset.h"
-#include "PresetsToBanks.h"
 
 using namespace std;
 
@@ -68,10 +65,6 @@ private:
     unique_ptr<fluid_synth_t, decltype(&delete_fluid_synth)> synth;
 
     float currentSampleRate;
-
-    fluid_preset_t* getFirstPreset();
-    void selectFirstPreset();
-    unique_ptr<BankAndPreset> getFirstBankAndPreset();
 
     void unloadAndLoadFont(const String &absPath);
     void loadFont(const String &absPath);

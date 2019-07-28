@@ -11,7 +11,6 @@ using namespace std;
 class Pill
 : public Component
 , public Button::Listener
-// , public AudioProcessorValueTreeState::Listener
 {
 public:
     Pill(
@@ -28,10 +27,7 @@ public:
     void paint(Graphics& g) override;
 
     void bankChanged(int bank);
-
-    // virtual void parameterChanged (const String& parameterID, float newValue) override;
 private:
-    // void loadToggleState();
 
     AudioProcessorValueTreeState& valueTreeState;
     int bank;
@@ -48,20 +44,9 @@ class Pills
 public:
     Pills(
         AudioProcessorValueTreeState& valueTreeState
-        // string label
-        // const vector<string> &items,
-        // const function<void (int)> &onItemSelected,
-        // const function<int (const string&)> &itemToIDMapper,
-        // int initiallySelectedItem
     );
     ~Pills();
-
-    // void setItems(
-    //         const vector<string> &items,
-    //         int initiallySelectedItem
-    // );
-
-    // void buttonClicked (Button* button) override;
+    
     void cycle(bool right);
 
     virtual void parameterChanged (const String& parameterID, float newValue) override;
@@ -81,16 +66,9 @@ private:
     void loadModelFrom(ValueTree& banks);
 
     AudioProcessorValueTreeState& valueTreeState;
-    // string label;
-    // vector<string> items;
-    // function<void (int)> onItemSelected;
-    // function<int (const string&)> itemToIDMapper;
 
-    // OwnedArray<Pill> buttons;
     vector<unique_ptr<Pill>> pills;
     Button *selected;
-
-    // Pill* addToList (Pill* newButton);
 
     void updatePillToggleStates();
 

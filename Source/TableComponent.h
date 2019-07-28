@@ -9,7 +9,6 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "PresetsToBanks.h"
 #include <memory>
 #include <string>
 #include <map>
@@ -40,11 +39,6 @@ class TableComponent    : public Component,
 public:
     TableComponent(
             AudioProcessorValueTreeState& valueTreeState
-        //     const vector<string> &columns,
-        //     const vector<TableRow> &rows,
-            // const function<void (int)> &onRowSelected,
-        //     const function<int (const vector<string>&)> &rowToIDMapper,
-            // int initiallySelectedRow
     );
     ~TableComponent();
 
@@ -74,8 +68,6 @@ public:
 
     void resized() override;
 
-//     void setRows(const vector<TableRow>& rows, int initiallySelectedRow);
-
     bool keyPressed(const KeyPress &key) override;
 
     virtual void parameterChanged (const String& parameterID, float newValue) override;
@@ -92,7 +84,6 @@ public:
     inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
     inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
 private:
-    // void loadModelFrom(ValueTree& presets);
     void loadModelFrom(ValueTree& banks);
     void repopulateTable();
     void selectCurrentPreset();
@@ -105,11 +96,7 @@ private:
     typedef multimap<int, TableRow> BanksToPresets;
     BanksToPresets banksToPresets;
 
-//     vector<string> columns;
     vector<TableRow> rows;
-
-    // function<void (int)> onRowSelected;
-//     function<int (const vector<string>&)> rowToIDMapper;
 
     // A comparator used to sort our data when the user clicks a column header
     class DataSorter {

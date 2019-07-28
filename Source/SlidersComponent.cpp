@@ -12,7 +12,7 @@
 #include "Util.h"
 using SliderAttachment = AudioProcessorValueTreeState::SliderAttachment;
 
-std::function<void()> SlidersComponent::makeSliderListener(Slider& slider, int controller/*, std::function<void()> callback*/) {
+std::function<void()> SlidersComponent::makeSliderListener(Slider& slider, int controller) {
     return [this, controller, &slider]{
         
         RangedAudioParameter *param {valueTreeState.getParameter("release")};
@@ -25,7 +25,6 @@ std::function<void()> SlidersComponent::makeSliderListener(Slider& slider, int c
         DEBUG_PRINT(s);
 //        slider.setValue(slider.getValue(), NotificationType::dontSendNotification);
         fluidSynthModel.setControllerValue(controller, slider.getValue());
-        // callback();
     };
 }
 
@@ -95,30 +94,9 @@ void SlidersComponent::acceptMidiControlEvent(int controller, int value) {
     }
 }
 
-// void SlidersComponent::updateAttackSlider(int value) {
-//     attackSlider.setValue(value, NotificationType::dontSendNotification);
-// }
-// void SlidersComponent::updateDecaySlider(int value) {
-//     decaySlider.setValue(value, NotificationType::dontSendNotification);
-// }
-// void SlidersComponent::updateSustainSlider(int value) {
-//     sustainSlider.setValue(value, NotificationType::dontSendNotification);
-// }
-// void SlidersComponent::updateReleaseSlider(int value) {
-//     releaseSlider.setValue(value, NotificationType::dontSendNotification);
-// }
-// void SlidersComponent::updateFilterCutOffSlider(int value) {
-//     filterCutOffSlider.setValue(value, NotificationType::dontSendNotification);
-// }
-// void SlidersComponent::updateFilterResonanceSlider(int value) {
-//     filterResonanceSlider.setValue(value, NotificationType::dontSendNotification);
-// }
-
 SlidersComponent::SlidersComponent(
-    // SharesParams& sharedParams,
     AudioProcessorValueTreeState& valueTreeState,
     FluidSynthModel& fluidSynthModel)
-// : sharedParams{sharedParams}
 : valueTreeState{valueTreeState}
 , fluidSynthModel{fluidSynthModel}
 , envelopeGroup{"envelopeGroup", "Envelope"}

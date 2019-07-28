@@ -14,10 +14,7 @@
 #include "PluginProcessor.h"
 #include "TablesComponent.h"
 #include "SurjectiveMidiKeyboardComponent.h"
-#include "FilePickerFragment.h"
-#include "ExposesComponents.h"
 #include "FilePicker.h"
-#include "StateChangeSubscriber.h"
 #include "SlidersComponent.h"
 
 //==============================================================================
@@ -25,12 +22,7 @@
 */
 class JuicySFAudioProcessorEditor
 : public AudioProcessorEditor
-// , public AudioProcessorValueTreeState::Listener
 , private Value::Listener
-// , public ValueTree::Listener
-                      /*,
-                                     , public ExposesComponents
-                                     public StateChangeSubscriber*/
 {
 public:
     JuicySFAudioProcessorEditor(
@@ -46,28 +38,6 @@ public:
     bool keyPressed(const KeyPress &key) override;
     bool keyStateChanged (bool isKeyDown) override;
 
-//    void getStateInformation (XmlElement& xml) override;
-//    void setStateInformation (XmlElement* xmlState) override;
-
-    // virtual FilePickerFragment& getFilePicker() override;
-    // virtual SlidersFragment& getSliders() override;
-    // virtual void parameterChanged (const String& parameterID, float newValue) override;
-
-    // int getWidth();
-    // int getHeight();
-
-    // virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
-    //                                        const Identifier& property) override;
-    // inline virtual void valueTreeChildAdded (ValueTree& parentTree,
-    //                                          ValueTree& childWhichHasBeenAdded) override {};
-    // inline virtual void valueTreeChildRemoved (ValueTree& parentTree,
-    //                                            ValueTree& childWhichHasBeenRemoved,
-    //                                            int indexFromWhichChildWasRemoved) override {};
-    // inline virtual void valueTreeChildOrderChanged (ValueTree& parentTreeWhoseChildrenHaveMoved,
-    //                                                 int oldIndex, int newIndex) override {};
-    // inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
-    // inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
-
 private:
     void valueChanged (Value&) override;
 
@@ -76,7 +46,6 @@ private:
     JuicySFAudioProcessor& processor;
 
     AudioProcessorValueTreeState& valueTreeState;
-    // SharesParams& sharedParams;
 
     // these are used to persist the UI's size - the values are stored along with the
     // filter's other parameters, and the UI component will update them when it gets

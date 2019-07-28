@@ -6,10 +6,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FluidSynthModel.h"
-#include "FilePickerFragment.h"
 
 class FilePicker: public Component,
-                  public FilePickerFragment,
                   public ValueTree::Listener,
                   private FilenameComponentListener
 {
@@ -23,7 +21,7 @@ public:
     void resized() override;
     void paint (Graphics& g) override;
 
-    virtual void setDisplayedFilePath(const String&) override;
+    void setDisplayedFilePath(const String&);
     
 
     virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,

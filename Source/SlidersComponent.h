@@ -2,18 +2,14 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FluidSynthModel.h"
-#include "SharesParams.h"
-#include "SlidersFragment.h"
 
 using namespace std;
 using SliderAttachment = AudioProcessorValueTreeState::SliderAttachment;
 
-class SlidersComponent : public Component,
-                         public SlidersFragment
+class SlidersComponent : public Component
 {
 public:
     SlidersComponent(
-        // SharesParams& sharedParams,
         AudioProcessorValueTreeState& valueTreeState,
         FluidSynthModel& fluidSynthModel);
     ~SlidersComponent();
@@ -22,20 +18,11 @@ public:
 
     const int getDesiredWidth();
 
-    virtual void acceptMidiControlEvent(int controller, int value) override;
-    
-    // virtual void updateAttackSlider(int value) override;
-    // virtual void updateDecaySlider(int value) override;
-    // virtual void updateSustainSlider(int value) override;
-    // virtual void updateReleaseSlider(int value) override;
-    
-    // virtual void updateFilterCutOffSlider(int value) override;
-    // virtual void updateFilterResonanceSlider(int value) override;
+    void acceptMidiControlEvent(int controller, int value);
 
 private:
     std::function<void()> makeSliderListener(Slider& slider, int controller);
 
-    // SharesParams& sharedParams;
     AudioProcessorValueTreeState& valueTreeState;
     FluidSynthModel& fluidSynthModel;
 
