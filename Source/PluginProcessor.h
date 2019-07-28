@@ -64,34 +64,21 @@ public:
     bool supportsDoublePrecisionProcessing() const override;
 
     FluidSynthModel& getFluidSynthModel();
-//    SharesParams& getSharedParams();
 
     MidiKeyboardState keyboardState;
-
-//    void subscribeToStateChanges(StateChangeSubscriber* subscriber);
-//    void unsubscribeFromStateChanges(StateChangeSubscriber* subscriber);
 
 private:
     void initialiseSynth();
 
-//    Params sharedParams;
     AudioProcessorValueTreeState valueTreeState;
-    // ValueTree valueTree;
 
     FluidSynthModel fluidSynthModel;
-    // fluid_synth_t* fluidSynth;
     Synthesiser synth;
-
-//    // just a raw pointer; we do not own
-//    AudioProcessorEditor* pluginEditor;
-
-//    list<StateChangeSubscriber*> stateChangeSubscribers;
 
     AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
     static BusesProperties getBusesProperties();
 
-//    Model* model;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuicySFAudioProcessor)
 };

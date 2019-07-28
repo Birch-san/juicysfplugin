@@ -10,8 +10,6 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "SoundfontSynthVoice.h"
-#include "SoundfontSynthSound.h"
 #include "ExposesComponents.h"
 #include "MidiConstants.h"
 #include "Util.h"
@@ -26,18 +24,14 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 
 //==============================================================================
-//, sharedParams{static_pointer_cast<SharesParams>(make_shared<Params>())}
 JuicySFAudioProcessor::JuicySFAudioProcessor()
 : AudioProcessor{getBusesProperties()}
-// , sharedParams{}
 , valueTreeState{
     *this,
     nullptr,
     "MYPLUGINSETTINGS",
     createParameterLayout()}
 , fluidSynthModel{valueTreeState}
-//, fluidSynthModel{*this}
-//, pluginEditor(nullptr)
 {
     valueTreeState.state.appendChild({ "uiState", {
             { "width", GuiConstants::minWidth },
@@ -47,32 +41,14 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
         { "path", "" },
     }, {} }, nullptr);
     // no properties, no subtrees (yet)
-    // valueTreeState.state.appendChild({ "presets", {}, {} }, nullptr);
-    // no properties, no subtrees (yet)
     valueTreeState.state.appendChild({ "banks", {}, {} }, nullptr);
-    // valueTreeState.state.setProperty("soundFontPath", "", nullptr);
-//    valueTreeState.state.appendChild({ "soundFontPath", {} }, nullptr);
     
     initialiseSynth();
 }
 
 AudioProcessorValueTreeState::ParameterLayout JuicySFAudioProcessor::createParameterLayout() {
-    // std::vector<std::unique_ptr<AudioParameterInt>> params;
-
-    // for (int i = 1; i < 9; ++i)
-    //     params.push_back (std::make_unique<AudioParameterInt> (String (i), String (i), 0, i, 0));
-    
-    
-//    make_unique<AudioParameter>("soundfontPath", "filepath to soundfont", 0, 127, 0, "A" ),
-
     // https://stackoverflow.com/a/8469002/5257399
     unique_ptr<AudioParameterInt> params[] {
-        // make_unique<AudioParameterInt>("uiWidthPersist", "width of this plugin's GUI. Editor listens for changes (e.g. on load)", GuiConstants::minWidth, GuiConstants::maxWidth, GuiConstants::minWidth, "UI Width Persist" ),
-        // make_unique<AudioParameterInt>("uiHeightPersist", "height of this plugin's GUI. Editor listens for changes (e.g. on load)", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height Persist" ),
-        // make_unique<AudioParameterInt>("uiWidthTemp", "width of this plugin's GUI. Editor writes here on change (e.g. on window resize). Processor copies this into Persist before any save.", GuiConstants::minWidth, GuiConstants::maxWidth, GuiConstants::minWidth, "UI Width Temp" ),
-        // make_unique<AudioParameterInt>("uiHeightTemp", "height of this plugin's GUI. Editor writes here on change (e.g. on window resize). Processor copies this into Persist before any save.", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height Temp" ),
-    //    make_unique<AudioParameterInt>("uiWidth", "width of this plugin's GUI", GuiConstants::minWidth, GuiConstants::maxWidth, GuiConstants::minWidth, "UI Width" ),
-    //    make_unique<AudioParameterInt>("uiHeight", "height of this plugin's GUI", GuiConstants::minHeight, GuiConstants::maxHeight, GuiConstants::minHeight, "UI Height" ),
         // SoundFont 2.4 spec section 7.2: zero through 127, or 128.
         make_unique<AudioParameterInt>("bank", "which bank is selected in the soundfont", MidiConstants::midiMinValue, 128, MidiConstants::midiMinValue, "Bank" ),
         // note: banks may be sparse, and lack a 0th preset. so defend against this.
@@ -93,22 +69,10 @@ AudioProcessorValueTreeState::ParameterLayout JuicySFAudioProcessor::createParam
 
 JuicySFAudioProcessor::~JuicySFAudioProcessor()
 {
-//    delete fluidSynthModel;
 }
 
 void JuicySFAudioProcessor::initialiseSynth() {
     fluidSynthModel.initialise();
-
-//    fluidSynth = fluidSynthModel.getSynth();
-
-    // const int numVoices = 8;
-
-    // Add some voices...
-    // for (int i = numVoices; --i >= 0;)
-    //     synth.addVoice(new SoundfontSynthVoice(fluidSynthModel.getSynth()));
-
-    // ..and give the synth a sound to play
-    // synth.addSound(new SoundfontSynthSound());
 }
 
 //==============================================================================
@@ -142,22 +106,23 @@ double JuicySFAudioProcessor::getTailLengthSeconds() const
 
 int JuicySFAudioProcessor::getNumPrograms()
 {
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
+    return fluidSynthModel.getNumPrograms();   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
 int JuicySFAudioProcessor::getCurrentProgram()
 {
-    return 0;
+    return fluidSynthModel.getCurrentProgram();
 }
 
-void JuicySFAudioProcessor::setCurrentProgram (int index)
+void JuicySFAudioProcessor::setCurrentProgram(int index)
 {
+    fluidSynthModel.setCurrentProgram(index);
 }
 
-const String JuicySFAudioProcessor::getProgramName (int index)
+const String JuicySFAudioProcessor::getProgramName(int index)
 {
-    return {};
+    return fluidSynthModel.getProgramName(index);
 }
 
 void JuicySFAudioProcessor::changeProgramName (int index, const String& newName)
@@ -208,11 +173,10 @@ AudioProcessor::BusesProperties JuicySFAudioProcessor::getBusesProperties() {
 
 void JuicySFAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
     jassert (!isUsingDoublePrecision());
-    const int numSamples{buffer.getNumSamples()};
 
     // Now pass any incoming midi messages to our keyboard state object, and let it
     // add messages to the buffer if the user is clicking on the on-screen keys
-    keyboardState.processNextMidiBuffer(midiMessages, 0, numSamples, true);
+    keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
     
     fluidSynthModel.processBlock(buffer, midiMessages);
 
@@ -418,14 +382,6 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
     }
 }
 
-//void JuicySFAudioProcessor::subscribeToStateChanges(StateChangeSubscriber* subscriber) {
-//    stateChangeSubscribers.push_back(subscriber);
-//}
-//
-//void JuicySFAudioProcessor::unsubscribeFromStateChanges(StateChangeSubscriber* subscriber) {
-//    stateChangeSubscribers.remove(subscriber);
-//}
-
 // FluidSynth only supports float in its process function, so that's all we can support.
 bool JuicySFAudioProcessor::supportsDoublePrecisionProcessing() const {
     return false;
@@ -434,10 +390,6 @@ bool JuicySFAudioProcessor::supportsDoublePrecisionProcessing() const {
 FluidSynthModel& JuicySFAudioProcessor::getFluidSynthModel() {
     return fluidSynthModel;
 }
-
-//SharesParams& JuicySFAudioProcessor::getSharedParams() {
-//    return sharedParams;
-//}
 
 //==============================================================================
 // This creates new instances of the plugin..

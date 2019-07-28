@@ -675,9 +675,9 @@ void FluidSynthModel::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiM
                     break;
                 }
                 case SOUND_CTRL10: { // MIDI CC 79 undefined
-                    RangedAudioParameter *param {valueTreeState.getParameter("sustain")};
+                    RangedAudioParameter *param{valueTreeState.getParameter("sustain")};
                     jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+                    AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
                     *castParam = m.getControllerValue();
                     break;
                 }
@@ -692,8 +692,8 @@ void FluidSynthModel::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiM
                 m.getProgramChangeNumber())};
             if (result == FLUID_OK) {
                 RangedAudioParameter *param{valueTreeState.getParameter("preset")};
-                jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-                AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+                jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+                AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
                 *castParam = m.getProgramChangeNumber();
             }
         } else if (m.isPitchWheel()) {
@@ -739,4 +739,64 @@ void FluidSynthModel::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiM
         nullptr,
         buffer.getNumChannels(),
         buffer.getArrayOfWritePointers());
+}
+
+int FluidSynthModel::getNumPrograms()
+{
+    return 128;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
+                // so this should be at least 1, even if you're not really implementing programs.
+}
+
+int FluidSynthModel::getCurrentProgram()
+{
+    RangedAudioParameter *param{valueTreeState.getParameter("preset")};
+    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+    AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+    return castParam->get();
+}
+
+void FluidSynthModel::setCurrentProgram(int index)
+{
+    RangedAudioParameter *param{valueTreeState.getParameter("preset")};
+    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+    AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+    *castParam = index;
+}
+
+const String FluidSynthModel::getProgramName(int index)
+{
+    fluid_sfont_t* sfont{
+        sfont_id == -1
+        ? nullptr
+        : fluid_synth_get_sfont_by_id(synth.get(), sfont_id)
+    };
+    if (!sfont) {
+        return {};
+    }
+    int bank, presetNum;
+    {
+        RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+        jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+        AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+        bank = castParam->get();
+    }
+    {
+        RangedAudioParameter *param {valueTreeState.getParameter("preset")};
+        jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
+        AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+        presetNum = castParam->get();
+    }
+    fluid_preset_t *preset{fluid_sfont_get_preset(
+        sfont,
+        bank,
+        presetNum)};
+    if (!preset) {
+        return {};
+    }
+    return {fluid_preset_get_name(preset)};
+}
+
+void FluidSynthModel::changeProgramName(int index, const String& newName)
+{
+    // no-op; we don't support modifying the soundfont, so let's not support modification of preset names.
 }
