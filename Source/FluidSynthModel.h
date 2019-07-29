@@ -7,6 +7,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include <fluidsynth.h>
 #include <memory>
+#include <map>
+#include "MidiConstants.h"
 
 using namespace std;
 
@@ -53,6 +55,12 @@ public:
     void changeProgramName(int index, const String& newName);
 
 private:
+    // static const StringArray controllerParams;
+
+    // there's no bimap in the standard library!
+    static const map<fluid_midi_control_change, String> controllerToParam;
+    static const map<String, fluid_midi_control_change> paramToController;
+
     void refreshBanks();
 
     AudioProcessorValueTreeState& valueTreeState;

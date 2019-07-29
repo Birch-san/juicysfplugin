@@ -3,12 +3,33 @@
 //
 
 #include <iostream>
+#include <iterator>
 #include <fluidsynth.h>
 #include "FluidSynthModel.h"
 #include "MidiConstants.h"
 #include "Util.h"
 
 using namespace std;
+
+const map<fluid_midi_control_change, String> FluidSynthModel::controllerToParam{
+    {SOUND_CTRL2, "filterResonance"}, // MIDI CC 71 Timbre/Harmonic Intensity (filter resonance)
+    {SOUND_CTRL3, "release"}, // MIDI CC 72 Release time
+    {SOUND_CTRL4, "attack"}, // MIDI CC 73 Attack time
+    {SOUND_CTRL5, "filterCutOff"}, // MIDI CC 74 Brightness (cutoff frequency, FILTERFC)
+    {SOUND_CTRL6, "decay"}, // MIDI CC 75 Decay Time
+    {SOUND_CTRL10, "sustain"}}; // MIDI CC 79 undefined
+
+const map<String, fluid_midi_control_change> FluidSynthModel::paramToController{[]{
+    map<String, fluid_midi_control_change> map;
+    transform(
+        controllerToParam.begin(),
+        controllerToParam.end(),
+        inserter(map, map.begin()),
+        [](const pair<fluid_midi_control_change, String>& pair) {
+            return make_pair(pair.second, pair.first);
+        });
+    return map;
+}()};
 
 FluidSynthModel::FluidSynthModel(
     AudioProcessorValueTreeState& valueTreeState
@@ -22,10 +43,16 @@ FluidSynthModel::FluidSynthModel(
 {
     valueTreeState.addParameterListener("bank", this);
     valueTreeState.addParameterListener("preset", this);
+    for (const auto &[param, controller]: paramToController) {
+        valueTreeState.addParameterListener(param, this);
+    }
     valueTreeState.state.addListener(this);
 }
 
 FluidSynthModel::~FluidSynthModel() {
+    for (const auto &[param, controller]: paramToController) {
+        valueTreeState.removeParameterListener(param, this);
+    }
     valueTreeState.removeParameterListener("bank", this);
     valueTreeState.removeParameterListener("preset", this);
     valueTreeState.state.removeListener(this);
@@ -46,44 +73,26 @@ void FluidSynthModel::initialise() {
 
     synth = { new_fluid_synth(settings.get()), delete_fluid_synth };
     fluid_synth_set_sample_rate(synth.get(), currentSampleRate);
-
-    // valueTreeState.getParameter("soundFontPath")->getValue();
-    // RangedAudioParameter *param {valueTreeState.getParameter("release")};
-    // jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-    // AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-    // *castParam = m.getControllerValue();
     
     ValueTree soundFont{valueTreeState.state.getChildWithName("soundFont")};
     String path{soundFont.getProperty("path", "")};
     loadFont(path);
 
+    // I can't hear a damned thing
     fluid_synth_set_gain(synth.get(), 2.0);
-    
-    fluid_midi_control_change controllers[]{SOUND_CTRL2, SOUND_CTRL3, SOUND_CTRL4, SOUND_CTRL5, SOUND_CTRL6, SOUND_CTRL10};
-    for(fluid_midi_control_change controller : controllers) {
-        setControllerValue(static_cast<int>(controller), 0);
-    }
-
-//    fluid_synth_bank_select(synth, 0, 3);
-
-//    fluid_handle_inst
-
-//    driver = new_fluid_audio_driver(settings, synth);
-
-//    changePreset(128, 13);
-    
-//    float env_amount(12000.0f);
-    
-//     http://www.synthfont.com/SoundFont_NRPNs.PDF
-    float env_amount{20000.0f};
-//    float env_amount(24000.0f);
     
     // note: fluid_chan.c#fluid_channel_init_ctrl()
     // all SOUND_CTRL are inited with value of 64, not zero.
     // "Just like panning, a value of 64 indicates no change for sound ctrls"
+    // and yet, I'm finding that default modulators start at MIN, so we are forced to start at 0 and climb from there
+    for (const auto &[controller, param]: controllerToParam) {
+        setControllerValue(static_cast<int>(controller), 0);
+    }
+    
+    // http://www.synthfont.com/SoundFont_NRPNs.PDF
+    float env_amount{20000.0f};
     
     unique_ptr<fluid_mod_t, decltype(&delete_fluid_mod)> mod{new_fluid_mod(), delete_fluid_mod};
-//
     fluid_mod_set_source1(mod.get(),
                           static_cast<int>(SOUND_CTRL2), // MIDI CC 71 Timbre/Harmonic Intensity (filter resonance)
                           FLUID_MOD_CC
@@ -104,7 +113,6 @@ void FluidSynthModel::initialise() {
                           | FLUID_MOD_POSITIVE);
     fluid_mod_set_source2(mod.get(), 0, 0);
     fluid_mod_set_dest(mod.get(), GEN_VOLENVRELEASE);
-//    fluid_mod_set_amount(mod.get(), 15200.0f);
     fluid_mod_set_amount(mod.get(), env_amount);
     fluid_synth_add_default_mod(synth.get(), mod.get(), FLUID_SYNTH_ADD);
     
@@ -164,15 +172,15 @@ void FluidSynthModel::parameterChanged(const String& parameterID, float newValue
     if (parameterID == "bank") {
         int bank, preset;
         {
-            RangedAudioParameter *param {valueTreeState.getParameter("bank")};
+            RangedAudioParameter *param{valueTreeState.getParameter("bank")};
             jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-            AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+            AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
             bank = castParam->get();
         }
         {
-            RangedAudioParameter *param {valueTreeState.getParameter("preset")};
-            jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-            AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+            RangedAudioParameter *param{valueTreeState.getParameter("preset")};
+            jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+            AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
             preset = castParam->get();
         }
         int bankOffset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
@@ -185,15 +193,15 @@ void FluidSynthModel::parameterChanged(const String& parameterID, float newValue
     } else if (parameterID == "preset") {
         int bank, preset;
         {
-            RangedAudioParameter *param {valueTreeState.getParameter("bank")};
-            jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-            AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+            RangedAudioParameter *param{valueTreeState.getParameter("bank")};
+            jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+            AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
             bank = castParam->get();
         }
         {
-            RangedAudioParameter *param {valueTreeState.getParameter("preset")};
-            jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-            AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
+            RangedAudioParameter *param{valueTreeState.getParameter("preset")};
+            jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+            AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
             preset = castParam->get();
         }
         int bankOffset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
@@ -203,6 +211,21 @@ void FluidSynthModel::parameterChanged(const String& parameterID, float newValue
             sfont_id,
             static_cast<unsigned int>(bankOffset + bank),
             static_cast<unsigned int>(preset));
+    } else if (
+        // https://stackoverflow.com/a/55482091/5257399
+        auto it{paramToController.find(parameterID)};
+        it != end(paramToController)) {
+        RangedAudioParameter *param{valueTreeState.getParameter(parameterID)};
+        jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+        AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+        int value{castParam->get()};
+        int controllerNumber{static_cast<int>(it->second)};
+        
+        fluid_synth_cc(
+            synth.get(),
+            channel,
+            controllerNumber,
+            value);
     }
 }
 
@@ -329,54 +352,15 @@ void FluidSynthModel::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiM
                 channel,
                 m.getControllerNumber(),
                 m.getControllerValue());
-            
-            switch(static_cast<fluid_midi_control_change>(m.getControllerNumber())) {
-                case SOUND_CTRL2: { // MIDI CC 71 Timbre/Harmonic Intensity (filter resonance)
-                    // valueTreeState.state.setProperty({"filterResonance"}, m.getControllerValue(), nullptr);
-                    RangedAudioParameter *param{valueTreeState.getParameter("filterResonance")};
-                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*>(param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                case SOUND_CTRL3: { // MIDI CC 72 Release time
-                    RangedAudioParameter *param{valueTreeState.getParameter("release")};
-                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*>(param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                case SOUND_CTRL4: { // MIDI CC 73 Attack time
-                    RangedAudioParameter *param{valueTreeState.getParameter("release")};
-                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*>(param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                case SOUND_CTRL5: { // MIDI CC 74 Brightness (cutoff frequency, FILTERFC)
-                    RangedAudioParameter *param{valueTreeState.getParameter("filterCutOff")};
-                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*>(param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                case SOUND_CTRL6: { // MIDI CC 75 Decay Time
-                    RangedAudioParameter *param{valueTreeState.getParameter("decay")};
-                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
-                    AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*>(param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                case SOUND_CTRL10: { // MIDI CC 79 undefined
-                    RangedAudioParameter *param{valueTreeState.getParameter("sustain")};
-                    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
-                    AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
-                    *castParam = m.getControllerValue();
-                    break;
-                }
-                default: {
-                    break;
-                }
+
+            fluid_midi_control_change controllerNum{static_cast<fluid_midi_control_change>(m.getControllerNumber())};
+            if (auto it{controllerToParam.find(controllerNum)};
+                it != end(controllerToParam)) {
+                String parameterID{it->second};
+                RangedAudioParameter *param{valueTreeState.getParameter(parameterID)};
+                jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+                AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+                *castParam = m.getControllerValue();
             }
         } else if (m.isProgramChange()) {
             int result{fluid_synth_program_change(

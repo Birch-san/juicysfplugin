@@ -14,15 +14,14 @@ using SliderAttachment = AudioProcessorValueTreeState::SliderAttachment;
 
 std::function<void()> SlidersComponent::makeSliderListener(Slider& slider, int controller) {
     return [this, controller, &slider]{
+        // RangedAudioParameter *param{valueTreeState.getParameter("release")};
+        // jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+        // AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+        // int value{castParam->get()};
         
-        RangedAudioParameter *param {valueTreeState.getParameter("release")};
-        jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-        AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-        int value {castParam->get()};
-        
-        String s{"slider "};
-        s << slider.getComponentID() << ", controller " << controller << ", value " << slider.getValue() << ", xmlReleaseValue " << value;
-        DEBUG_PRINT(s);
+        // String s{"slider "};
+        // s << slider.getComponentID() << ", controller " << controller << ", value " << slider.getValue() << ", xmlReleaseValue " << value;
+        // DEBUG_PRINT(s);
 //        slider.setValue(slider.getValue(), NotificationType::dontSendNotification);
         fluidSynthModel.setControllerValue(controller, slider.getValue());
     };
