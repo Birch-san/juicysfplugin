@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "24C399ED93EC47D5BEB26F76"
-               BuildableName = "juicysfplugin.app"
-               BlueprintName = "juicysfplugin - Standalone Plugin"
+               BlueprintIdentifier = "345302E3C02BBFCDACE98BE7"
+               BuildableName = "juicysfplugin.component"
+               BlueprintName = "juicysfplugin - AU"
                ReferencedContainer = "container:juicysfplugin.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,15 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "24C399ED93EC47D5BEB26F76"
-            BuildableName = "juicysfplugin.app"
-            BlueprintName = "juicysfplugin - Standalone Plugin"
-            ReferencedContainer = "container:juicysfplugin.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -58,9 +49,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "24C399ED93EC47D5BEB26F76"
-            BuildableName = "juicysfplugin.app"
-            BlueprintName = "juicysfplugin - Standalone Plugin"
+            BlueprintIdentifier = "345302E3C02BBFCDACE98BE7"
+            BuildableName = "juicysfplugin.component"
+            BlueprintName = "juicysfplugin - AU"
             ReferencedContainer = "container:juicysfplugin.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -73,16 +64,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "24C399ED93EC47D5BEB26F76"
-            BuildableName = "juicysfplugin.app"
-            BlueprintName = "juicysfplugin - Standalone Plugin"
+            BlueprintIdentifier = "345302E3C02BBFCDACE98BE7"
+            BuildableName = "juicysfplugin.component"
+            BlueprintName = "juicysfplugin - AU"
             ReferencedContainer = "container:juicysfplugin.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

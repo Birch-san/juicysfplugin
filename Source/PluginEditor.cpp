@@ -10,22 +10,35 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "GuiConstants.h"
 
 //==============================================================================
-JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor& p)
-    : AudioProcessorEditor (&p),
-      processor (p),
-      midiKeyboard (p.keyboardState, SurjectiveMidiKeyboardComponent::horizontalKeyboard),
-      tablesComponent(p.getFluidSynthModel()),
-      filePicker(p.getFluidSynthModel()),
-      slidersComponent{p.getFluidSynthModel()}
+JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor(
+    JuicySFAudioProcessor& p,
+    AudioProcessorValueTreeState& valueTreeState)
+: AudioProcessorEditor{&p}
+, processor{p}
+, valueTreeState{valueTreeState}
+, midiKeyboard{p.keyboardState, SurjectiveMidiKeyboardComponent::horizontalKeyboard}
+, tablesComponent{valueTreeState}
+, filePicker{valueTreeState}
+, slidersComponent{valueTreeState, p.getFluidSynthModel()}
 {
     // set resize limits for this plug-in
-    setResizeLimits (500, 300, 1900, 1000);
+    setResizeLimits(
+        GuiConstants::minWidth,
+        GuiConstants::minHeight,
+        GuiConstants::maxWidth,
+        GuiConstants::maxHeight);
 
-    setSize (p.lastUIWidth, p.lastUIHeight);
+    lastUIWidth.referTo(valueTreeState.state.getChildWithName("uiState").getPropertyAsValue("width",  nullptr));
+    lastUIHeight.referTo(valueTreeState.state.getChildWithName("uiState").getPropertyAsValue("height", nullptr));
 
-//    processor.subscribeToStateChanges(this);
+    // set our component's initial size to be the last one that was stored in the filter's settings
+    setSize(lastUIWidth.getValue(), lastUIHeight.getValue());
+
+    lastUIWidth.addListener(this);
+    lastUIHeight.addListener(this);
 
     midiKeyboard.setName ("MIDI Keyboard");
 
@@ -33,7 +46,7 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor&
     tablesComponent.setWantsKeyboardFocus(false);
 
     setWantsKeyboardFocus(true);
-    addAndMakeVisible (midiKeyboard);
+    addAndMakeVisible(midiKeyboard);
 
     addAndMakeVisible(slidersComponent);
     addAndMakeVisible(tablesComponent);
@@ -41,32 +54,22 @@ JuicySFAudioProcessorEditor::JuicySFAudioProcessorEditor (JuicySFAudioProcessor&
 
 }
 
-JuicySFAudioProcessorEditor::~JuicySFAudioProcessorEditor()
-{
-//    processor.unsubscribeFromStateChanges(this);
+// called when the stored window size changes
+void JuicySFAudioProcessorEditor::valueChanged(Value&) {
+    setSize(lastUIWidth.getValue(), lastUIHeight.getValue());
 }
 
-//void JuicySFAudioProcessorEditor::getStateInformation (XmlElement& xml) {
-//    // save
-//    xml.setAttribute ("uiWidth", getWidth());
-//    xml.setAttribute ("uiHeight", getHeight());
-//}
-//
-//void JuicySFAudioProcessorEditor::setStateInformation (XmlElement* xmlState) {
-//    // load
-//    setSize (xmlState->getIntAttribute ("uiWidth", getWidth()),
-//            xmlState->getIntAttribute ("uiHeight", getHeight()));
-//}
+JuicySFAudioProcessorEditor::~JuicySFAudioProcessorEditor()
+{
+    lastUIWidth.removeListener(this);
+    lastUIHeight.removeListener(this);
+}
 
 //==============================================================================
 void JuicySFAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-
-//    g.setColour (Colours::white);
-//    g.setFont (15.0f);
-//    g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
 
     if (!focusInitialized) {
         if (!hasKeyboardFocus(false) && isVisible()) {
@@ -83,12 +86,8 @@ void JuicySFAudioProcessorEditor::resized()
     const int padding{8};
     const int pianoHeight{70};
     const int filePickerHeight{25};
-    // const int slidersHeight{150};
     Rectangle<int> r{getLocalBounds()};
     filePicker.setBounds(r.removeFromTop(filePickerHeight + padding).reduced(padding, 0).withTrimmedTop(padding));
-
-    // Rectangle<int> r2 (getLocalBounds());
-    // slidersComponent.setBounds(r2.removeFromLeft(filePickerWidth + padding).reduced(padding, 0).withTrimmedLeft(padding));
 
     midiKeyboard.setBounds (r.removeFromBottom (pianoHeight).reduced(padding, 0));
 
@@ -97,28 +96,11 @@ void JuicySFAudioProcessorEditor::resized()
 
     tablesComponent.setBounds(rContent);
 
-
-    processor.lastUIWidth = getWidth();
-    processor.lastUIHeight = getHeight();
-
-//    Rectangle<int> r2 (getLocalBounds());
-//    r2.reduce(0, padding);
-//    r2.removeFromBottom(pianoHeight);
-//    r2.removeFromTop(filePickerHeight);
-//    tablesComponent.setBounds (r2);
-//
-//    Rectangle<int> r3 (getLocalBounds());
-//    r3.removeFromTop(filePickerHeight);
-//
-//    filePicker.setBounds(r3);
+    lastUIWidth = getWidth();
+    lastUIHeight = getHeight();
 }
 
 bool JuicySFAudioProcessorEditor::keyPressed(const KeyPress &key) {
-//    if (!hasKeyboardFocus(false))
-//        return false;
-//    if (key.getKeyCode() == KeyPress::upKey){
-//    }
-//    cout << "hey\n";
     const int cursorKeys[] = {
             KeyPress::leftKey,
             KeyPress::rightKey,
@@ -134,20 +116,9 @@ bool JuicySFAudioProcessorEditor::keyPressed(const KeyPress &key) {
     } else {
         return midiKeyboard.keyPressed(key);
     }
-//    for(auto childComponent : getChildren()) {
-//        if (childComponent->keyPressed(key)) return true;
-//    }
     return false;
 }
 
 bool JuicySFAudioProcessorEditor::keyStateChanged (bool isKeyDown) {
     return midiKeyboard.keyStateChanged(isKeyDown);
-//    for(auto childComponent : getChildren()) {
-//        if (childComponent->keyStateChanged(isKeyDown)) return true;
-//    }
-//    return false;
-}
-
-FilePickerFragment& JuicySFAudioProcessorEditor::getFilePicker() {
-    return filePicker;
 }

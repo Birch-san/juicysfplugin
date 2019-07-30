@@ -10,47 +10,66 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "SoundfontSynthVoice.h"
-#include "SoundfontSynthSound.h"
-#include "ExposesComponents.h"
 #include "MidiConstants.h"
 #include "Util.h"
+#include "GuiConstants.h"
+
+using namespace std;
+using Parameter = AudioProcessorValueTreeState::Parameter;
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 
 //==============================================================================
 JuicySFAudioProcessor::JuicySFAudioProcessor()
-     : AudioProcessor (getBusesProperties()),
-       lastUIWidth(400),
-       lastUIHeight(300),
-       soundFontPath(String()),
-       lastPreset(-1),
-       lastBank(-1),
-       fluidSynthModel(*this)/*,
-       pluginEditor(nullptr)*/
+: AudioProcessor{getBusesProperties()}
+, valueTreeState{
+    *this,
+    nullptr,
+    "MYPLUGINSETTINGS",
+    createParameterLayout()}
+, fluidSynthModel{valueTreeState}
 {
+    valueTreeState.state.appendChild({ "uiState", {
+            { "width", GuiConstants::minWidth },
+            { "height", GuiConstants::minHeight }
+        }, {} }, nullptr);
+    valueTreeState.state.appendChild({ "soundFont", {
+        { "path", "" },
+    }, {} }, nullptr);
+    // no properties, no subtrees (yet)
+    valueTreeState.state.appendChild({ "banks", {}, {} }, nullptr);
+    
     initialiseSynth();
+}
+
+AudioProcessorValueTreeState::ParameterLayout JuicySFAudioProcessor::createParameterLayout() {
+    // https://stackoverflow.com/a/8469002/5257399
+    unique_ptr<AudioParameterInt> params[] {
+        // SoundFont 2.4 spec section 7.2: zero through 127, or 128.
+        make_unique<AudioParameterInt>("bank", "which bank is selected in the soundfont", MidiConstants::midiMinValue, 128, MidiConstants::midiMinValue, "Bank" ),
+        // note: banks may be sparse, and lack a 0th preset. so defend against this.
+        make_unique<AudioParameterInt>("preset", "which patch (aka patch, program, instrument) is selected in the soundfont", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "Preset" ),
+        make_unique<AudioParameterInt>("attack", "volume envelope attack time", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "A" ),
+        make_unique<AudioParameterInt>("decay", "volume envelope sustain attentuation", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "D" ),
+        make_unique<AudioParameterInt>("sustain", "volume envelope decay time", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "S" ),
+        make_unique<AudioParameterInt>("release", "volume envelope release time", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "R" ),
+        make_unique<AudioParameterInt>("filterCutOff", "low-pass filter cut-off frequency", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "Cut" ),
+        make_unique<AudioParameterInt>("filterResonance", "low-pass filter resonance attentuation", MidiConstants::midiMinValue, MidiConstants::midiMaxValue, MidiConstants::midiMinValue, "Res" ),
+    };
+    
+    return {
+        make_move_iterator(begin(params)),
+        make_move_iterator(end(params))
+    };
 }
 
 JuicySFAudioProcessor::~JuicySFAudioProcessor()
 {
-//    delete fluidSynthModel;
 }
 
 void JuicySFAudioProcessor::initialiseSynth() {
     fluidSynthModel.initialise();
-
-    fluidSynth = fluidSynthModel.getSynth();
-
-    const int numVoices = 8;
-
-    // Add some voices...
-    for (int i = numVoices; --i >= 0;)
-        synth.addVoice (new SoundfontSynthVoice(fluidSynthModel.getSynth()));
-
-    // ..and give the synth a sound to play
-    synth.addSound (new SoundfontSynthSound());
 }
 
 //==============================================================================
@@ -84,22 +103,23 @@ double JuicySFAudioProcessor::getTailLengthSeconds() const
 
 int JuicySFAudioProcessor::getNumPrograms()
 {
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
+    return fluidSynthModel.getNumPrograms();   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
 int JuicySFAudioProcessor::getCurrentProgram()
 {
-    return 0;
+    return fluidSynthModel.getCurrentProgram();
 }
 
-void JuicySFAudioProcessor::setCurrentProgram (int index)
+void JuicySFAudioProcessor::setCurrentProgram(int index)
 {
+    fluidSynthModel.setCurrentProgram(index);
 }
 
-const String JuicySFAudioProcessor::getProgramName (int index)
+const String JuicySFAudioProcessor::getProgramName(int index)
 {
-    return {};
+    return fluidSynthModel.getProgramName(index);
 }
 
 void JuicySFAudioProcessor::changeProgramName (int index, const String& newName)
@@ -148,89 +168,17 @@ AudioProcessor::BusesProperties JuicySFAudioProcessor::getBusesProperties() {
             .withOutput ("Output", AudioChannelSet::stereo(), true);
 }
 
-void JuicySFAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
+void JuicySFAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
     jassert (!isUsingDoublePrecision());
-    const int numSamples = buffer.getNumSamples();
 
     // Now pass any incoming midi messages to our keyboard state object, and let it
     // add messages to the buffer if the user is clicking on the on-screen keys
-    keyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
+    keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
     
-    MidiBuffer processedMidi;
-    int time;
-    MidiMessage m;
-    
-    // TODO: factor into a MidiCollector
-    for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);) {
-        DEBUG_PRINT ( m.getDescription() );
-        
-        // explicitly not handling note_on/off, or pitch_bend, because these are (for better or worse)
-        // responsibilities of SoundfontSynthVoice.
-        // well, by that logic maybe I should move program change onto Voice. but it doesn't feel like a per-voice concern.
-        if (m.isController()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(CONTROL_CHANGE));
-            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
-            fluid_midi_event_set_control(midi_event, m.getControllerNumber());
-            fluid_midi_event_set_value(midi_event, m.getControllerValue());
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
-            delete_fluid_midi_event(midi_event);
-        } else if (m.isProgramChange()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(PROGRAM_CHANGE));
-            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
-            fluid_midi_event_set_program(midi_event, m.getProgramChangeNumber());
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
-            delete_fluid_midi_event(midi_event);
-        } else if (m.isPitchWheel()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(PITCH_BEND));
-            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
-            fluid_midi_event_set_pitch(midi_event, m.getPitchWheelValue());
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
-            delete_fluid_midi_event(midi_event);
-        } else if (m.isChannelPressure()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(CHANNEL_PRESSURE));
-            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
-            fluid_midi_event_set_program(midi_event, m.getChannelPressureValue());
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
-            delete_fluid_midi_event(midi_event);
-        } else if (m.isAftertouch()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(KEY_PRESSURE));
-            fluid_midi_event_set_channel(midi_event, fluidSynthModel.getChannel());
-            fluid_midi_event_set_key(midi_event, m.getNoteNumber());
-            fluid_midi_event_set_value(midi_event, m.getAfterTouchValue());
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
-            delete_fluid_midi_event(midi_event);
-//        } else if (m.isMetaEvent()) {
-//            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-//            fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSTEM_RESET));
-//            fluid_synth_handle_midi_event(fluidSynth, midi_event);
-//            delete_fluid_midi_event(midi_event);
-        } else if (m.isSysEx()) {
-            fluid_midi_event_t *midi_event(new_fluid_midi_event());
-            fluid_midi_event_set_type(midi_event, static_cast<int>(MIDI_SYSEX));
-            // I assume that the MidiMessage's sysex buffer would be freed anyway when MidiMessage is destroyed, so set dynamic=false
-            // to ensure that fluidsynth does not attempt to free the sysex buffer during delete_fluid_midi_event()
-            fluid_midi_event_set_sysex(midi_event, const_cast<juce::uint8*>(m.getSysExData()), m.getSysExDataSize(), static_cast<int>(false));
-            fluid_synth_handle_midi_event(fluidSynth, midi_event);
-            delete_fluid_midi_event(midi_event);
-        }
-    }
-    
-//    int pval;
-    // 73: 64 attack
-    // 75: decay
-    // 79: sustain
-    // 72: 64 release
-//    fluid_synth_get_cc(fluidSynth, 0, 73, &pval);
-//    Logger::outputDebugString ( juce::String::formatted("hey: %d\n", pval) );
+    fluidSynthModel.processBlock(buffer, midiMessages);
 
     // and now get our synth to process these midi events and generate its output.
-    synth.renderNextBlock (buffer, midiMessages, 0, numSamples);
-    fluid_synth_process(fluidSynth, numSamples, 0, nullptr, buffer.getNumChannels(), buffer.getArrayOfWritePointers());
+    // synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
 
     // (see juce_VST3_Wrapper.cpp for the assertion this would trip otherwise)
     // we are !JucePlugin_ProducesMidiOutput, so clear remaining MIDI messages from our buffer
@@ -255,7 +203,7 @@ bool JuicySFAudioProcessor::hasEditor() const
 AudioProcessorEditor* JuicySFAudioProcessor::createEditor()
 {
     // grab a raw pointer to it for our own use
-    return /*pluginEditor = */new JuicySFAudioProcessorEditor (*this);
+    return /*pluginEditor = */new JuicySFAudioProcessorEditor (*this, valueTreeState);
 }
 
 //==============================================================================
@@ -266,27 +214,39 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
     // as intermediaries to make it easy to save and load complex data.
 
     // Create an outer XML element..
-    XmlElement xml ("MYPLUGINSETTINGS");
-
-    // add some attributes to it..
-    xml.setAttribute ("uiWidth", lastUIWidth);
-    xml.setAttribute ("uiHeight", lastUIHeight);
-    xml.setAttribute ("soundFontPath", soundFontPath);
-    xml.setAttribute ("preset", lastPreset);
-    xml.setAttribute ("bank", lastBank);
-
-//    list<StateChangeSubscriber*>::iterator p;
-//    for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
-//        (*p)->getStateInformation(xml);
-//    }
+    XmlElement xml{"MYPLUGINSETTINGS"};
 
     // Store the values of all our parameters, using their param ID as the XML attribute
-    for (auto* param : getParameters())
-        if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param))
-            xml.setAttribute (p->paramID, p->getValue());
-
-    // then use this helper function to stuff it into the binary blob and return it..
-    copyXmlToBinary (xml, destData);
+    XmlElement* params{xml.createNewChildElement("params")};
+    for (auto* param : getParameters()) {
+         if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param)) {
+             params->setAttribute(p->paramID, p->getValue());
+         }
+    }
+    {
+        ValueTree tree{valueTreeState.state.getChildWithName("uiState")};
+        XmlElement* newElement{xml.createNewChildElement("uiState")};
+        {
+            double value{tree.getProperty("width", GuiConstants::minWidth)};
+            newElement->setAttribute("width", value);
+        }
+        {
+            double value{tree.getProperty("height", GuiConstants::minHeight)};
+            newElement->setAttribute("height", value);
+        }
+    }
+    {
+        ValueTree tree{valueTreeState.state.getChildWithName("soundFont")};
+        XmlElement* newElement{xml.createNewChildElement("soundFont")};
+        {
+            String value{tree.getProperty("path", "")};
+            newElement->setAttribute("path", value);
+        }
+    }
+    
+    DEBUG_PRINT(xml.createDocument("",false,false));
+    
+    copyXmlToBinary(xml, destData);
 }
 
 void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -294,84 +254,51 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
     // This getXmlFromBinary() helper function retrieves our XML from the binary blob..
-    ScopedPointer<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
-
-    if (xmlState != nullptr)
-    {
+    shared_ptr<XmlElement> xmlState{getXmlFromBinary(data, sizeInBytes)};
+    DEBUG_PRINT(xmlState->createDocument("",false,false));
+    
+    if (xmlState.get() != nullptr) {
         // make sure that it's actually our type of XML object..
-        if (xmlState->hasTagName ("MYPLUGINSETTINGS"))
-        {
-//            list<StateChangeSubscriber*>::iterator p;
-//            for(p = stateChangeSubscribers.begin(); p != stateChangeSubscribers.end(); p++) {
-//                (*p)->setStateInformation(xmlState);
-//            }
-
-            // ok, now pull out our last window size..
-            lastUIWidth  = jmax (xmlState->getIntAttribute ("uiWidth", lastUIWidth), 400);
-            lastUIHeight = jmax (xmlState->getIntAttribute ("uiHeight", lastUIHeight), 300);
-            soundFontPath = xmlState->getStringAttribute ("soundFontPath", soundFontPath);
-            lastPreset = xmlState->getIntAttribute ("preset", lastPreset);
-            lastBank = xmlState->getIntAttribute ("bank", lastBank);
-
-            // Now reload our parameters..
-            for (auto* param : getParameters())
-                if (auto* p = dynamic_cast<AudioProcessorParameterWithID*> (param))
-                    p->setValue ((float) xmlState->getDoubleAttribute (p->paramID, p->getValue()));
-
-            fluidSynthModel.onFileNameChanged(soundFontPath, lastBank, lastPreset);
-
-            AudioProcessorEditor* editor = getActiveEditor();
-            if (editor != nullptr) {
-                editor->setSize(lastUIWidth, lastUIHeight);
-
-                jassert(dynamic_cast<ExposesComponents*> (editor) != nullptr);
-                ExposesComponents* exposesComponents = dynamic_cast<ExposesComponents*> (editor);
-                exposesComponents->getFilePicker().setDisplayedFilePath(soundFontPath);
+        if (xmlState->hasTagName(valueTreeState.state.getType())) {
+            XmlElement* params{xmlState->getChildByName("params")};
+            if (params)
+                for (auto* param : getParameters())
+                    if (auto* p = dynamic_cast<AudioProcessorParameterWithID*>(param))
+                        p->setValue(static_cast<float>(params->getDoubleAttribute(p->paramID, p->getValue())));
+            
+            {
+                XmlElement* xmlElement{xmlState->getChildByName("soundFont")};
+                if (xmlElement) {
+                    ValueTree tree{valueTreeState.state.getChildWithName("soundFont")};
+                    Value value{tree.getPropertyAsValue("path", nullptr)};
+                    value = xmlElement->getStringAttribute("path", value.getValue());
+                }
             }
-
-//            const String& currentSoundFontAbsPath = fluidSynthModel->getCurrentSoundFontAbsPath();
-//            if (currentSoundFontAbsPath.isNotEmpty()) {
-//                fileChooser.setCurrentFile(File(currentSoundFontAbsPath), true, dontSendNotification);
-//            }
+            {
+                ValueTree tree{valueTreeState.state.getChildWithName("uiState")};
+                XmlElement* xmlElement{xmlState->getChildByName("uiState")};
+                if (xmlElement) {
+                    {
+                        Value value{tree.getPropertyAsValue("width", nullptr)};
+                        value = xmlElement->getIntAttribute("width", value.getValue());
+                    }
+                    {
+                        Value value{tree.getPropertyAsValue("height", nullptr)};
+                        value = xmlElement->getIntAttribute("height", value.getValue());
+                    }
+                }
+            }
         }
     }
 }
-
-//void JuicySFAudioProcessor::subscribeToStateChanges(StateChangeSubscriber* subscriber) {
-//    stateChangeSubscribers.push_back(subscriber);
-//}
-//
-//void JuicySFAudioProcessor::unsubscribeFromStateChanges(StateChangeSubscriber* subscriber) {
-//    stateChangeSubscribers.remove(subscriber);
-//}
 
 // FluidSynth only supports float in its process function, so that's all we can support.
 bool JuicySFAudioProcessor::supportsDoublePrecisionProcessing() const {
     return false;
 }
 
-FluidSynthModel* JuicySFAudioProcessor::getFluidSynthModel() {
-    return &fluidSynthModel;
-}
-
-void JuicySFAudioProcessor::setSoundFontPath(const String& value) {
-    soundFontPath = value;
-}
-
-String& JuicySFAudioProcessor::getSoundFontPath() {
-    return soundFontPath;
-}
-int JuicySFAudioProcessor::getPreset() {
-    return lastPreset;
-}
-int JuicySFAudioProcessor::getBank() {
-    return lastBank;
-}
-void JuicySFAudioProcessor::setPreset(int preset) {
-    lastPreset = preset;
-}
-void JuicySFAudioProcessor::setBank(int bank) {
-    lastBank = bank;
+FluidSynthModel& JuicySFAudioProcessor::getFluidSynthModel() {
+    return fluidSynthModel;
 }
 
 //==============================================================================

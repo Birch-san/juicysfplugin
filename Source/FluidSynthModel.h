@@ -5,93 +5,80 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "SharesParams.h"
 #include <fluidsynth.h>
 #include <memory>
-#include "BankAndPreset.h"
-#include "PresetsToBanks.h"
-
-
-// https://stackoverflow.com/a/13446565/5257399
-//using std::shared_ptr;
+#include <map>
+#include "MidiConstants.h"
 
 using namespace std;
 
-class FluidSynthModel {
+class FluidSynthModel
+: public ValueTree::Listener
+, public AudioProcessorValueTreeState::Listener {
 public:
-    FluidSynthModel(SharesParams& p);
-    ~FluidSynthModel();
+    FluidSynthModel(
+        AudioProcessorValueTreeState& valueTreeState
+        );
+     ~FluidSynthModel();
 
-    fluid_synth_t* getSynth();
     void initialise();
-
-    BanksToPresets getBanks();
-
-    void changePreset(int bank, int preset);
+    
     int getChannel();
 
-    void onFileNameChanged(const String &absPath, int bank, int preset);
     void setControllerValue(int controller, int value);
 
-    //==============================================================================
-    /**
-        Used to receive callbacks when a button is clicked.
+    void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
 
-        @see Button::addListener, Button::removeListener
-    */
-    class Listener
-    {
-    public:
-        /** Destructor. */
-        virtual ~Listener();
-
-        /** Called when the button is clicked. */
-        virtual void fontChanged (FluidSynthModel*, const String &absPath);
-    };
-
-    /** Registers a listener to receive events when this button's state changes.
-        If the listener is already registered, this will not register it again.
-        @see removeListener
-    */
-    void addListener (Listener* newListener);
-
-    /** Removes a previously-registered button listener
-        @see addListener
-    */
-    void removeListener (Listener* listener);
 
     void setSampleRate(float sampleRate);
+    
+    //==============================================================================
+    virtual void parameterChanged (const String& parameterID, float newValue) override;
+    
+    virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
+                                           const Identifier& property) override;
+    inline virtual void valueTreeChildAdded (ValueTree& parentTree,
+                                             ValueTree& childWhichHasBeenAdded) override {};
+    inline virtual void valueTreeChildRemoved (ValueTree& parentTree,
+                                               ValueTree& childWhichHasBeenRemoved,
+                                               int indexFromWhichChildWasRemoved) override {};
+    inline virtual void valueTreeChildOrderChanged (ValueTree& parentTreeWhoseChildrenHaveMoved,
+                                                    int oldIndex, int newIndex) override {};
+    inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
+    inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
 
-    const String& getCurrentSoundFontAbsPath();
+    //==============================================================================
+    int getNumPrograms();
+    int getCurrentProgram();
+    void setCurrentProgram(int index);
+    const String getProgramName(int index);
+    void changeProgramName(int index, const String& newName);
 
 private:
-    SharesParams& sharesParams;
+    static const StringArray programChangeParams;
 
-    fluid_synth_t* synth;
-    fluid_settings_t* settings;
-//    fluid_audio_driver_t* driver;
+    // there's no bimap in the standard library!
+    static const map<fluid_midi_control_change, String> controllerToParam;
+    static const map<String, fluid_midi_control_change> paramToController;
 
-    String currentSoundFontAbsPath;
+    void refreshBanks();
+
+    AudioProcessorValueTreeState& valueTreeState;
+
+    // https://stackoverflow.com/questions/38980315/is-stdunique-ptr-deletion-order-guaranteed
+    // members are destroyed in reverse of the order they're declared
+    // http://www.fluidsynth.org/api/
+    // in their examples, they destroy the synth before destroying the settings
+    unique_ptr<fluid_settings_t, decltype(&delete_fluid_settings)> settings;
+    unique_ptr<fluid_synth_t, decltype(&delete_fluid_synth)> synth;
 
     float currentSampleRate;
 
-    fluid_preset_t* getFirstPreset();
-    void selectFirstPreset();
-    unique_ptr<BankAndPreset> getFirstBankAndPreset();
-
     void unloadAndLoadFont(const String &absPath);
     void loadFont(const String &absPath);
-    bool shouldLoadFont(const String &absPath);
-
-    void changePresetImpl(int bank, int preset);
-
-    bool initialised;
-    unsigned int sfont_id;
+    
+    int sfont_id;
     unsigned int channel;
-
-//    fluid_mod_t* mod;
-
-    ListenerList<Listener> eventListeners;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FluidSynthModel)
 };

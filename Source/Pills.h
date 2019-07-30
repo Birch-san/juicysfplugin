@@ -8,35 +8,69 @@
 
 using namespace std;
 
-class Pills : public Component,
-              public Button::Listener {
+class Pill
+: public Component
+, public Button::Listener
+{
+public:
+    Pill(
+        AudioProcessorValueTreeState& valueTreeState,
+        int bank,
+        bool isFirst,
+        bool isLast
+    );
+    ~Pill();
+
+    void buttonClicked(Button* button) override;
+
+    void resized() override;
+    void paint(Graphics& g) override;
+
+    void bankChanged(int bank);
+private:
+
+    AudioProcessorValueTreeState& valueTreeState;
+    int bank;
+    TextButton textButton;
+
+    friend class Pills;
+};
+
+class Pills
+: public Component
+, public ValueTree::Listener
+, public AudioProcessorValueTreeState::Listener
+{
 public:
     Pills(
-            string label,
-            const vector<string> &items,
-            const function<void (int)> &onItemSelected,
-            const function<int (const string&)> &itemToIDMapper,
-            int initiallySelectedItem
+        AudioProcessorValueTreeState& valueTreeState
     );
-
-    void setItems(
-            const vector<string> &items,
-            int initiallySelectedItem
-    );
-
-    void buttonClicked (Button* button) override;
+    ~Pills();
+    
     void cycle(bool right);
 
-private:
-    string label;
-    vector<string> items;
-    function<void (int)> onItemSelected;
-    function<int (const string&)> itemToIDMapper;
+    virtual void parameterChanged (const String& parameterID, float newValue) override;
 
-    OwnedArray<TextButton> buttons;
+    virtual void valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged,
+                                           const Identifier& property) override;
+    inline virtual void valueTreeChildAdded (ValueTree& parentTree,
+                                             ValueTree& childWhichHasBeenAdded) override {};
+    inline virtual void valueTreeChildRemoved (ValueTree& parentTree,
+                                               ValueTree& childWhichHasBeenRemoved,
+                                               int indexFromWhichChildWasRemoved) override {};
+    inline virtual void valueTreeChildOrderChanged (ValueTree& parentTreeWhoseChildrenHaveMoved,
+                                                    int oldIndex, int newIndex) override {};
+    inline virtual void valueTreeParentChanged (ValueTree& treeWhoseParentHasChanged) override {};
+    inline virtual void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override {};
+private:
+    void loadModelFrom(ValueTree& banks);
+
+    AudioProcessorValueTreeState& valueTreeState;
+
+    vector<unique_ptr<Pill>> pills;
     Button *selected;
 
-    TextButton* addToList (TextButton* newButton);
+    void updatePillToggleStates();
 
     void populate(int initiallySelectedItem);
     void resized() override;

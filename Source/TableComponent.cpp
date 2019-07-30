@@ -7,25 +7,23 @@
 //
 
 #include "TableComponent.h"
+#include "Util.h"
+#include <functional>
+#include <iterator>
+#include <map>
 
 using namespace std;
+using namespace Util;
 
 //==============================================================================
 /**
     This class shows how to implement a TableListBoxModel to show in a TableListBox.
 */
 TableComponent::TableComponent(
-        const vector<string> &columns,
-        const vector<vector<string>> &rows,
-        const function<void (int)> &onRowSelected,
-        const function<int (const vector<string>&)> &rowToIDMapper,
-        int initiallySelectedRow
+    AudioProcessorValueTreeState& valueTreeState
 )
-        : font (14.0f),
-          columns(columns),
-          rows(rows),
-          onRowSelected(onRowSelected),
-          rowToIDMapper(rowToIDMapper)
+: valueTreeState{valueTreeState}
+, font{14.0f}
 {
     // Create our table component and add it to this component..
     addAndMakeVisible (table);
@@ -37,41 +35,102 @@ TableComponent::TableComponent(
 
     int columnIx = 1;
 
-    // Add some columns to the table header, based on the column list in our database..
-    for (auto &column : columns) // access by reference to avoid copying
-    {
-        const int colWidth{ columnIx == 1 ? 30 : 200 };
-        table.getHeader().addColumn (
-                String(column),
-                columnIx++,
-                colWidth, // column width
-                30, // min width
-                400, // max width
-                TableHeaderComponent::defaultFlags
-        );
-    }
+    table.getHeader().addColumn (
+            String("#"),
+            columnIx++,
+            30, // column width
+            30, // min width
+            400, // max width
+            TableHeaderComponent::defaultFlags
+    );
+    table.getHeader().addColumn (
+            String("Name"),
+            columnIx++,
+            200, // column width
+            30, // min width
+            400, // max width
+            TableHeaderComponent::defaultFlags
+    );
 
     table.setWantsKeyboardFocus(false);
 
-    table.selectRow(initiallySelectedRow);
+    ValueTree banks{valueTreeState.state.getChildWithName("banks")};
+    loadModelFrom(banks);
 
     // we could now change some initial settings..
-    table.getHeader().setSortColumnId (1, false); // sort ascending by ID column
-//    table.getHeader().setColumnVisible (7, false); // hide the "length" column until the user shows it
-
-    // un-comment this line to have a go of stretch-to-fit mode
-    // table.getHeader().setStretchToFitActive (true);
-
-//    table.setMultipleSelectionEnabled (false);
+    table.getHeader().setSortColumnId(1, false); // sort ascending by ID column
+    valueTreeState.state.addListener(this);
+    valueTreeState.addParameterListener("bank", this);
+    valueTreeState.addParameterListener("preset", this);
 }
 
-void TableComponent::setRows(const vector<vector<string>>& rows, int initiallySelectedRow) {
-    this->rows = rows;
+TableComponent::~TableComponent() {
+    valueTreeState.removeParameterListener("bank", this);
+    valueTreeState.removeParameterListener("preset", this);
+    valueTreeState.state.removeListener(this);
+}
+
+void TableComponent::loadModelFrom(ValueTree& banks) {
+    banksToPresets.clear();
+    int banksChildren{banks.getNumChildren()};
+    for(int bankIx{0}; bankIx<banksChildren; bankIx++) {
+        ValueTree bank{banks.getChild(bankIx)};
+        int bankNum{bank.getProperty("num")};
+        int bankChildren{bank.getNumChildren()};
+        for(int presetIx{0}; presetIx<bankChildren; presetIx++) {
+            ValueTree preset{bank.getChild(presetIx)};
+            int presetNum{preset.getProperty("num")};
+            String presetName{preset.getProperty("name")};
+            TableRow row{presetNum, move(presetName)};
+            banksToPresets.emplace(bankNum, move(row));
+        }
+    }
+    repopulateTable();
+}
+
+void TableComponent::parameterChanged(const String& parameterID, float newValue) {
+    if (parameterID == "bank") {
+        repopulateTable();
+    } else if (parameterID == "preset") {
+        selectCurrentPreset();
+    }
+}
+
+void TableComponent::repopulateTable() {
+    rows.clear();
+    RangedAudioParameter *param{valueTreeState.getParameter("bank")};
+    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+    AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+    int bank{castParam->get()};
+
+    BanksToPresets::iterator lowerBound{banksToPresets.lower_bound(bank)};
+    BanksToPresets::iterator upperBound{banksToPresets.upper_bound(bank)};
+    
+    // basic syntaxes for a lambda which return's a pair's .second
+    // https://stackoverflow.com/questions/2568194/populate-a-vector-with-all-multimap-values-with-a-given-key
+    // shorter syntax with mem_fn()
+    // https://stackoverflow.com/a/36775400/5257399
+    transform(
+        lowerBound,
+        upperBound,
+        back_inserter(rows),
+        mem_fn(&BanksToPresets::value_type::second)
+        );
     table.deselectAllRows();
     table.updateContent();
     table.getHeader().setSortColumnId(0, true);
-    table.selectRow(initiallySelectedRow);
+    selectCurrentPreset();
     table.repaint();
+}
+
+void TableComponent::valueTreePropertyChanged(
+    ValueTree& treeWhosePropertyHasChanged,
+    const Identifier& property) {
+    if (treeWhosePropertyHasChanged.getType() == StringRef("banks")) {
+        if (property == StringRef("synthetic")) {
+            loadModelFrom(treeWhosePropertyHasChanged);
+        }
+    }
 }
 
 // This is overloaded from TableListBoxModel, and must return the total number of rows in our table
@@ -96,6 +155,13 @@ void TableComponent::paintRowBackground (
         g.fillAll (alternateColour);
 }
 
+String TableRow::getStringContents(int columnId) {
+    if (columnId <= 1) {
+        return String(preset);
+    }
+    return name;
+}
+
 // This is overloaded from TableListBoxModel, and must paint any cells that aren't using custom
 // components.
 void TableComponent::paintCell (
@@ -109,7 +175,9 @@ void TableComponent::paintCell (
     g.setColour (getLookAndFeel().findColour (ListBox::textColourId));
     g.setFont (font);
 
-    g.drawText (rows[rowNumber][columnId-1], 2, 0, width - 4, height, Justification::centredLeft, true);
+    TableRow& row{rows[rowNumber]};
+    String text{row.getStringContents(columnId)};
+    g.drawText (text, 2, 0, width - 4, height, Justification::centredLeft, true);
 
     g.setColour (getLookAndFeel().findColour (ListBox::backgroundColourId));
     g.fillRect (width - 1, 0, 1, height);
@@ -122,25 +190,26 @@ void TableComponent::sortOrderChanged (
         bool isForwards
 ) {
     if (newSortColumnId != 0) {
-        int selectedRowIx = table.getSelectedRow();
-        vector<string> selectedRow;
-        if (selectedRowIx >= 0) {
-            selectedRow = rows[selectedRowIx];
-        }
-
         TableComponent::DataSorter sorter (newSortColumnId, isForwards);
         sort(rows.begin(), rows.end(), sorter);
 
         table.updateContent();
+        selectCurrentPreset();
+    }
+}
 
-        if (selectedRowIx >= 0) {
-            for (auto it = rows.begin(); it != rows.end(); ++it) {
-                if(*it == selectedRow) {
-                    int index = static_cast<int>(std::distance(rows.begin(), it));
-                    table.selectRow(index);
-                    break;
-                }
-            }
+void TableComponent::selectCurrentPreset() {
+    table.deselectAllRows();
+    RangedAudioParameter *param{valueTreeState.getParameter("preset")};
+    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+    AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+    int value{castParam->get()};
+
+    for (auto it{rows.begin()}; it != rows.end(); ++it) {
+        if(it->preset == value) {
+            int index{static_cast<int>(distance(rows.begin(), it))};
+            table.selectRow(index);
+            break;
         }
     }
 }
@@ -148,17 +217,17 @@ void TableComponent::sortOrderChanged (
 // This is overloaded from TableListBoxModel, and should choose the best width for the specified
 // column.
 int TableComponent::getColumnAutoSizeWidth (int columnId) {
-//    if (columnId == 5)
-//        return 100; // (this is the ratings column, containing a custom combobox component)
     if (columnId == 1)
-        return 30; // (this is the ratings column, containing a custom combobox component)
+        return 30;
 
     
     int widest = 32;
 
     // find the widest bit of text in this column..
-    for (int i = getNumRows(); --i >= 0;) {
-        widest = jmax (widest, font.getStringWidth (rows[i][columnId-1]));
+    for (int i{getNumRows()}; --i >= 0;) {
+        TableRow& row{rows[i]};
+        String text{row.getStringContents(columnId)};
+        widest = jmax (widest, font.getStringWidth (text));
     }
 
     return widest + 8;
@@ -177,20 +246,24 @@ TableComponent::DataSorter::DataSorter (
         int columnByWhichToSort,
         bool forwards
 )
-        : columnByWhichToSort (columnByWhichToSort),
-          direction (forwards ? 1 : -1)
+: columnByWhichToSort (columnByWhichToSort)
+, direction (forwards ? 1 : -1)
 {}
 
 bool TableComponent::DataSorter::operator ()(
-        vector<string> first,
-        vector<string> second
+        TableRow first,
+        TableRow second
 ) {
-    int result = String(first[columnByWhichToSort-1])
-            .compareNatural (String(second[columnByWhichToSort-1]));
-
-    if (result == 0)
-        result = String(first[0])
-                .compareNatural (String(second[0]));
+    int result;
+    if (columnByWhichToSort <= 1) {
+        result = compare(first.preset, second.preset);
+    } else {
+        result = first.name
+            .compareNatural (second.name);
+        if (result == 0) {
+            result = compare(first.preset, second.preset);
+        }
+    }
 
     result *= direction;
 
@@ -201,9 +274,21 @@ void TableComponent::selectedRowsChanged (int row) {
     if (row < 0) {
         return;
     }
-    onRowSelected(rowToIDMapper(rows[row]));
+    int newPreset{rows[row].preset};
+    RangedAudioParameter *param{valueTreeState.getParameter("preset")};
+    jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+    AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+    *castParam = newPreset;
 }
 
 bool TableComponent::keyPressed(const KeyPress &key) {
     return table.keyPressed(key);
 }
+
+TableRow::TableRow(
+    int preset,
+    String name
+)
+: preset{preset}
+, name{name}
+{}

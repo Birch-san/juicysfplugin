@@ -12,8 +12,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FluidSynthModel.h"
-#include "StateChangeSubscriber.h"
-#include "SharesParams.h"
 #include <list>
 
 using namespace std;
@@ -21,8 +19,7 @@ using namespace std;
 //==============================================================================
 /**
 */
-class JuicySFAudioProcessor  : public AudioProcessor,
-                               public SharesParams
+class JuicySFAudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
@@ -63,41 +60,22 @@ public:
 
     bool supportsDoublePrecisionProcessing() const override;
 
-    FluidSynthModel* getFluidSynthModel();
+    FluidSynthModel& getFluidSynthModel();
 
     MidiKeyboardState keyboardState;
-
-    virtual void setSoundFontPath(const String& value) override;
-    virtual String& getSoundFontPath() override;
-    virtual int getPreset() override;
-    virtual void setPreset(int preset) override;
-    virtual int getBank() override;
-    virtual void setBank(int bank) override;
-
-//    void subscribeToStateChanges(StateChangeSubscriber* subscriber);
-//    void unsubscribeFromStateChanges(StateChangeSubscriber* subscriber);
-
-    int lastUIWidth, lastUIHeight;
 
 private:
     void initialiseSynth();
 
-    String soundFontPath;
-    int lastPreset;
-    int lastBank;
+    AudioProcessorValueTreeState valueTreeState;
 
     FluidSynthModel fluidSynthModel;
-    fluid_synth_t* fluidSynth;
     Synthesiser synth;
 
-//    // just a raw pointer; we do not own
-//    AudioProcessorEditor* pluginEditor;
-
-//    list<StateChangeSubscriber*> stateChangeSubscribers;
+    AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
     static BusesProperties getBusesProperties();
 
-//    Model* model;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuicySFAudioProcessor)
 };
