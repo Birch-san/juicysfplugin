@@ -82,11 +82,23 @@ void FluidSynthModel::initialise() {
     fluid_synth_set_gain(synth.get(), 2.0);
     
     // note: fluid_chan.c#fluid_channel_init_ctrl()
-    // all SOUND_CTRL are inited with value of 64, not zero.
-    // "Just like panning, a value of 64 indicates no change for sound ctrls"
-    // and yet, I'm finding that default modulators start at MIN, so we are forced to start at 0 and climb from there
-    for (const auto &[controller, param]: controllerToParam) {
-        setControllerValue(static_cast<int>(controller), 0);
+    // > Just like panning, a value of 64 indicates no change for sound ctrls
+    // --
+    // so, advice is to leave everything at 64
+    // and yet, I'm finding that default modulators start at MIN,
+    // i.e. we are forced to start at 0 and climb from there
+    // --
+    // let's loop through all audio params that we manage,
+    // restore them to whatever value we have stored for them
+    // (which by default would be 0)
+    // super likely to be 0 regardless, since JuicySFAudioProcessor::initialise()
+    // runs earlier than JuicySFAudioProcessor::setStateInformation()
+    for (const auto &[controller, parameterID]: controllerToParam) {
+        RangedAudioParameter *param{valueTreeState.getParameter(parameterID)};
+        jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+        AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+        int value{castParam->get()};
+        setControllerValue(static_cast<int>(controller), value);
     }
     
     // http://www.synthfont.com/SoundFont_NRPNs.PDF
