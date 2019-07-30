@@ -168,29 +168,9 @@ void FluidSynthModel::initialise() {
     fluid_synth_add_default_mod(synth.get(), mod.get(), FLUID_SYNTH_ADD);
 }
 
+const StringArray FluidSynthModel::programChangeParams{"bank", "preset"};
 void FluidSynthModel::parameterChanged(const String& parameterID, float newValue) {
-    if (parameterID == "bank") {
-        int bank, preset;
-        {
-            RangedAudioParameter *param{valueTreeState.getParameter("bank")};
-            jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-            AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
-            bank = castParam->get();
-        }
-        {
-            RangedAudioParameter *param{valueTreeState.getParameter("preset")};
-            jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
-            AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
-            preset = castParam->get();
-        }
-        int bankOffset{fluid_synth_get_bank_offset(synth.get(), sfont_id)};
-        fluid_synth_program_select(
-            synth.get(),
-            channel,
-            sfont_id,
-            static_cast<unsigned int>(bankOffset + bank),
-            static_cast<unsigned int>(preset));
-    } else if (parameterID == "preset") {
+    if (programChangeParams.contains(parameterID)) {
         int bank, preset;
         {
             RangedAudioParameter *param{valueTreeState.getParameter("bank")};

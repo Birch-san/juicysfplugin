@@ -55,7 +55,7 @@ public:
     void changeProgramName(int index, const String& newName);
 
 private:
-    // static const StringArray controllerParams;
+    static const StringArray programChangeParams;
 
     // there's no bimap in the standard library!
     static const map<fluid_midi_control_change, String> controllerToParam;
