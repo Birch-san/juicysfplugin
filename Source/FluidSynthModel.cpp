@@ -417,44 +417,39 @@ void FluidSynthModel::setCurrentProgram(int index)
     RangedAudioParameter *param{valueTreeState.getParameter("preset")};
     jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
     AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+    // setCurrentProgram() gets invoked from non-message thread.
+    // AudioParameterInt#operator= will activate any listeners of audio parameter "preset".
+    // This includes TableComponent, who will update its UI.
+    // we need to lock the message thread whilst it does that UI update.
+    const MessageManagerLock mmLock;
     *castParam = index;
 }
 
 const String FluidSynthModel::getProgramName(int index)
 {
-    // fluid_sfont_t* sfont{
-    //     sfont_id == -1
-    //     ? nullptr
-    //     : fluid_synth_get_sfont_by_id(synth.get(), sfont_id)
-    // };
-    // if (!sfont) {
-    //     return {};
-    // }
-    // int bank, presetNum;
-    // {
-    //     RangedAudioParameter *param {valueTreeState.getParameter("bank")};
-    //     jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-    //     AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-    //     bank = castParam->get();
-    // }
-    // {
-    //     RangedAudioParameter *param {valueTreeState.getParameter("preset")};
-    //     jassert(dynamic_cast<AudioParameterInt*> (param) != nullptr);
-    //     AudioParameterInt* castParam {dynamic_cast<AudioParameterInt*> (param)};
-    //     presetNum = castParam->get();
-    // }
-    // fluid_preset_t *preset{fluid_sfont_get_preset(
-    //     sfont,
-    //     bank,
-    //     presetNum)};
-    // if (!preset) {
-    //     return {};
-    // }
-    // return {fluid_preset_get_name(preset)};
+     fluid_sfont_t* sfont{
+         sfont_id == -1
+         ? nullptr
+         : fluid_synth_get_sfont_by_id(synth.get(), sfont_id)
+     };
+     if (!sfont) {
+         String presetName{"Preset "};
+         return presetName << index;
+     }
+     RangedAudioParameter *param{valueTreeState.getParameter("bank")};
+     jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
+     AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
+     int bank{castParam->get()};
     
-    // I think the presets' names will be collected only at synth startup, so we won't yet have loaded the soundfont.
-    String presetName{"Preset "};
-    return presetName << index;
+     fluid_preset_t *preset{fluid_sfont_get_preset(
+         sfont,
+         bank,
+         index)};
+     if (!preset) {
+         String presetName{"Preset "};
+         return presetName << index;
+     }
+     return {fluid_preset_get_name(preset)};
 }
 
 void FluidSynthModel::changeProgramName(int index, const String& newName)
