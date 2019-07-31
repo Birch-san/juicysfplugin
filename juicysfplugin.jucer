@@ -125,6 +125,10 @@
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" libraryPath="import_lib" headerPath="..\..\include"/>
         <CONFIGURATION isDebug="0" name="Release" libraryPath="import_lib" headerPath="..\..\include"/>
+        <CONFIGURATION isDebug="1" name="Debug (32-bit)" libraryPath="import_lib" headerPath="..\..\include"
+                       winArchitecture="Win32"/>
+        <CONFIGURATION isDebug="0" name="Release (32-bit)" libraryPath="import_lib"
+                       headerPath="..\..\include" winArchitecture="Win32"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_basics" path="../../juce"/>
