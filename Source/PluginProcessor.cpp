@@ -239,7 +239,7 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
         ValueTree tree{valueTreeState.state.getChildWithName("soundFont")};
         XmlElement* newElement{xml.createNewChildElement("soundFont")};
         {
-            String value{tree.getProperty("path", "")};
+            String value = tree.getProperty("path", "");
             newElement->setAttribute("path", value);
         }
     }

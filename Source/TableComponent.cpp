@@ -80,7 +80,7 @@ void TableComponent::loadModelFrom(ValueTree& banks) {
         for(int presetIx{0}; presetIx<bankChildren; presetIx++) {
             ValueTree preset{bank.getChild(presetIx)};
             int presetNum{preset.getProperty("num")};
-            String presetName{preset.getProperty("name")};
+            String presetName = preset.getProperty("name");
             TableRow row{presetNum, move(presetName)};
             banksToPresets.emplace(bankNum, move(row));
         }
