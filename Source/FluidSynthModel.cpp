@@ -59,12 +59,12 @@ FluidSynthModel::~FluidSynthModel() {
 }
 
 void FluidSynthModel::initialise() {
-    settings = { new_fluid_settings(), delete_fluid_settings };
-
     // deactivate all audio drivers in fluidsynth to avoid FL Studio deadlock when initialising CoreAudio
     // after all: we only use fluidsynth to render blocks of audio. it doesn't output to audio driver.
     const char *DRV[] {NULL};
     fluid_audio_driver_register(DRV);
+    
+    settings = { new_fluid_settings(), delete_fluid_settings };
     
     // https://sourceforge.net/p/fluidsynth/wiki/FluidSettings/
 #if JUCE_DEBUG
