@@ -46,10 +46,18 @@ https://stackoverflow.com/questions/42624572/unrecoverable-build-error-whilst-tr
 If you encounter "Unrecoverable build error" when building juicysfplugin's setup.exe installer, you need to open an administrator prompt and register MergeMod.dll:
 
 ```bash
-regsvr32 "C:\Program Files (x86)\Common Files\Microsoft Shared\MSI Tools\MergeMod.dll"
+regsvr32 "C:\Program Files (x86)\Common Files\microsoft shared\MSI Tools\MergeMod.dll"
 ```
 
 You may also need to run Visual Studio as Adminstrator.
+
+You should also consider closing the solution, deleting Visual Studio's temp files (e.g. any file touched today) inside:
+
+```
+%LocalAppData%\Temp
+```
+
+...then re-openng the solution, and attempting build again.
 
 # Necessary for changing the dependencies
 
