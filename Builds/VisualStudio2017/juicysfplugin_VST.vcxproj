@@ -283,6 +283,19 @@
   <ItemGroup>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_plugin_client_VST2.cpp"/>
   </ItemGroup>
+  <!-- Note: glob Content Include is not good for incremental build. It saves some typing though. -->
+  <ItemGroup Condition="'$(Platform)'=='x64'">
+    <Content Include="lib_x64\*.dll">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Platform)'=='Win32'">
+    <Content Include="lib_x86\*.dll">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup/>
   <ItemGroup>
     <ResourceCompile Include=".\resources.rc"/>
