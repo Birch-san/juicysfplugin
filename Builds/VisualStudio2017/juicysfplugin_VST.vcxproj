@@ -4,20 +4,20 @@
          ToolsVersion="15.0"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
+    <ProjectConfiguration Include="Debug x64|x64">
+      <Configuration>Debug x64</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
+    <ProjectConfiguration Include="Release x64|x64">
+      <Configuration>Release x64</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug (32-bit)|Win32">
-      <Configuration>Debug (32-bit)</Configuration>
+    <ProjectConfiguration Include="Debug x86|Win32">
+      <Configuration>Debug x86</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release (32-bit)|Win32">
-      <Configuration>Release (32-bit)</Configuration>
+    <ProjectConfiguration Include="Release x86|Win32">
+      <Configuration>Release x86</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -25,7 +25,7 @@
     <ProjectGuid>{F47A6C45-0C65-BB36-F74E-BCCDF23F5ECA}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug x64|x64'"
                  Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
@@ -33,7 +33,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'"
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release x64|x64'"
                  Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
@@ -41,7 +41,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (32-bit)|Win32'"
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug x86|Win32'"
                  Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
@@ -49,7 +49,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (32-bit)|Win32'"
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release x86|Win32'"
                  Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
@@ -67,28 +67,28 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <TargetExt>.dll</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\VST\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\VST\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">juicysfplugin</TargetName>
-    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(LibraryPath);import_lib;$(SolutionDir)$(Platform)\$(Configuration)\Shared Code</LibraryPath>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\VST\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\VST\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">juicysfplugin</TargetName>
-    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath);import_lib;$(SolutionDir)$(Platform)\$(Configuration)\Shared Code</LibraryPath>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug (32-bit)|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\VST\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug (32-bit)|Win32'">$(Platform)\$(Configuration)\VST\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug (32-bit)|Win32'">juicysfplugin</TargetName>
-    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug (32-bit)|Win32'">true</GenerateManifest>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug (32-bit)|Win32'">$(LibraryPath);import_lib;$(SolutionDir)$(Platform)\$(Configuration)\Shared Code</LibraryPath>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release (32-bit)|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\VST\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release (32-bit)|Win32'">$(Platform)\$(Configuration)\VST\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release (32-bit)|Win32'">juicysfplugin</TargetName>
-    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release (32-bit)|Win32'">true</GenerateManifest>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release (32-bit)|Win32'">$(LibraryPath);import_lib;$(SolutionDir)$(Platform)\$(Configuration)\Shared Code</LibraryPath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug x64|x64'">$(SolutionDir)$(Platform)\$(Configuration)\VST\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug x64|x64'">$(Platform)\$(Configuration)\VST\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug x64|x64'">juicysfplugin</TargetName>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug x64|x64'">true</GenerateManifest>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug x64|x64'">$(LibraryPath);import_lib_x64;$(SolutionDir)$(Platform)\$(Configuration)\Shared Code</LibraryPath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release x64|x64'">$(SolutionDir)$(Platform)\$(Configuration)\VST\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release x64|x64'">$(Platform)\$(Configuration)\VST\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release x64|x64'">juicysfplugin</TargetName>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release x64|x64'">true</GenerateManifest>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release x64|x64'">$(LibraryPath);import_lib_x64;$(SolutionDir)$(Platform)\$(Configuration)\Shared Code</LibraryPath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug x86|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\VST\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug x86|Win32'">$(Platform)\$(Configuration)\VST\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug x86|Win32'">juicysfplugin</TargetName>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug x86|Win32'">true</GenerateManifest>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug x86|Win32'">$(LibraryPath);import_lib_x86;$(SolutionDir)$(Platform)\$(Configuration)\Shared Code</LibraryPath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release x86|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\VST\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release x86|Win32'">$(Platform)\$(Configuration)\VST\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release x86|Win32'">juicysfplugin</TargetName>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release x86|Win32'">true</GenerateManifest>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release x86|Win32'">$(LibraryPath);import_lib_x86;$(SolutionDir)$(Platform)\$(Configuration)\Shared Code</LibraryPath>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug x64|x64'">
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>true</MkTypLibCompatible>
@@ -122,7 +122,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(IntDir)\juicysfplugin.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>import_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>import_lib_x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>libfluidsynth.dll.a;juicysfplugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -132,10 +132,10 @@
     </Bscmake>
     <Lib>
       <AdditionalDependencies>libfluidsynth.dll.a;juicysfplugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>import_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>import_lib_x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release x64|x64'">
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>true</MkTypLibCompatible>
@@ -170,7 +170,7 @@
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalLibraryDirectories>import_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>import_lib_x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>libfluidsynth.dll.a;juicysfplugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -180,10 +180,10 @@
     </Bscmake>
     <Lib>
       <AdditionalDependencies>libfluidsynth.dll.a;juicysfplugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>import_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>import_lib_x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (32-bit)|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug x86|Win32'">
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>true</MkTypLibCompatible>
@@ -218,7 +218,7 @@
       <ProgramDatabaseFile>$(IntDir)\juicysfplugin.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>import_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>import_lib_x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>libfluidsynth.dll.a;juicysfplugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -228,10 +228,10 @@
     </Bscmake>
     <Lib>
       <AdditionalDependencies>libfluidsynth.dll.a;juicysfplugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>import_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>import_lib_x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (32-bit)|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release x86|Win32'">
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>true</MkTypLibCompatible>
@@ -267,7 +267,7 @@
       <TargetMachine>MachineX86</TargetMachine>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalLibraryDirectories>import_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>import_lib_x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>libfluidsynth.dll.a;juicysfplugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -277,7 +277,7 @@
     </Bscmake>
     <Lib>
       <AdditionalDependencies>libfluidsynth.dll.a;juicysfplugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>import_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>import_lib_x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>

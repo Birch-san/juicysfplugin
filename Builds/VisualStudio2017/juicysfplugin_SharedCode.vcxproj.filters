@@ -409,7 +409,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\BankAndPreset.cpp">
+    <ClCompile Include="..\..\Source\SlidersComponent.cpp">
       <Filter>juicysfplugin\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\FilePicker.cpp">
@@ -422,15 +422,6 @@
       <Filter>juicysfplugin\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Pills.cpp">
-      <Filter>juicysfplugin\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Preset.cpp">
-      <Filter>juicysfplugin\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\SoundfontSynthSound.cpp">
-      <Filter>juicysfplugin\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\SoundfontSynthVoice.cpp">
       <Filter>juicysfplugin\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\SurjectiveMidiKeyboardComponent.cpp">
@@ -2364,13 +2355,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\BankAndPreset.h">
+    <ClInclude Include="..\..\Source\GuiConstants.h">
       <Filter>juicysfplugin\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\ExposesComponents.h">
+    <ClInclude Include="..\..\Source\MidiConstants.h">
       <Filter>juicysfplugin\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\FilePickerFragment.h">
+    <ClInclude Include="..\..\Source\SlidersComponent.h">
+      <Filter>juicysfplugin\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Util.h">
       <Filter>juicysfplugin\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\FilePicker.h">
@@ -2383,18 +2377,6 @@
       <Filter>juicysfplugin\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Pills.h">
-      <Filter>juicysfplugin\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Preset.h">
-      <Filter>juicysfplugin\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\PresetsToBanks.h">
-      <Filter>juicysfplugin\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\SoundfontSynthSound.h">
-      <Filter>juicysfplugin\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\SoundfontSynthVoice.h">
       <Filter>juicysfplugin\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\SurjectiveMidiKeyboardComponent.h">

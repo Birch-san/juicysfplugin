@@ -12,13 +12,13 @@
               projectLineFeed="&#10;" cppLanguageStandard="17" pluginAUIsSandboxSafe="1">
   <MAINGROUP id="rCqBG3" name="juicysfplugin">
     <GROUP id="{ED7E27E3-B67D-383C-F819-F05289E08A33}" name="Source">
-      <FILE id="EiukEj" name="BankAndPreset.cpp" compile="1" resource="0"
-            file="Source/BankAndPreset.cpp"/>
-      <FILE id="lwGh9Y" name="BankAndPreset.h" compile="0" resource="0" file="Source/BankAndPreset.h"/>
-      <FILE id="nJTeqi" name="ExposesComponents.h" compile="0" resource="0"
-            file="Source/ExposesComponents.h"/>
-      <FILE id="aHqBtg" name="FilePickerFragment.h" compile="0" resource="0"
-            file="Source/FilePickerFragment.h"/>
+      <FILE id="HbY0Sd" name="GuiConstants.h" compile="0" resource="0" file="Source/GuiConstants.h"/>
+      <FILE id="XKCUJ6" name="MidiConstants.h" compile="0" resource="0" file="Source/MidiConstants.h"/>
+      <FILE id="WlxOdU" name="SlidersComponent.cpp" compile="1" resource="0"
+            file="Source/SlidersComponent.cpp"/>
+      <FILE id="Y8Po7W" name="SlidersComponent.h" compile="0" resource="0"
+            file="Source/SlidersComponent.h"/>
+      <FILE id="w2rQsp" name="Util.h" compile="0" resource="0" file="Source/Util.h"/>
       <FILE id="jhSsxG" name="FilePicker.cpp" compile="1" resource="0" file="Source/FilePicker.cpp"/>
       <FILE id="kDg5Qi" name="FilePicker.h" compile="0" resource="0" file="Source/FilePicker.h"/>
       <FILE id="xg2XPM" name="FluidSynthModel.cpp" compile="1" resource="0"
@@ -29,18 +29,6 @@
       <FILE id="RbaYg9" name="MyColours.h" compile="0" resource="0" file="Source/MyColours.h"/>
       <FILE id="esyv7j" name="Pills.cpp" compile="1" resource="0" file="Source/Pills.cpp"/>
       <FILE id="qlJw1C" name="Pills.h" compile="0" resource="0" file="Source/Pills.h"/>
-      <FILE id="Q7V7pC" name="Preset.cpp" compile="1" resource="0" file="Source/Preset.cpp"/>
-      <FILE id="bPOtSV" name="Preset.h" compile="0" resource="0" file="Source/Preset.h"/>
-      <FILE id="tlzfXV" name="PresetsToBanks.h" compile="0" resource="0"
-            file="Source/PresetsToBanks.h"/>
-      <FILE id="SEcFsz" name="SoundfontSynthSound.cpp" compile="1" resource="0"
-            file="Source/SoundfontSynthSound.cpp"/>
-      <FILE id="kCI8aL" name="SoundfontSynthSound.h" compile="0" resource="0"
-            file="Source/SoundfontSynthSound.h"/>
-      <FILE id="FKMDFe" name="SoundfontSynthVoice.cpp" compile="1" resource="0"
-            file="Source/SoundfontSynthVoice.cpp"/>
-      <FILE id="t75qEY" name="SoundfontSynthVoice.h" compile="0" resource="0"
-            file="Source/SoundfontSynthVoice.h"/>
       <FILE id="uAVIjl" name="SurjectiveMidiKeyboardComponent.cpp" compile="1"
             resource="0" file="Source/SurjectiveMidiKeyboardComponent.cpp"/>
       <FILE id="m3NMU5" name="SurjectiveMidiKeyboardComponent.h" compile="0"
@@ -123,12 +111,12 @@
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.17134.0"
             externalLibraries="libfluidsynth.dll.a">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" libraryPath="import_lib" headerPath="..\..\include"/>
-        <CONFIGURATION isDebug="0" name="Release" libraryPath="import_lib" headerPath="..\..\include"/>
-        <CONFIGURATION isDebug="1" name="Debug (32-bit)" libraryPath="import_lib" headerPath="..\..\include"
+        <CONFIGURATION isDebug="1" name="Debug x64" libraryPath="import_lib_x64" headerPath="..\..\include"/>
+        <CONFIGURATION isDebug="0" name="Release x64" libraryPath="import_lib_x64" headerPath="..\..\include"/>
+        <CONFIGURATION isDebug="1" name="Debug x86" libraryPath="import_lib_x86" headerPath="..\..\include"
                        winArchitecture="Win32"/>
-        <CONFIGURATION isDebug="0" name="Release (32-bit)" libraryPath="import_lib"
-                       headerPath="..\..\include" winArchitecture="Win32"/>
+        <CONFIGURATION isDebug="0" name="Release x86" libraryPath="import_lib_x86" headerPath="..\..\include"
+                       winArchitecture="Win32"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_basics" path="../../juce"/>
