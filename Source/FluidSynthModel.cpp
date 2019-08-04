@@ -75,7 +75,7 @@ void FluidSynthModel::initialise() {
     fluid_synth_set_sample_rate(synth.get(), currentSampleRate);
     
     ValueTree soundFont{valueTreeState.state.getChildWithName("soundFont")};
-    String path{soundFont.getProperty("path", "")};
+    String path = soundFont.getProperty("path", "");
     loadFont(path);
 
     // I can't hear a damned thing
@@ -225,7 +225,7 @@ void FluidSynthModel::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasCh
                                                const Identifier& property) {
     if (treeWhosePropertyHasChanged.getType() == StringRef("soundFont")) {
         if (property == StringRef("path")) {
-            String soundFontPath{treeWhosePropertyHasChanged.getProperty("path", "")};
+            String soundFontPath = treeWhosePropertyHasChanged.getProperty("path", "");
             if (soundFontPath.isNotEmpty()) {
                 unloadAndLoadFont(soundFontPath);
             }

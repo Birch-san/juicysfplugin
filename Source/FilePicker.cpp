@@ -65,7 +65,7 @@ void FilePicker::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged
     if (treeWhosePropertyHasChanged.getType() == StringRef("soundFont")) {
     // if (&treeWhosePropertyHasChanged == &valueTree) {
         if (property == StringRef("path")) {
-            String soundFontPath{treeWhosePropertyHasChanged.getProperty("path", "")};
+            String soundFontPath = treeWhosePropertyHasChanged.getProperty("path", "");
             DEBUG_PRINT(soundFontPath);
             setDisplayedFilePath(soundFontPath);
             // if (soundFontPath.isNotEmpty()) {
