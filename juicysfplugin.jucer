@@ -111,12 +111,10 @@
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.17134.0"
             externalLibraries="libfluidsynth.dll.a">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug x64" libraryPath="import_lib_x64" headerPath="..\..\include"/>
-        <CONFIGURATION isDebug="0" name="Release x64" libraryPath="import_lib_x64" headerPath="..\..\include"/>
-        <CONFIGURATION isDebug="1" name="Debug x86" libraryPath="import_lib_x86" headerPath="..\..\include"
-                       winArchitecture="Win32"/>
-        <CONFIGURATION isDebug="0" name="Release x86" libraryPath="import_lib_x86" headerPath="..\..\include"
-                       winArchitecture="Win32"/>
+        <CONFIGURATION isDebug="1" name="Debug" libraryPath="import_lib_$(Platform)"
+                       headerPath="..\..\include"/>
+        <CONFIGURATION isDebug="0" name="Release" libraryPath="import_lib_$(Platform)"
+                       headerPath="..\..\include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_basics" path="../../juce"/>
