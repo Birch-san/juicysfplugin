@@ -3,12 +3,12 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?include $(sys.CURRENTDIR)\Config.wxi?>
 	<Product Id="*" Name="$(var.Name)" Language="1033" Version="1.0.0.0" Manufacturer="$(var.Manufacturer)" UpgradeCode="e03ac63d-63d8-48d1-ab6c-ba539f7d523f">
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="$(var.Platform)" />
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="$(var.WixPlatform)" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate />
 
-    <WixVariable Id="WixUILicenseRtf" Value="test.rtf" />
+    <WixVariable Id="WixUILicenseRtf" Value="license_concatenated.rtf" />
 
 		<Feature Id="ProductFeature" Title="WixSetup" Level="1">
 			<ComponentGroupRef Id="StandaloneAppComponents" />
@@ -59,17 +59,59 @@
       </Component>
     </ComponentGroup>
     <ComponentGroup Id="LibraryComponents" Directory="$(var.PlatformSystemFolder)">
+      <?if $(var.Win64) = no ?>
+        <Component Guid="*">
+          <File Source="$(var.LibSrcRoot)libgcc_s_dw2-1.dll" />
+        </Component>
+      <?endif ?>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libFLAC-8.dll" />
+      </Component>
       <Component Guid="*">
         <File Source="$(var.LibSrcRoot)libfluidsynth-2.dll" />
       </Component>
-      <?if $(var.Win64) = no ?>
-      <?warning $(var.Win64) ?>
-      <?warning $(var.Platform) ?>
-      <?warning $(var.LibSrcRoot) ?>
       <Component Guid="*">
-        <File Source="$(var.LibSrcRoot)libgcc_s_dw2-1.dll" />
+        <File Source="$(var.LibSrcRoot)libglib-2.0-0.dll" />
       </Component>
-      <?endif ?>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libgmodule-2.0-0.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libiconv-2.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libintl-8.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libogg-0.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libpcre-1.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libportaudio-2.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libreadline8.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libsndfile-1.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libspeex-1.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libtermcap-0.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libvorbis-0.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libvorbisenc-2.dll" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LibSrcRoot)libwinpthread-1.dll" />
+      </Component>
     </ComponentGroup>
     <ComponentGroup Id="LicenseConcatComponents" Directory="INSTALLFOLDER">
       <Component Id="license_concatenated.txt" Guid="*">
@@ -82,6 +124,60 @@
     <ComponentGroup Id="LicenseComponents" Directory="LICENSEFOLDER">
       <Component Guid="*">
         <File Source="$(var.LicenseSrcRoot)JUCE-framework_GPL3.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libflac_New_BSD.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libfluidsynth_LGPL_2.1.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libgcc_runtime_libraries_GPL3_with_GCC_runtime_library_exception.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libglib_LGPL_2.1.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libgthread_LGPL_2.1.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libiconv_LGPL_2.1.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libintl_LGPL_2.1.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libogg_New_BSD.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libpcre_BSD.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libportaudio_bespoke.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libreadline_GPL3.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libsndfile_LGPL_2.1.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libspeex_revised_BSD.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libtermcap_LGPL_2.1.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libvorbis_New_BSD.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libvorbisenc_New_BSD.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)libwinpthreads_BSD_and_MIT.txt" />
+      </Component>
+      <Component Guid="*">
+        <File Source="$(var.LicenseSrcRoot)Steinberg-VST3_GPL3.txt" />
       </Component>
     </ComponentGroup>
 	</Fragment>

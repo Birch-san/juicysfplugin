@@ -17,11 +17,13 @@
     <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
     <?define PlatformCommonFilesFolder = "CommonFiles64Folder" ?>
     <?define PlatformSystemFolder = "System64Folder" ?>
+    <?define WixPlatform = "x64" ?>
   <?else ?>
     <?define ProductName = "$(var.Name) (32 bit)" ?>
     <?define Win64 = "no" ?>
     <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
     <?define PlatformCommonFilesFolder = "CommonFilesFolder" ?>
     <?define PlatformSystemFolder = "SystemFolder" ?>
+    <?define WixPlatform = "x86" ?>
   <?endif ?>
 </Include>
