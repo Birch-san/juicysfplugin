@@ -11,8 +11,7 @@
   <?define LibSrcRoot = "$(var.juicysfplugin_StandalonePlugin.TargetDir)" ?>
 
   <!-- Product name as you want it to appear in Add/Remove Programs-->
-  <!-- <?if $(var.Platform) = x64 ?> -->
-  <?if "$(var.Configuration)" = "Release x64" ?>
+  <?if "$(var.Platform)" = "x64" ?>
     <?define ProductName = "$(var.Name) (64 bit)" ?>
     <?define Win64 = "yes" ?>
     <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
