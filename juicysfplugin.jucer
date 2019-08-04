@@ -115,6 +115,10 @@
                        headerPath="..\..\include"/>
         <CONFIGURATION isDebug="0" name="Release" libraryPath="import_lib_$(Platform)"
                        headerPath="..\..\include"/>
+        <CONFIGURATION isDebug="1" name="Debug" libraryPath="import_lib_$(Platform)"
+                       headerPath="..\..\include" winArchitecture="Win32"/>
+        <CONFIGURATION isDebug="0" name="Release" libraryPath="import_lib_$(Platform)"
+                       headerPath="..\..\include" winArchitecture="Win32"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_basics" path="../../juce"/>
