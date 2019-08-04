@@ -15,17 +15,34 @@
     <OutputName>WixSetup</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <OutputPath>$(Platform)\$(Configuration)\bin\</OutputPath>
+    <IntermediateOutputPath>$(Platform)\$(Configuration)\obj\</IntermediateOutputPath>
+    <DefineConstants>Debug</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>$(Platform)\$(Configuration)\bin\</OutputPath>
+    <IntermediateOutputPath>$(Platform)\$(Configuration)\obj\</IntermediateOutputPath>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' ">
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <OutputPath>$(Platform)\$(Configuration)\bin\</OutputPath>
+    <IntermediateOutputPath>$(Platform)\$(Configuration)\obj\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <OutputPath>$(Platform)\$(Configuration)\bin\</OutputPath>
+    <IntermediateOutputPath>$(Platform)\$(Configuration)\obj\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixToolPath)WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MyWelcomeEulaDlg.wxs" />
     <Compile Include="Product.wxs" />
+    <Compile Include="WixUI_MyMinimal.wxs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VisualStudio2017\juicysfplugin_StandalonePlugin.vcxproj">

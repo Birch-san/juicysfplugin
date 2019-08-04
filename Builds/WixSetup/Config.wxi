@@ -9,9 +9,10 @@
   <?define LicenseConcatSrcRoot = "$(var.juicysfplugin_StandalonePlugin.ProjectDir)" ?>
   <?define LicenseSrcRoot = "$(var.juicysfplugin_StandalonePlugin.ProjectDir)licenses_of_dependencies\" ?>
   <?define LibSrcRoot = "$(var.juicysfplugin_StandalonePlugin.TargetDir)" ?>
+  <?define licenseRtf = "$(var.LicenseConcatSrcRoot)license_concatenated.rtf" ?>
 
   <!-- Product name as you want it to appear in Add/Remove Programs-->
-  <?if "$(var.Platform)" = "x64" ?>
+  <?if "$(sys.BUILDARCH)" = "x64" ?>
     <?define ProductName = "$(var.Name) (64 bit)" ?>
     <?define Win64 = "yes" ?>
     <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>

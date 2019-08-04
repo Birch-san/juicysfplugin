@@ -2,15 +2,16 @@
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?include $(sys.CURRENTDIR)\Config.wxi?>
-	<Product Id="*" Name="$(var.Name)" Language="1033" Version="1.0.0.0" Manufacturer="$(var.Manufacturer)" UpgradeCode="e03ac63d-63d8-48d1-ab6c-ba539f7d523f">
+	<Product Id="*" Name="$(var.ProductName)" Language="1033" Version="2.3.1" Manufacturer="$(var.Manufacturer)" UpgradeCode="e03ac63d-63d8-48d1-ab6c-ba539f7d523f">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="$(var.WixPlatform)" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate />
 
-    <WixVariable Id="WixUILicenseRtf" Value="license_concatenated.rtf" />
-
-		<Feature Id="ProductFeature" Title="WixSetup" Level="1">
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.licenseRtf)" />
+    <UIRef Id="WixUI_MyMinimal" />
+    
+    <Feature Id="ProductFeature" Title="juicysfplugin" Level="1">
 			<ComponentGroupRef Id="StandaloneAppComponents" />
       <ComponentGroupRef Id="LicenseComponents" />
       <ComponentGroupRef Id="LicenseConcatComponents" />
