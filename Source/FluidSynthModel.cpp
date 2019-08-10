@@ -73,10 +73,6 @@ void FluidSynthModel::initialise() {
 
     synth = { new_fluid_synth(settings.get()), delete_fluid_synth };
     fluid_synth_set_sample_rate(synth.get(), currentSampleRate);
-    
-    ValueTree soundFont{valueTreeState.state.getChildWithName("soundFont")};
-    String path = soundFont.getProperty("path", "");
-    loadFont(path);
 
     // I can't hear a damned thing
     fluid_synth_set_gain(synth.get(), 2.0);
@@ -88,17 +84,9 @@ void FluidSynthModel::initialise() {
     // and yet, I'm finding that default modulators start at MIN,
     // i.e. we are forced to start at 0 and climb from there
     // --
-    // let's loop through all audio params that we manage,
-    // restore them to whatever value we have stored for them
-    // (which by default would be 0)
-    // super likely to be 0 regardless, since JuicySFAudioProcessor::initialise()
-    // runs earlier than JuicySFAudioProcessor::setStateInformation()
-    for (const auto &[controller, parameterID]: controllerToParam) {
-        RangedAudioParameter *param{valueTreeState.getParameter(parameterID)};
-        jassert(dynamic_cast<AudioParameterInt*>(param) != nullptr);
-        AudioParameterInt* castParam{dynamic_cast<AudioParameterInt*>(param)};
-        int value{castParam->get()};
-        setControllerValue(static_cast<int>(controller), value);
+    // let's zero out every audio param that we manage
+    for (const auto &[controller, param]: controllerToParam) {
+        setControllerValue(static_cast<int>(controller), 0);
     }
     
     // http://www.synthfont.com/SoundFont_NRPNs.PDF
@@ -355,6 +343,11 @@ void FluidSynthModel::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiM
                 *castParam = m.getControllerValue();
             }
         } else if (m.isProgramChange()) {
+#if JUCE_DEBUG
+            String debug{"MIDI program change: "};
+            debug << m.getProgramChangeNumber();
+            Logger::outputDebugString(debug);
+#endif
             int result{fluid_synth_program_change(
                 synth.get(),
                 channel,
