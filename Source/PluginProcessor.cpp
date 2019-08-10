@@ -260,12 +260,6 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
     if (xmlState.get() != nullptr) {
         // make sure that it's actually our type of XML object..
         if (xmlState->hasTagName(valueTreeState.state.getType())) {
-            XmlElement* params{xmlState->getChildByName("params")};
-            if (params)
-                for (auto* param : getParameters())
-                    if (auto* p = dynamic_cast<AudioProcessorParameterWithID*>(param))
-                        p->setValue(static_cast<float>(params->getDoubleAttribute(p->paramID, p->getValue())));
-            
             {
                 XmlElement* xmlElement{xmlState->getChildByName("soundFont")};
                 if (xmlElement) {
@@ -285,6 +279,14 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
                     {
                         Value value{tree.getPropertyAsValue("height", nullptr)};
                         value = xmlElement->getIntAttribute("height", value.getValue());
+                    }
+                }
+            }
+            XmlElement* params{xmlState->getChildByName("params")};
+            if (params) {
+                for (auto* param : getParameters()) {
+                    if (auto* p = dynamic_cast<AudioProcessorParameterWithID*>(param)) {
+                        p->setValueNotifyingHost(static_cast<float>(params->getDoubleAttribute(p->paramID, p->getValue())));
                     }
                 }
             }
