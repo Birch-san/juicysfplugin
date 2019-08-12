@@ -1,10 +1,11 @@
-<img width="436" alt="image" src="https://user-images.githubusercontent.com/6141784/40509932-f424abb4-5f92-11e8-85ae-61050955dc97.png">
+![image](https://user-images.githubusercontent.com/6141784/60401921-32af9e00-9b80-11e9-8e3a-6c5717f868d6.png)
 
 Latest stable release:
 
-- macOS [1.0.6](https://github.com/Birch-san/juicysfplugin/releases/tag/1.0.6)
-- Windows x64 [1.0.8](https://github.com/Birch-san/juicysfplugin/releases/tag/1.0.8)
-- Linux is [supported as of 1.0.8](https://github.com/Birch-san/juicysfplugin/pull/3), but you will need to build from source
+- macOS [2.3.3](https://github.com/Birch-san/juicysfplugin/releases/tag/2.3.3.macOS)
+- Windows x64 [2.3.3](https://github.com/Birch-san/juicysfplugin/releases/tag/2.3.3)
+- Windows x86 [2.3.3](https://github.com/Birch-san/juicysfplugin/releases/tag/2.3.3)
+- Linux was [supported as of 1.0.8](https://github.com/Birch-san/juicysfplugin/pull/3). It has regressed since, but shouldn't be super-hard to get working again. No binary was ever distributed; It has only ever been build-from-source.
 
 Demo track: [mp3](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.mp3), [FLAC](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.flac), [FLAC +Soundgoodizer](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track_soundgoodizer.flac)
 
@@ -18,6 +19,23 @@ It's well-suited for making videogame music. If you have a soundfont of your fav
 [fluidsynth](http://www.fluidsynth.org/) is the soundfont synthesizer.
 
 Supports SF2 and SF3 soundfont formats.
+
+Supports the following MIDI events:
+
+- noteon, noteoff
+- 192 program change (this changes soundfont preset)
+- pitch wheel
+- aftertouch (key pressure)
+- channel pressure
+- default modulators as described in [SoundFont specification 2.4](http://freepats.zenvoid.org/sf2/sfspec24.pdf)
+  - includes (among others): CC 1 modulation wheel is mapped to vibrato LFO pitch depth
+- CC 71 Timbre/Harmonic Intensity (filter resonance)
+- CC 72 Release time
+- CC 73 Attack time
+- CC 74 Brightness (cutoff frequency, FILTERFC)
+- CC 75 Decay Time
+- CC 79 undefined (being used as Sustain time)
+- may support SysEx (untested)
 
 **Mode 1: standalone application**
 
@@ -34,7 +52,7 @@ This means you can host it inside your DAW (e.g. GarageBand, FL Studio Mac, Sibe
 
 I couldn't find a _free_, _easy-to-use_ macOS audio plugin for making music with soundfonts.
 
-# Install
+# Install (macOS)
 
 Latest release: https://github.com/Birch-san/juicysfplugin/releases
 
@@ -57,7 +75,7 @@ juicysfplugin.vst -> ~/Library/Audio/Plug-Ins/VST/juicysfplugin.vst
 juicysfplugin.vst3 -> ~/Library/Audio/Plug-Ins/VST3/juicysfplugin.vst3
 ```
 
-## Launch
+## Launch (macOS)
 
 Now, you may do one of the following:
 
@@ -89,10 +107,9 @@ ASCII -> MIDI keybinding is the same as FL Studio's:
 
 <img width="256px" alt="image" src="http://s3.amazonaws.com/fl_resource/flkeychart.png">
 
-## Using the standalone .app
+## Using the standalone .app (macOS) / .exe (Windows)
 
-Generally the .app will Just Work™, but if your audio setup is more bespoke, then you'll need to configure.  
-Ignore the yellow warning about feedback. There is no feedback loop (because no audio is input).
+Generally the .app will Just Work™, but if your audio setup is more bespoke, then you'll need to configure.
 
 **Options > Audio/MIDI settings**
 
@@ -102,9 +119,7 @@ Ignore the yellow warning about feedback. There is no feedback loop (because no 
 
 Or any output device that you can hear audio through.
 
-Input audio device doesn't matter. We only use MIDI as input.
-
-<img width="515" alt="image" src="https://user-images.githubusercontent.com/6141784/37062266-d723c984-218d-11e8-9ded-9dc5eb701199.png">
+<img width="502" alt="image" src="https://user-images.githubusercontent.com/6141784/62873427-4cafd500-bd17-11e9-80af-03fbf9742802.png">
 
 # Building from source (macOS)
 
@@ -212,17 +227,12 @@ I've kept this minimal, but documented some other include paths worthy of consid
 }
 ```
 
-# Dependency versions
+# Test matrix
 
 Known working with:
 
-- macOS High Sierra 10.13
-- XCode 9.3.1
-- JUCE Framework 5.3
-- VST3 Audio Plug-Ins SDK 3.6.9
-- fluidsynth 1.1.11
-
-There is a [fluidsynth 2](https://github.com/Birch-san/juicysfplugin/tree/fluidsynth2) branch. It works, but there's no strong reason to justify switching to it – we have no burning need for any FS2 features (well, except perhaps the [modluators API](https://github.com/Birch-san/juicysfplugin/issues/2#issuecomment-397872150)), and it'd generate some extra work to get the Windows release to parity.
+- macOS Mojave 10.14.5
+- Windows 10 x64 1903
 
 # Making releases
 
