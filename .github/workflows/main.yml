@@ -1,0 +1,18 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: macOS-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Release build
+      run: |
+        cd Builds/MacOSX
+        xcodebuild -scheme 'juicysfplugin - All' -configuration 'Release' -project juicysfplugin.xcodeproj
+    - name: Archive
+      run: |
+        ./archive-for-distribution.sh 3.0.0
