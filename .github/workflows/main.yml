@@ -8,11 +8,20 @@ jobs:
     runs-on: macOS-latest
     
     steps:
+    - name: Get JUCE
+      run: |
+        cd /Applications
+        ls -la
+        git clone https://github.com/WeAreROLI/JUCE.git
+        ls -la JUCE
     - uses: actions/checkout@v1
     - name: Release build
       run: |
         cd Builds/MacOSX
         xcodebuild -scheme 'juicysfplugin - All' -configuration 'Release' -project juicysfplugin.xcodeproj
     - name: Archive
-      run: |
-        ./archive-for-distribution.sh 3.0.0
+      run: ./archive-for-distribution.sh 2.3.4
+    - uses: actions/upload-artifact@master
+      with:
+        name: my-artifact
+        path: build/juicysfplugin.2.3.4.Release.tar.xz
