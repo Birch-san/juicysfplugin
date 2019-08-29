@@ -9,16 +9,10 @@ jobs:
     
     steps:
     - name: Get JUCE
-      run: |
-        cd /Applications
-        ls -la
-        git clone https://github.com/WeAreROLI/JUCE.git
-        ls -la JUCE
+      run: git -C /Applications clone https://github.com/WeAreROLI/JUCE.git
     - uses: actions/checkout@v1
     - name: Release build
-      run: |
-        cd Builds/MacOSX
-        xcodebuild -scheme 'juicysfplugin - All' -configuration 'Release' -project juicysfplugin.xcodeproj
+      run: xcodebuild -scheme 'juicysfplugin - All' -configuration 'Release' -project Builds/MacOSX/juicysfplugin.xcodeproj -UseModernBuildSystem=NO
     - name: Archive
       run: ./archive-for-distribution.sh 2.3.4
     - uses: actions/upload-artifact@master
