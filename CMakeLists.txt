@@ -28,17 +28,28 @@ find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your sys
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-# reconfigure library prefixes/suffixes so that only static libraries can be found
-set(CMAKE_FIND_LIBRARY_PREFIXES_BACKUP "${CMAKE_FIND_LIBRARY_PREFIXES}")
-set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP "${CMAKE_FIND_LIBRARY_SUFFIXES}")
-set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_STATIC_LIBRARY_PREFIX}")
-set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX}")
+# default to static libraries, since distribution is easier
+option(BUILD_SHARED_LIBS "Build using shared libraries" off)
+
+# https://cmake.org/cmake/help/latest/guide/tutorial/Selecting%20Static%20or%20Shared%20Libraries.html
+set_target_properties(JuicySFPlugin PROPERTIES
+                        POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
+
+if (NOT BUILD_SHARED_LIBS)
+  # reconfigure library prefixes/suffixes so that only static libraries can be found
+  set(CMAKE_FIND_LIBRARY_PREFIXES_BACKUP "${CMAKE_FIND_LIBRARY_PREFIXES}")
+  set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP "${CMAKE_FIND_LIBRARY_SUFFIXES}")
+  set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_STATIC_LIBRARY_PREFIX}")
+  set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX}")
+endif (NOT BUILD_SHARED_LIBS)
 
 find_package(fluidsynth 2 REQUIRED)
 # TODO: get every dependency of fluidsynth too
 
-set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_FIND_LIBRARY_PREFIXES_BACKUP}")
-set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP}")
+if (NOT BUILD_SHARED_LIBS)
+  set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_FIND_LIBRARY_PREFIXES_BACKUP}")
+  set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP}")
+endif (NOT BUILD_SHARED_LIBS)
 
 include_directories(${FLUIDSYNTH_INCLUDE_DIR})
 set(LIBS ${LIBS} ${FLUIDSYNTH_LIBRARIES})
