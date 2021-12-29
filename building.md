@@ -5,6 +5,10 @@ git checkout 6.1.4
 cmake -B cmake-build-install -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$HOME/juicydeps"
 cmake --build cmake-build-install --target install
 
+# the brew distribution of fluidsynth is not suitable for static linking (it lacks a libfluidsynth.a)
+# but this is still useful because it will give us all of the dependencies, which will enable us to install our own fuidsynth
+brew install fluidsynth
+
 git clone git@github.com:FluidSynth/fluidsynth.git
 cd fluidsynth
 git checkout v2.2.4
@@ -43,11 +47,8 @@ cmake -Bbuild -DCMAKE_INSTALL_PREFIX="$HOME/juicydeps" \
 -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake --build build --target install
 
-# this didn't work; fails because the libgthread, libglib, libintl, libsndfile deps that were found via brew, were not multi-arch
-# '-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64'
-
 git clone git@github.com:Birch-san/juicysfplugin.git
 cd juicysfplugin
-cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps"
+cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps;$(brew --prefix)" -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
 ````

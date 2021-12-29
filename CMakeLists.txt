@@ -1,4 +1,5 @@
-# cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps"
+# cmake -B build -DCMAKE_INSTALL_PREFIX="$HOME/juicydeps" -DCMAKE_BUILD_TYPE=Debug
+# cmake --build build
 
 # To get started on a new plugin, copy this entire folder (containing this file and C++ sources) to
 # a convenient location, and then start making modifications.
@@ -22,27 +23,25 @@ project(JUICY_SF_PLUGIN VERSION 3.0.0)
 # include that subdirectory as part of the build.
 
 find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
+# or
+# add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
 
-# message("lib prefixes: ${CMAKE_FIND_LIBRARY_PREFIXES}")
-# message("lib suffixes: ${CMAKE_FIND_LIBRARY_SUFFIXES}")
-# message("static lib prefixes: ${CMAKE_STATIC_LIBRARY_PREFIX}")
-# message("static lib suffixes: ${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
+# reconfigure library prefixes/suffixes so that only static libraries can be found
 set(CMAKE_FIND_LIBRARY_PREFIXES_BACKUP "${CMAKE_FIND_LIBRARY_PREFIXES}")
 set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP "${CMAKE_FIND_LIBRARY_SUFFIXES}")
 set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_STATIC_LIBRARY_PREFIX}")
 set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX}")
-# message("(mutated)")
-# message("lib prefixes: ${CMAKE_FIND_LIBRARY_PREFIXES}")
-# message("lib suffixes: ${CMAKE_FIND_LIBRARY_SUFFIXES}")
-find_package(fluidsynth 2)
+
+find_package(fluidsynth 2 REQUIRED)
+# TODO: get every dependency of fluidsynth too
+
 set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_FIND_LIBRARY_PREFIXES_BACKUP}")
 set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP}")
-# message("(restored)")
-# message("lib prefixes: ${CMAKE_FIND_LIBRARY_PREFIXES}")
-# message("lib suffixes: ${CMAKE_FIND_LIBRARY_SUFFIXES}")
-# return()
-# or
-# add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
+
+include_directories(${FLUIDSYNTH_INCLUDE_DIR})
+set(LIBS ${LIBS} ${FLUIDSYNTH_LIBRARIES})
 
 # If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
 # system. This setup should be done before calling `juce_add_plugin`.
@@ -71,7 +70,7 @@ juce_add_plugin(JuicySFPlugin
     PLUGIN_CODE Jsfp                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-    PRODUCT_NAME "Juicy Soundfont Plugin")        # The name of the final executable, which can differ from the target name
+    PRODUCT_NAME "juicysfplugin")        # The name of the final executable, which can differ from the target name
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
@@ -132,6 +131,7 @@ target_link_libraries(JuicySFPlugin
         juce::juce_graphics
         juce::juce_gui_basics
         juce::juce_gui_extra
+        ${LIBS}
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
