@@ -1,0 +1,53 @@
+```bash
+git clone git@github.com:juce-framework/JUCE.git
+cd JUCE
+git checkout 6.1.4
+cmake -B cmake-build-install -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$HOME/juicydeps"
+cmake --build cmake-build-install --target install
+
+git clone git@github.com:FluidSynth/fluidsynth.git
+cd fluidsynth
+git checkout v2.2.4
+# https://github.com/FluidSynth/fluidsynth/blob/master/README.cmake.md
+cmake -Bbuild -DCMAKE_INSTALL_PREFIX="$HOME/juicydeps" \
+-DBUILD_SHARED_LIBS=off \
+-Denable-portaudio=off \
+-Denable-dbus=off \
+-Denable-aufile=off \
+-Denable-ipv6=off \
+-Denable-jack=off \
+-Denable-ladspa=off \
+-Denable-libinstpatch=on \
+-Denable-libsndfile=on \
+-Denable-midishare=off \
+-Denable-opensles=off \
+-Denable-oboe=off \
+-Denable-network=off \
+-Denable-oss=off \
+-Denable-dsound=off \
+-Denable-wasapi=off \
+-Denable-waveout=off \
+-Denable-winmidi=off \
+-Denable-sdl2=off \
+-Denable-pkgconfig=on \
+-Denable-pulseaudio=off \
+-Denable-readline=off \
+-Denable-threads=on \
+-Denable-openmp=on \
+-Denable-coreaudio=off \
+-Denable-coremidi=off \
+-Denable-framework=off \
+-Denable-lash=off \
+-Denable-alsa=off \
+-Denable-systemd=off \
+-DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build build --target install
+
+# this didn't work; fails because the libgthread, libglib, libintl, libsndfile deps that were found via brew, were not multi-arch
+# '-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64'
+
+git clone git@github.com:Birch-san/juicysfplugin.git
+cd juicysfplugin
+cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps"
+cmake --build build
+````

@@ -1,4 +1,4 @@
-# Example Audio Plugin CMakeLists.txt
+# cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps"
 
 # To get started on a new plugin, copy this entire folder (containing this file and C++ sources) to
 # a convenient location, and then start making modifications.
@@ -21,9 +21,28 @@ project(JUICY_SF_PLUGIN VERSION 3.0.0)
 # included JUCE directly in your source tree (perhaps as a submodule), you'll need to tell CMake to
 # include that subdirectory as part of the build.
 
-# find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
+find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
+
+# message("lib prefixes: ${CMAKE_FIND_LIBRARY_PREFIXES}")
+# message("lib suffixes: ${CMAKE_FIND_LIBRARY_SUFFIXES}")
+# message("static lib prefixes: ${CMAKE_STATIC_LIBRARY_PREFIX}")
+# message("static lib suffixes: ${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set(CMAKE_FIND_LIBRARY_PREFIXES_BACKUP "${CMAKE_FIND_LIBRARY_PREFIXES}")
+set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP "${CMAKE_FIND_LIBRARY_SUFFIXES}")
+set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_STATIC_LIBRARY_PREFIX}")
+set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX}")
+# message("(mutated)")
+# message("lib prefixes: ${CMAKE_FIND_LIBRARY_PREFIXES}")
+# message("lib suffixes: ${CMAKE_FIND_LIBRARY_SUFFIXES}")
+find_package(fluidsynth 2)
+set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_FIND_LIBRARY_PREFIXES_BACKUP}")
+set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP}")
+# message("(restored)")
+# message("lib prefixes: ${CMAKE_FIND_LIBRARY_PREFIXES}")
+# message("lib suffixes: ${CMAKE_FIND_LIBRARY_SUFFIXES}")
+# return()
 # or
-add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
+# add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
 
 # If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
 # system. This setup should be done before calling `juce_add_plugin`.
