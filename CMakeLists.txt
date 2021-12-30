@@ -35,19 +35,12 @@ find_package(PkgConfig REQUIRED)
 set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH off)
 pkg_search_module(FLUIDSYNTH REQUIRED IMPORTED_TARGET fluidsynth>=2)
 
-# if (BUILD_SHARED_LIBS)
-#   set(STATIC_QUALIFIER "")
-# else (BUILD_SHARED_LIBS)
-#   set(STATIC_QUALIFIER STATIC_)
-# endif (BUILD_SHARED_LIBS)
-
-# set(INCLUDE_DIRS ${INCLUDE_DIRS} ${FLUIDSYNTH_${STATIC_QUALIFIER}INCLUDE_DIRS})
-# set(LIBS ${LIBS} ${FLUIDSYNTH_${STATIC_QUALIFIER}LIBRARIES})
-# set(LINK_DIRS ${LINK_DIRS} ${FLUIDSYNTH_${STATIC_QUALIFIER}LIBRARY_DIRS})
-# message(STATIC_QUALIFIER ${STATIC_QUALIFIER})
-# message(INCLUDE_DIRS ${INCLUDE_DIRS})
-# message(LIBS ${LIBS})
-# message(LINK_DIRS ${LINK_DIRS})
+if (BUILD_SHARED_LIBS)
+  set(FLUIDSYNTH_TARGET_STATIC_QUALIFIER "")
+else (BUILD_SHARED_LIBS)
+  set(FLUIDSYNTH_TARGET_STATIC_QUALIFIER "-static")
+endif (BUILD_SHARED_LIBS)
+set(FLUIDSYNTH_TARGET "PkgConfig::FLUIDSYNTH${FLUIDSYNTH_TARGET_STATIC_QUALIFIER}")
 
 # If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
 # system. This setup should be done before calling `juce_add_plugin`.
@@ -63,7 +56,7 @@ pkg_search_module(FLUIDSYNTH REQUIRED IMPORTED_TARGET fluidsynth>=2)
 
 juce_add_plugin(JuicySFPlugin
     # VERSION ...                               # Set this if the plugin version is different to the project version
-    # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
+    ICON_BIG resources/Logo512.png                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
     COMPANY_NAME Birchlabs                          # Specify the name of the plugin's author
     IS_SYNTH TRUE                       # Is this a synth or an effect?
@@ -126,9 +119,6 @@ target_compile_definitions(JuicySFPlugin
 # linked automatically. If we'd generated a binary data target above, we would need to link to it
 # here too. This is a standard CMake command.
 
-# target_include_directories(JuicySFPlugin PRIVATE ${INCLUDE_DIRS})
-# target_link_directories(JuicySFPlugin PRIVATE ${LINK_DIRS})
-
 target_link_libraries(JuicySFPlugin
     PRIVATE
         # AudioPluginData           # If we'd created a binary data target, we'd link to it here
@@ -144,7 +134,7 @@ target_link_libraries(JuicySFPlugin
         juce::juce_graphics
         juce::juce_gui_basics
         juce::juce_gui_extra
-        PkgConfig::FLUIDSYNTH-static
+        ${FLUIDSYNTH_TARGET}
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
