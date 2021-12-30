@@ -7,7 +7,7 @@ cmake --build cmake-build-install --target install
 
 # the brew distribution of fluidsynth is not suitable for static linking (it lacks a libfluidsynth.a)
 # but this is still useful because it will give us all of the dependencies, which will enable us to install our own fuidsynth
-brew install fluidsynth
+brew install fluidsynth pkg-config
 
 git clone git@github.com:FluidSynth/fluidsynth.git
 cd fluidsynth
@@ -49,6 +49,6 @@ cmake --build build --target install
 
 git clone git@github.com:Birch-san/juicysfplugin.git
 cd juicysfplugin
-cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps;$(brew --prefix)" -DCMAKE_BUILD_TYPE=Debug
+PKG_CONFIG_PATH="$HOME/juicydeps/lib64/pkgconfig;$(brew --prefix)/lib/pkgconfig" cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps;$(brew --prefix)" -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
 ````

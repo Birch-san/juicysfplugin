@@ -26,33 +26,29 @@ find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your sys
 # or
 # add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-
 # default to static libraries, since distribution is easier
 option(BUILD_SHARED_LIBS "Build using shared libraries" off)
 
-# https://cmake.org/cmake/help/latest/guide/tutorial/Selecting%20Static%20or%20Shared%20Libraries.html
-set_target_properties(JuicySFPlugin PROPERTIES
-                        POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+find_package(PkgConfig REQUIRED)
 
-if (NOT BUILD_SHARED_LIBS)
-  # reconfigure library prefixes/suffixes so that only static libraries can be found
-  set(CMAKE_FIND_LIBRARY_PREFIXES_BACKUP "${CMAKE_FIND_LIBRARY_PREFIXES}")
-  set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP "${CMAKE_FIND_LIBRARY_SUFFIXES}")
-  set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_STATIC_LIBRARY_PREFIX}")
-  set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX}")
-endif (NOT BUILD_SHARED_LIBS)
+set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH off)
+pkg_search_module(FLUIDSYNTH REQUIRED IMPORTED_TARGET fluidsynth>=2)
+return()
 
-find_package(fluidsynth 2 REQUIRED)
-# TODO: get every dependency of fluidsynth too
+# if (BUILD_SHARED_LIBS)
+#   set(STATIC_QUALIFIER "")
+# else (BUILD_SHARED_LIBS)
+#   set(STATIC_QUALIFIER STATIC_)
+# endif (BUILD_SHARED_LIBS)
 
-if (NOT BUILD_SHARED_LIBS)
-  set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_FIND_LIBRARY_PREFIXES_BACKUP}")
-  set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP}")
-endif (NOT BUILD_SHARED_LIBS)
-
-include_directories(${FLUIDSYNTH_INCLUDE_DIR})
-set(LIBS ${LIBS} ${FLUIDSYNTH_LIBRARIES})
+# set(INCLUDE_DIRS ${INCLUDE_DIRS} ${FLUIDSYNTH_${STATIC_QUALIFIER}INCLUDE_DIRS})
+# set(LIBS ${LIBS} ${FLUIDSYNTH_${STATIC_QUALIFIER}LIBRARIES})
+# set(LINK_DIRS ${LINK_DIRS} ${FLUIDSYNTH_${STATIC_QUALIFIER}LIBRARY_DIRS})
+# message(STATIC_QUALIFIER ${STATIC_QUALIFIER})
+# message(INCLUDE_DIRS ${INCLUDE_DIRS})
+# message(LIBS ${LIBS})
+# message(LINK_DIRS ${LINK_DIRS})
 
 # If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
 # system. This setup should be done before calling `juce_add_plugin`.
@@ -82,6 +78,10 @@ juce_add_plugin(JuicySFPlugin
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "juicysfplugin")        # The name of the final executable, which can differ from the target name
+
+# https://cmake.org/cmake/help/latest/guide/tutorial/Selecting%20Static%20or%20Shared%20Libraries.html
+set_target_properties(JuicySFPlugin PROPERTIES
+                        POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
@@ -127,6 +127,9 @@ target_compile_definitions(JuicySFPlugin
 # linked automatically. If we'd generated a binary data target above, we would need to link to it
 # here too. This is a standard CMake command.
 
+# target_include_directories(JuicySFPlugin PRIVATE ${INCLUDE_DIRS})
+# target_link_directories(JuicySFPlugin PRIVATE ${LINK_DIRS})
+
 target_link_libraries(JuicySFPlugin
     PRIVATE
         # AudioPluginData           # If we'd created a binary data target, we'd link to it here
@@ -142,7 +145,7 @@ target_link_libraries(JuicySFPlugin
         juce::juce_graphics
         juce::juce_gui_basics
         juce::juce_gui_extra
-        ${LIBS}
+        PkgConfig::FLUIDSYNTH-static
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
