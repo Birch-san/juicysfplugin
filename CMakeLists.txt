@@ -34,7 +34,6 @@ find_package(PkgConfig REQUIRED)
 
 set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH off)
 pkg_search_module(FLUIDSYNTH REQUIRED IMPORTED_TARGET fluidsynth>=2)
-# return()
 
 # if (BUILD_SHARED_LIBS)
 #   set(STATIC_QUALIFIER "")
