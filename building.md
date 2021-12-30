@@ -49,9 +49,11 @@ cmake --build build --target install
 
 git clone git@github.com:Birch-san/juicysfplugin.git
 cd juicysfplugin
+# use JUCE's embedded VST3 SDK
+# (and optionally your own VST2 SDK):
 PKG_CONFIG_PATH="$HOME/juicydeps/lib64/pkgconfig;$(brew --prefix)/lib/pkgconfig" cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps;$(brew --prefix)" -DCMAKE_BUILD_TYPE=Debug -DVST2_SDK_PATH="$HOME/SDKs/VST_SDK/VST2_SDK" -DVST_COPY_DIR="/Library/Audio/Plug-Ins/VST" -DVST3_COPY_DIR="/Library/Audio/Plug-Ins/VST3" -DAU_COPY_DIR="/Library/Audio/Plug-Ins/Components"
 
-# use VST3 SDK:
+# use external VST3 SDK:
 PKG_CONFIG_PATH="$HOME/juicydeps/lib64/pkgconfig;$(brew --prefix)/lib/pkgconfig" cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps;$(brew --prefix)" -DCMAKE_BUILD_TYPE=Debug -DVST2_SDK_PATH="$HOME/SDKs/VST_SDK/vst2sdk" -DVST3_SDK_PATH="$HOME/SDKs/VST_SDK/vst3sdk" -DVST_COPY_DIR="/Library/Audio/Plug-Ins/VST" -DVST3_COPY_DIR="/Library/Audio/Plug-Ins/VST3" -DAU_COPY_DIR="/Library/Audio/Plug-Ins/Components"
 cmake --build build
 ````
