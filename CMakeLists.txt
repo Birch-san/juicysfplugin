@@ -56,6 +56,11 @@ if (VST2_SDK_PATH)
 else (VST2_SDK_PATH)
   set(HAS_VST2_SDK_PATH 0)
 endif (VST2_SDK_PATH)
+
+if (VST3_SDK_PATH)
+  juce_set_vst3_sdk_path(${VST3_SDK_PATH})
+endif (VST3_SDK_PATH)
+
 # juce_set_aax_sdk_path(...)
 
 # `juce_add_plugin` adds a static library target with the name passed as the first argument
