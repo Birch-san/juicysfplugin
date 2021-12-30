@@ -246,7 +246,7 @@ endfunction()
 # scan the LDFLAGS returned by pkg-config for library directories and
 # libraries, figure out the absolute paths of that libraries in the
 # given directories
-function(_pkg_find_libs _prefix _no_cmake_path _no_cmake_environment_path)
+function(_pkg_find_libs _prefix _no_cmake_path _no_cmake_environment_path _static out_var)
   unset(_libs)
   unset(_find_opts)
 
@@ -259,9 +259,23 @@ function(_pkg_find_libs _prefix _no_cmake_path _no_cmake_environment_path)
     list(APPEND _find_opts "NO_CMAKE_ENVIRONMENT_PATH")
   endif()
 
+  set(CMAKE_FIND_LIBRARY_PREFIXES_BACKUP "${CMAKE_FIND_LIBRARY_PREFIXES}")
+  set(CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP "${CMAKE_FIND_LIBRARY_SUFFIXES}")
+
+  if(_static)
+    set(var_prefix ${_prefix}_STATIC)
+    # reconfigure library prefixes/suffixes so that only static libraries can be found
+    set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_STATIC_LIBRARY_PREFIX}")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX}")
+  else()
+    set(var_prefix ${_prefix})
+  endif()
+  set(ld_var ${var_prefix}_LDFLAGS)
+  set(link_libs_var ${var_prefix}_LINK_LIBRARIES)
+
   unset(_search_paths)
   unset(_next_is_framework)
-  foreach (flag IN LISTS ${_prefix}_LDFLAGS)
+  foreach (flag IN LISTS ${ld_var})
     if (_next_is_framework)
       list(APPEND _libs "-framework ${flag}")
       unset(_next_is_framework)
@@ -280,52 +294,77 @@ function(_pkg_find_libs _prefix _no_cmake_path _no_cmake_environment_path)
       continue()
     endif()
 
+    
+    if(_static)
+      set(var_name pkgcfg_lib_${_prefix}_${_pkg_search})
+    else()
+      set(var_name pkgcfg_static_lib_${_prefix}_${_pkg_search})
+    endif()
+
     if(_search_paths)
         # Firstly search in -L paths
-        find_library(pkgcfg_lib_${_prefix}_${_pkg_search}
+        find_library(${var_name}
                      NAMES ${_pkg_search}
                      HINTS ${_search_paths} NO_DEFAULT_PATH)
     endif()
-    find_library(pkgcfg_lib_${_prefix}_${_pkg_search}
+    find_library(${var_name}
                  NAMES ${_pkg_search}
                  ${_find_opts})
-    mark_as_advanced(pkgcfg_lib_${_prefix}_${_pkg_search})
-    if(pkgcfg_lib_${_prefix}_${_pkg_search})
-      list(APPEND _libs "${pkgcfg_lib_${_prefix}_${_pkg_search}}")
+
+    mark_as_advanced(${var_name})
+    if(${var_name})
+      list(APPEND _libs "${${var_name}}")
     else()
       list(APPEND _libs ${_pkg_search})
     endif()
+    # message("${var_name}" " ${${var_name}}")
   endforeach()
 
-  set(${_prefix}_LINK_LIBRARIES "${_libs}" PARENT_SCOPE)
-  message("\${_prefix}_LINK_LIBRARIES" ${_libs})
+  set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_FIND_LIBRARY_PREFIXES_BACKUP}")
+  set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP}")
+  # message(_libs " ${_libs}")
+  # message(out_var " ${out_var}")
+
+  set(${out_var} ${_libs} PARENT_SCOPE)
+  set(${link_libs_var} ${_libs} PARENT_SCOPE)
 endfunction()
 
 # create an imported target from all the information returned by pkg-config
-function(_pkg_create_imp_target _prefix _imp_target_global)
-  if (NOT TARGET PkgConfig::${_prefix})
+function(_pkg_create_imp_target _prefix _imp_target_global _libs _static)
+  if(_static)
+    set(tgt PkgConfig::${_prefix}-static)
+    set(var_prefix ${_prefix}_STATIC)
+  else()
+    set(tgt PkgConfig::${_prefix})
+    set(var_prefix ${_prefix})
+  endif()
+  if (NOT TARGET ${tgt})
     if(${_imp_target_global})
       set(_global_opt "GLOBAL")
     else()
       unset(_global_opt)
     endif()
-    add_library(PkgConfig::${_prefix} INTERFACE IMPORTED ${_global_opt})
+    add_library(${tgt} INTERFACE IMPORTED ${_global_opt})
+    # message(${_prefix}_INCLUDE_DIRS " ${${_prefix}_INCLUDE_DIRS}")
+    # message(${var_prefix}_LINK_LIBRARIES " ${${var_prefix}_LINK_LIBRARIES}")
+    # message(${var_prefix}_LDFLAGS_OTHER " ${${var_prefix}_LDFLAGS_OTHER}")
+    # message(${var_prefix}_CFLAGS_OTHER " ${${var_prefix}_CFLAGS_OTHER}")
 
     if(${_prefix}_INCLUDE_DIRS)
-      set_property(TARGET PkgConfig::${_prefix} PROPERTY
+      set_property(TARGET ${tgt} PROPERTY
                    INTERFACE_INCLUDE_DIRECTORIES "${${_prefix}_INCLUDE_DIRS}")
     endif()
-    if(${_prefix}_LINK_LIBRARIES)
-      set_property(TARGET PkgConfig::${_prefix} PROPERTY
-                   INTERFACE_LINK_LIBRARIES "${${_prefix}_LINK_LIBRARIES}")
+    if(${var_prefix}_LINK_LIBRARIES)
+      set_property(TARGET ${tgt} PROPERTY
+                   INTERFACE_LINK_LIBRARIES "${_libs}")
     endif()
-    if(${_prefix}_LDFLAGS_OTHER)
-      set_property(TARGET PkgConfig::${_prefix} PROPERTY
-                   INTERFACE_LINK_OPTIONS "${${_prefix}_LDFLAGS_OTHER}")
+    if(${var_prefix}_LDFLAGS_OTHER)
+      set_property(TARGET ${tgt} PROPERTY
+                   INTERFACE_LINK_OPTIONS "${${var_prefix}_LDFLAGS_OTHER}")
     endif()
-    if(${_prefix}_CFLAGS_OTHER)
-      set_property(TARGET PkgConfig::${_prefix} PROPERTY
-                   INTERFACE_COMPILE_OPTIONS "${${_prefix}_CFLAGS_OTHER}")
+    if(${var_prefix}_CFLAGS_OTHER)
+      set_property(TARGET ${tgt} PROPERTY
+                   INTERFACE_COMPILE_OPTIONS "${${var_prefix}_CFLAGS_OTHER}")
     endif()
   endif()
 endfunction()
@@ -333,9 +372,13 @@ endfunction()
 # recalculate the dynamic output
 # this is a macro and not a function so the result of _pkg_find_libs is automatically propagated
 macro(_pkg_recalculate _prefix _no_cmake_path _no_cmake_environment_path _imp_target _imp_target_global)
-  _pkg_find_libs(${_prefix} ${_no_cmake_path} ${_no_cmake_environment_path})
+  _pkg_find_libs("${_prefix}" ${_no_cmake_path} ${_no_cmake_environment_path}
+    FALSE _libs)
+  _pkg_find_libs("${_prefix}" ${_no_cmake_path} ${_no_cmake_environment_path}
+    TRUE _static_libs)
   if(${_imp_target})
-    _pkg_create_imp_target(${_prefix} ${_imp_target_global})
+    _pkg_create_imp_target("${_prefix}" ${_imp_target_global} "${_libs}" FALSE)
+    _pkg_create_imp_target("${_prefix}" ${_imp_target_global} "${_static_libs}" TRUE)
   endif()
 endmacro()
 
