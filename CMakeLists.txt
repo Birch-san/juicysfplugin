@@ -81,7 +81,7 @@ set_target_properties(JuicySFPlugin PROPERTIES
 # include all your JUCE module headers; if you're happy to include module headers directly, you
 # probably don't need to call this.
 
-juce_generate_juce_header(JuicySFPlugin)
+# juce_generate_juce_header(JuicySFPlugin)
 
 # `target_sources` adds source files to a target. We pass the target that needs the sources as the
 # first argument, then a visibility parameter for the sources which should normally be PRIVATE.
