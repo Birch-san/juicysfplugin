@@ -71,6 +71,8 @@ juce_add_plugin(JuicySFPlugin
     ICON_BIG resources/Logo512.png                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
     COMPANY_NAME Birchlabs                          # Specify the name of the plugin's author
+    COMPANY_WEBSITE "https://birchlabs.co.uk"
+    DESCRIPTION "Audio plugin to play soundfonts"
     IS_SYNTH TRUE                       # Is this a synth or an effect?
     NEEDS_MIDI_INPUT TRUE               # Does the plugin need midi input?
     NEEDS_MIDI_OUTPUT FALSE              # Does the plugin need midi output?
@@ -79,9 +81,9 @@ juce_add_plugin(JuicySFPlugin
     COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
     APP_SANDBOX_ENABLED TRUE
     HARDENED_RUNTIME_ENABLED TRUE
-    # VST2_CATEGORY kPlugCategSynth
-    # VST3_CATEGORIES Synth Instrument
-    # AU_MAIN_TYPE kAudioUnitType_MIDIProcessor
+    VST2_CATEGORY kPlugCategSynth
+    VST3_CATEGORIES Instrument Synth
+    AU_MAIN_TYPE kAudioUnitType_MusicDevice
     AU_SANDBOX_SAFE FALSE
     PLUGIN_MANUFACTURER_CODE Blbs               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE Jsfp                            # A unique four-character plugin id with exactly one upper-case character
