@@ -271,13 +271,14 @@ function(_pkg_find_libs _prefix _no_cmake_path _no_cmake_environment_path _stati
   else()
     set(var_prefix ${_prefix})
     set(pkgcfg_lib_prefix pkgcfg_lib_${_prefix})
+    # reconfigure library prefixes/suffixes so that only dynamic libraries can be found
+    set(CMAKE_FIND_LIBRARY_PREFIXES "${CMAKE_SHARED_LIBRARY_PREFIX}")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_SHARED_LIBRARY_SUFFIX}")
   endif()
-
-  set(ld_var ${var_prefix}_LDFLAGS)
 
   unset(_search_paths)
   unset(_next_is_framework)
-  foreach (flag IN LISTS ${ld_var})
+  foreach (flag IN LISTS ${var_prefix}_LDFLAGS)
     if (_next_is_framework)
       list(APPEND _libs "-framework ${flag}")
       unset(_next_is_framework)
@@ -296,21 +297,21 @@ function(_pkg_find_libs _prefix _no_cmake_path _no_cmake_environment_path _stati
       continue()
     endif()
 
-    set(var_name ${pkgcfg_lib_prefix}_${_pkg_search})
+    set(lib_var_name ${pkgcfg_lib_prefix}_${_pkg_search})
 
     if(_search_paths)
         # Firstly search in -L paths
-        find_library(${var_name}
+        find_library(${lib_var_name}
                      NAMES ${_pkg_search}
                      HINTS ${_search_paths} NO_DEFAULT_PATH)
     endif()
-    find_library(${var_name}
+    find_library(${lib_var_name}
                  NAMES ${_pkg_search}
                  ${_find_opts})
 
-    mark_as_advanced(${var_name})
-    if(${var_name})
-      list(APPEND _libs "${${var_name}}")
+    mark_as_advanced(${lib_var_name})
+    if(${lib_var_name})
+      list(APPEND _libs "${${lib_var_name}}")
     else()
       list(APPEND _libs ${_pkg_search})
     endif()
