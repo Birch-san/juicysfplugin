@@ -91,11 +91,12 @@ juce_add_plugin(JuicySFPlugin
     EDITOR_WANTS_KEYBOARD_FOCUS TRUE    # Does the editor need keyboard focus?
     COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
     APP_SANDBOX_ENABLED TRUE
+    APP_SANDBOX_OPTIONS com.apple.security.files.user-selected.read-only
     HARDENED_RUNTIME_ENABLED TRUE
     VST2_CATEGORY kPlugCategSynth
     VST3_CATEGORIES Instrument Synth
     AU_MAIN_TYPE kAudioUnitType_MusicDevice
-    AU_SANDBOX_SAFE FALSE
+    AU_SANDBOX_SAFE TRUE
     PLUGIN_MANUFACTURER_CODE Blbs               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE Jsfp                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
