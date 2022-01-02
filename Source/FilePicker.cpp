@@ -74,9 +74,20 @@ void FilePicker::filenameComponentChanged (FilenameComponent*) {
 #if JUCE_MAC || JUCE_IOS
     CFUniquePtr<CFStringRef> fileExtensionCF{fileChooser.getCurrentFile().getFullPathName().toCFString()};
     CFUniquePtr<CFURLRef> cfURL{CFURLCreateWithFileSystemPath(NULL, fileExtensionCF.get(), CFURLPathStyle::kCFURLPOSIXPathStyle, false)};
-    // std::string inURL = "file://" + fileChooser.getCurrentFile().getFullPathName().toStdString();
     CFErrorRef* cfError;
+
+    // CFURLCreateBookmarkData causes this error:
+    // cannot open file at line 45340 of [d24547a13b]
+    // os_unix.c:45340: (0) open(/var/db/DetachedSignatures) - Undefined error: 0
     CFUniquePtr<CFDataRef> cfData{CFURLCreateBookmarkData(NULL, cfURL.get(), bookmarkCreationOptions, NULL, NULL, cfError)};
+
+    const UInt8 * cfDataBytePtr{CFDataGetBytePtr(cfData.get())};
+    CFIndex cfDataByteLength{CFDataGetLength(cfData.get())};
+    {
+        Value value{valueTreeState.state.getChildWithName("soundFont").getPropertyAsValue("bookmark", nullptr)};
+        var var{static_cast<const void*>(cfDataBytePtr), static_cast<size_t>(cfDataByteLength)};
+        value.setValue(var);
+    }
 #endif
     // currentPath = fileChooser.getCurrentFile().getFullPathName();
     // fluidSynthModel.onFileNameChanged(fileChooser.getCurrentFile().getFullPathName(), -1, -1);

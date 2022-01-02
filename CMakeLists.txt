@@ -89,7 +89,7 @@ endif (VST3_SDK_PATH)
 # https://developer.apple.com/library/archive/technotes/tn2247/_index.html
 # https://developer.apple.com/library/archive/documentation/Security/Conceptual/AppSandboxDesignGuide/AppSandboxInDepth/AppSandboxInDepth.html
 
-#   
+# https://github.com/juce-framework/JUCE/blob/master/docs/CMake%20API.md
 juce_add_plugin(JuicySFPlugin
     # VERSION ...                               # Set this if the plugin version is different to the project version
     ICON_BIG resources/Logo512.png                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone

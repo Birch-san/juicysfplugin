@@ -108,5 +108,9 @@ PKG_CONFIG_PATH="$HOME/juicydeps/lib64/pkgconfig;$(brew --prefix)/lib/pkgconfig"
 
 # use external VST3 SDK:
 # -DVST2_SDK_PATH="$HOME/SDKs/VST_SDK/vst2sdk" -DVST3_SDK_PATH="$HOME/SDKs/VST_SDK/vst3sdk"
-cmake --build build
+
+# build just one target, in Debug mode
+cmake --build build --target JuicySFPlugin_Standalone
+# build all targets, in Release mode
+cmake --build build --config Release
 ````

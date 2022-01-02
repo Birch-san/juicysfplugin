@@ -30,12 +30,14 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
     createParameterLayout()}
 , fluidSynthModel{valueTreeState}
 {
+    MemoryBlock bookmarkBuffer;
     valueTreeState.state.appendChild({ "uiState", {
             { "width", GuiConstants::minWidth },
             { "height", GuiConstants::minHeight }
         }, {} }, nullptr);
     valueTreeState.state.appendChild({ "soundFont", {
         { "path", "" },
+        { "bookmark", std::move(bookmarkBuffer) },
     }, {} }, nullptr);
     // no properties, no subtrees (yet)
     valueTreeState.state.appendChild({ "banks", {}, {} }, nullptr);
@@ -242,6 +244,12 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
             String value = tree.getProperty("path", "");
             newElement->setAttribute("path", value);
         }
+        {
+            MemoryBlock buffer;
+            var value = tree.getProperty("bookmark", buffer);
+            jassert(value.isBinaryData());
+            newElement->setAttribute("bookmark", value.getBinaryData()->toBase64Encoding());
+        }
     }
     
     DEBUG_PRINT(xml.createDocument("",false,false));
@@ -264,8 +272,17 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
                 XmlElement* xmlElement{xmlState->getChildByName("soundFont")};
                 if (xmlElement) {
                     ValueTree tree{valueTreeState.state.getChildWithName("soundFont")};
-                    Value value{tree.getPropertyAsValue("path", nullptr)};
-                    value = xmlElement->getStringAttribute("path", value.getValue());
+                    {
+                        Value value{tree.getPropertyAsValue("path", nullptr)};
+                        value = xmlElement->getStringAttribute("path", value.getValue());
+                    }
+                    {
+                        Value value{tree.getPropertyAsValue("bookmark", nullptr)};
+                        jassert(value.getValue().isBinaryData());
+                        MemoryBlock buffer;
+                        buffer.fromBase64Encoding(xmlElement->getStringAttribute("bookmark", value.getValue()));
+                        value = buffer;
+                    }
                 }
             }
             {
