@@ -7,6 +7,11 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FluidSynthModel.h"
 
+#if JUCE_MAC || JUCE_IOS
+//   #include <CoreFoundation/CoreFoundation.h>
+  #include <CoreFoundation/CFURL.h>
+#endif
+
 class FilePicker: public Component,
                   public ValueTree::Listener,
                   private FilenameComponentListener
@@ -42,6 +47,10 @@ private:
     // FluidSynthModel& fluidSynthModel;
 
     String currentPath;
+
+#if JUCE_MAC || JUCE_IOS
+    CFURLBookmarkCreationOptions bookmarkCreationOptions;
+#endif
 
     void filenameComponentChanged (FilenameComponent*) override;
 

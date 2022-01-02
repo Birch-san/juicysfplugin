@@ -35,6 +35,55 @@
  using namespace juce;
 #endif
 
+using juce::String;
+using juce::ValueTree;
+using juce::AudioProcessorValueTreeState;
+using juce::Component;
+using juce::Graphics;
+using juce::RangedAudioParameter;
+using juce::AudioParameterInt;
+using juce::TableListBox;
+using juce::TableListBoxModel;
+using juce::KeyPress;
+using juce::Rectangle;
+using juce::StringArray;
+using juce::MidiBuffer;
+using juce::Identifier;
+using juce::AudioBuffer;
+using juce::BorderSize;
+using juce::jmax;
+using juce::NotificationType;
+using juce::Label;
+using juce::MemoryBlock;
+using juce::AudioProcessor;
+using juce::AudioProcessorEditor;
+using juce::ListBox;
+using juce::Justification;
+using juce::Font;
+using juce::Slider;
+using juce::Colour;
+using juce::Button;
+using juce::TextButton;
+using juce::GroupComponent;
+using juce::Logger;
+using juce::LookAndFeel;
+using juce::LookAndFeel_V4;
+using juce::ResizableWindow;
+using juce::StringRef;
+using juce::TableHeaderComponent;
+using juce::Value;
+using juce::XmlElement;
+using juce::AudioProcessorParameterWithID;
+using juce::dontSendNotification;
+using juce::FilenameComponent;
+using juce::AudioChannelSet;
+using juce::FilenameComponentListener;
+using juce::Synthesiser;
+using juce::MidiKeyboardState;
+using juce::MessageManagerLock;
+using juce::MidiMessage;
+using juce::File;
+
 #if ! JUCE_DONT_DECLARE_PROJECTINFO
 namespace ProjectInfo
 {

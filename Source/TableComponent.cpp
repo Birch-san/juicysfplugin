@@ -30,7 +30,7 @@ TableComponent::TableComponent(
     table.setModel (this);
 
     // give it a border
-    table.setColour (ListBox::outlineColourId, Colours::grey);
+    table.setColour (ListBox::outlineColourId, juce::Colours::grey);
     table.setOutlineThickness (1);
 
     int columnIx = 1;
@@ -150,7 +150,7 @@ void TableComponent::paintRowBackground (
     const Colour alternateColour (getLookAndFeel().findColour (ListBox::backgroundColourId)
             .interpolatedWith (getLookAndFeel().findColour (ListBox::textColourId), 0.03f));
     if (rowIsSelected)
-        g.fillAll (Colours::lightblue);
+        g.fillAll (juce::Colours::lightblue);
     else if (rowNumber % 2)
         g.fillAll (alternateColour);
 }

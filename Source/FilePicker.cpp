@@ -6,6 +6,17 @@
 #include "MyColours.h"
 #include "Util.h"
 
+// #ifdef __APPLE__
+//   #include <CoreFoundation/CFURL.h>
+// #endif
+#if JUCE_MAC || JUCE_IOS
+  #include <juce_core/native/juce_mac_CFHelpers.h>
+  #include <CoreFoundation/CFString.h>
+  #include <CoreFoundation/CFData.h>
+  #include <CoreFoundation/CFError.h>
+  using juce::CFUniquePtr;
+#endif
+
 FilePicker::FilePicker(
     AudioProcessorValueTreeState& valueTreeState
     // FluidSynthModel& fluidSynthModel
@@ -22,6 +33,9 @@ FilePicker::FilePicker(
 , valueTreeState{valueTreeState}
 // , fluidSynthModel{fluidSynthModel}
 // , currentPath{}
+#if JUCE_MAC || JUCE_IOS
+, bookmarkCreationOptions{kCFURLBookmarkCreationWithSecurityScope}
+#endif
 {
     // faster (rounded edges introduce transparency)
     setOpaque (true);
@@ -33,6 +47,10 @@ FilePicker::FilePicker(
     fileChooser.addListener (this);
     valueTreeState.state.addListener(this);
 //    valueTreeState.state.getChildWithName("soundFont").sendPropertyChangeMessage("path");
+
+#if JUCE_MAC || JUCE_IOS
+    bookmarkCreationOptions |= kCFURLBookmarkCreationSecurityScopeAllowOnlyReadAccess;
+#endif
 }
 FilePicker::~FilePicker() {
     fileChooser.removeListener (this);
@@ -49,10 +67,17 @@ void FilePicker::resized() {
  */
 void FilePicker::paint(Graphics& g)
 {
-    g.fillAll(MyColours::getUIColourIfAvailable(LookAndFeel_V4::ColourScheme::UIColour::windowBackground, Colours::lightgrey));
+    g.fillAll(MyColours::getUIColourIfAvailable(LookAndFeel_V4::ColourScheme::UIColour::windowBackground, juce::Colours::lightgrey));
 }
 
 void FilePicker::filenameComponentChanged (FilenameComponent*) {
+#if JUCE_MAC || JUCE_IOS
+    CFUniquePtr<CFStringRef> fileExtensionCF{fileChooser.getCurrentFile().getFullPathName().toCFString()};
+    CFUniquePtr<CFURLRef> cfURL{CFURLCreateWithFileSystemPath(NULL, fileExtensionCF.get(), CFURLPathStyle::kCFURLPOSIXPathStyle, false)};
+    // std::string inURL = "file://" + fileChooser.getCurrentFile().getFullPathName().toStdString();
+    CFErrorRef* cfError;
+    CFUniquePtr<CFDataRef> cfData{CFURLCreateBookmarkData(NULL, cfURL.get(), bookmarkCreationOptions, NULL, NULL, cfError)};
+#endif
     // currentPath = fileChooser.getCurrentFile().getFullPathName();
     // fluidSynthModel.onFileNameChanged(fileChooser.getCurrentFile().getFullPathName(), -1, -1);
     Value value{valueTreeState.state.getChildWithName("soundFont").getPropertyAsValue("path", nullptr)};

@@ -33,6 +33,9 @@
 
   ==============================================================================
 */
+namespace juce
+{
+
 class SurjectiveMidiKeyboardUpDownButton  : public Button
 {
 public:
@@ -322,7 +325,7 @@ int SurjectiveMidiKeyboardComponent::getTotalKeyboardWidth() const noexcept
     return x + w;
 }
 
-int SurjectiveMidiKeyboardComponent::getNoteAtPosition (Point<int> p)
+int SurjectiveMidiKeyboardComponent::getNoteAtPosition (juce::Point<int> p)
 {
     float v;
     return xyToNote (p, v);
@@ -331,27 +334,27 @@ int SurjectiveMidiKeyboardComponent::getNoteAtPosition (Point<int> p)
 const uint8 SurjectiveMidiKeyboardComponent::whiteNotes[] = { 0, 2, 4, 5, 7, 9, 11 };
 const uint8 SurjectiveMidiKeyboardComponent::blackNotes[] = { 1, 3, 6, 8, 10 };
 
-int SurjectiveMidiKeyboardComponent::xyToNote (Point<int> pos, float& mousePositionVelocity)
+int SurjectiveMidiKeyboardComponent::xyToNote (juce::Point<int> pos, float& mousePositionVelocity)
 {
     if (! reallyContains (pos, false))
         return -1;
 
-    Point<int> p (pos);
+    juce::Point<int> p (pos);
 
     if (orientation != horizontalKeyboard)
     {
-        p = Point<int> (p.y, p.x);
+        p = juce::Point<int> (p.y, p.x);
 
         if (orientation == verticalKeyboardFacingLeft)
-            p = Point<int> (p.x, getWidth() - p.y);
+            p = juce::Point<int> (p.x, getWidth() - p.y);
         else
-            p = Point<int> (getHeight() - p.x, p.y);
+            p = juce::Point<int> (getHeight() - p.x, p.y);
     }
 
-    return remappedXYToNote (p + Point<int> (xOffset, 0), mousePositionVelocity);
+    return remappedXYToNote (p + juce::Point<int> (xOffset, 0), mousePositionVelocity);
 }
 
-int SurjectiveMidiKeyboardComponent::remappedXYToNote (Point<int> pos, float& mousePositionVelocity) const
+int SurjectiveMidiKeyboardComponent::remappedXYToNote (juce::Point<int> pos, float& mousePositionVelocity) const
 {
     const int blackNoteLength = getBlackNoteLength();
 
@@ -709,7 +712,7 @@ void SurjectiveMidiKeyboardComponent::resized()
 
             float mousePositionVelocity;
             const int spaceAvailable = w;
-            const int lastStartKey = remappedXYToNote (Point<int> (endOfLastKey - spaceAvailable, 0), mousePositionVelocity) + 1;
+            const int lastStartKey = remappedXYToNote (juce::Point<int> (endOfLastKey - spaceAvailable, 0), mousePositionVelocity) + 1;
 
             if (lastStartKey >= 0 && ((int) firstKey) > lastStartKey)
             {
@@ -774,7 +777,7 @@ void SurjectiveMidiKeyboardComponent::updateNoteUnderMouse (const MouseEvent& e,
     updateNoteUnderMouse (e.getEventRelativeTo (this).getPosition(), isDown, e.source.getIndex());
 }
 
-void SurjectiveMidiKeyboardComponent::updateNoteUnderMouse (Point<int> pos, bool isDown, int fingerNum)
+void SurjectiveMidiKeyboardComponent::updateNoteUnderMouse (juce::Point<int> pos, bool isDown, int fingerNum)
 {
     float mousePositionVelocity = 0.0f;
     const int newNote = xyToNote (pos, mousePositionVelocity);
@@ -981,4 +984,6 @@ bool SurjectiveMidiKeyboardComponent::keyPressed (const KeyPress& key)
 void SurjectiveMidiKeyboardComponent::focusLost (FocusChangeType)
 {
     resetAnyKeysInUse();
+}
+
 }

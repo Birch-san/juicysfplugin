@@ -75,8 +75,21 @@ endif (VST3_SDK_PATH)
 # the formats specified by the FORMATS arguments. This function accepts many optional arguments.
 # Check the readme at `docs/CMake API.md` in the JUCE repo for the full list.
 
-# building of AUv3 is skipped, because JUCE only implements it for -DCMAKE_GENERATOR=Xcode or -GXcode, which seems to make compilation fail
-# https://github.com/juce-framework/JUCE/blob/master/docs/CMake%20API.md
+# building of AUv3 requires -DCMAKE_GENERATOR=Xcode or -GXcode
+# and your "XCode > Preferences > Locations > Command Line Tools" set to "XCode"
+# otherwise you'll get error:
+# Run Build Command(s):/usr/bin/xcodebuild -project CMAKE_TRY_COMPILE.xcodeproj build -target cmTC_33f26 -parallelizeTargets -configuration Debug -hideShellScriptEnvironment && xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
+
+# we almost support sandboxing (com.apple.security.files.user-selected.read-only is sufficient for picking a soundfont),
+# but when you re-open the plugin we fail to re-open the file (whose path we saved).
+# the correct way to support Sandboxing is to create a security-scoped bookmark after the user selects a file, and then load soundfont from that location in future.
+# but I don't know how to do this from C++ (and don't know how we would serialize the bookmark to save it for next use).
+# you could solve this by requesting temporary-exception.files.all.read entitlement,
+# but then XCode asks you to provide a provisioning profile (I don't have one; haven't purchased an Apple Developer account).
+# https://developer.apple.com/library/archive/technotes/tn2247/_index.html
+# https://developer.apple.com/library/archive/documentation/Security/Conceptual/AppSandboxDesignGuide/AppSandboxInDepth/AppSandboxInDepth.html
+
+#   
 juce_add_plugin(JuicySFPlugin
     # VERSION ...                               # Set this if the plugin version is different to the project version
     ICON_BIG resources/Logo512.png                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
@@ -137,6 +150,8 @@ target_compile_definitions(JuicySFPlugin
         # JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
         JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_plugin` call
         JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call
+        # JUCE_CORE_INCLUDE_OBJC_HELPERS=1
+        DONT_SET_USING_JUCE_NAMESPACE=1
         JUCE_VST3_CAN_REPLACE_VST2=${HAS_VST2_SDK_PATH})
 
 # If your target needs extra binary assets, you can add them here. The first argument is the name of
