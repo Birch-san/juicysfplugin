@@ -102,10 +102,12 @@ cmake --build build --target install
 
 git clone git@github.com:Birch-san/juicysfplugin.git
 cd juicysfplugin
-# use JUCE's embedded VST3 SDK
-# (and optionally your own VST2 SDK):
-# -DCMAKE_BUILD_TYPE=Debug
-PKG_CONFIG_PATH="$HOME/juicydeps/lib64/pkgconfig;$(brew --prefix)/lib/pkgconfig" cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps;$(brew --prefix)" -DVST2_SDK_PATH="$HOME/SDKs/VST_SDK/VST2_SDK" -DVST_COPY_DIR="/Library/Audio/Plug-Ins/VST" -DVST3_COPY_DIR="/Library/Audio/Plug-Ins/VST3" -DAU_COPY_DIR="/Library/Audio/Plug-Ins/Components" '-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64' -DEXTRA_ARCH_PKG_CONFIG_PATH="$HOME/juicydeps_x86_64/lib64/pkgconfig;$(ibrew --prefix)/lib/pkgconfig" -GXcode
+
+# Simple version:
+PKG_CONFIG_PATH="$HOME/juicydeps/lib64/pkgconfig;$(brew --prefix)/lib/pkgconfig" cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps;$(brew --prefix)" -DCMAKE_BUILD_TYPE=Release
+
+# XCode generator + Universal Binary + codesigning + AUv3 + VST2 + auto-install to /Library/Audio/Plug-Ins + target lower OS
+PKG_CONFIG_PATH="$HOME/juicydeps/lib64/pkgconfig;$(brew --prefix)/lib/pkgconfig" cmake -B build -DCMAKE_PREFIX_PATH="$HOME/juicydeps;$(brew --prefix)" -DVST2_SDK_PATH="$HOME/SDKs/VST_SDK/VST2_SDK" -DVST_COPY_DIR="/Library/Audio/Plug-Ins/VST" -DVST3_COPY_DIR="/Library/Audio/Plug-Ins/VST3" -DAU_COPY_DIR="/Library/Audio/Plug-Ins/Components" '-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64' -DEXTRA_ARCH_PKG_CONFIG_PATH="$HOME/juicydeps_x86_64/lib64/pkgconfig;$(ibrew --prefix)/lib/pkgconfig" -GXcode -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY="Apple Development" -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=TVU9P2GAL9 -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
 
 # use external VST3 SDK:
 # -DVST2_SDK_PATH="$HOME/SDKs/VST_SDK/vst2sdk" -DVST3_SDK_PATH="$HOME/SDKs/VST_SDK/vst3sdk"
@@ -113,5 +115,5 @@ PKG_CONFIG_PATH="$HOME/juicydeps/lib64/pkgconfig;$(brew --prefix)/lib/pkgconfig"
 # build just one target, in Debug mode
 cmake --build build --target JuicySFPlugin_Standalone
 # build all targets, in Release mode
-cmake --build build --config Release
+cmake --build build --config Release -- -allowProvisioningUpdates
 ````
