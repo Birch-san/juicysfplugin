@@ -17,6 +17,8 @@
 #include "FilePicker.h"
 #include "SlidersComponent.h"
 
+using juce::SurjectiveMidiKeyboardComponent;
+
 //==============================================================================
 /**
 */

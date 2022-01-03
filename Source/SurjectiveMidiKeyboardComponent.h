@@ -58,6 +58,9 @@ using namespace std;
 
     @see MidiKeyboardState
 */
+namespace juce
+{
+
 class SurjectiveMidiKeyboardComponent  : public Component,
                                          public MidiKeyboardStateListener,
                                          public ChangeBroadcaster,
@@ -227,7 +230,7 @@ public:
     int getTotalKeyboardWidth() const noexcept;
 
     /** Returns the key at a given coordinate. */
-    int getNoteAtPosition (Point<int> position);
+    int getNoteAtPosition (juce::Point<int> position);
 
     //==============================================================================
     /** Deletes all key-mappings.
@@ -424,10 +427,10 @@ private:
     static const uint8 blackNotes[];
 
     void getKeyPos (int midiNoteNumber, int& x, int& w) const;
-    int xyToNote (Point<int>, float& mousePositionVelocity);
-    int remappedXYToNote (Point<int>, float& mousePositionVelocity) const;
+    int xyToNote (juce::Point<int>, float& mousePositionVelocity);
+    int remappedXYToNote (juce::Point<int>, float& mousePositionVelocity) const;
     void resetAnyKeysInUse();
-    void updateNoteUnderMouse (Point<int>, bool isDown, int fingerNum);
+    void updateNoteUnderMouse (juce::Point<int>, bool isDown, int fingerNum);
     void updateNoteUnderMouse (const MouseEvent&, bool isDown);
     void repaintNote (int midiNoteNumber);
     void setLowestVisibleKeyFloat (float noteNumber);
@@ -435,3 +438,4 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SurjectiveMidiKeyboardComponent)
 };
+}

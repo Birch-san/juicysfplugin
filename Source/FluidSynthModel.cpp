@@ -9,6 +9,15 @@
 #include "MidiConstants.h"
 #include "Util.h"
 
+#if JUCE_MAC || JUCE_IOS
+  #include <juce_core/native/juce_mac_CFHelpers.h>
+  #include <CoreFoundation/CFString.h>
+  #include <CoreFoundation/CFData.h>
+  #include <CoreFoundation/CFURL.h>
+  #include <CoreFoundation/CFError.h>
+  using juce::CFUniquePtr;
+#endif
+
 using namespace std;
 
 const map<fluid_midi_control_change, String> FluidSynthModel::controllerToParam{
@@ -212,12 +221,34 @@ void FluidSynthModel::parameterChanged(const String& parameterID, float newValue
 void FluidSynthModel::valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged,
                                                const Identifier& property) {
     if (treeWhosePropertyHasChanged.getType() == StringRef("soundFont")) {
+#if JUCE_MAC || JUCE_IOS
+        if (property == StringRef("bookmark")) {
+            CFErrorRef* cfError;
+            MemoryBlock buffer;
+            var bookmark = treeWhosePropertyHasChanged.getProperty("bookmark", buffer);
+            jassert(bookmark.isBinaryData());
+            CFUniquePtr<CFDataRef> data{CFDataCreate(
+                NULL,
+                static_cast<const UInt8 *>(bookmark.getBinaryData()->getData()),
+                static_cast<CFIndex>(bookmark.getBinaryData()->getSize()))};
+            CFUniquePtr<CFURLRef> cfURL{CFURLCreateByResolvingBookmarkData(NULL, data.get(), kCFURLBookmarkResolutionWithSecurityScope, NULL, NULL, NULL, cfError)};
+
+            CFUniquePtr<CFStringRef> cfPath {CFURLCopyFileSystemPath(cfURL.get(), CFURLPathStyle::kCFURLPOSIXPathStyle)};
+            StringRef path {String::fromCFString(cfPath.get())};
+            if (path.isNotEmpty()) {
+                CFURLStartAccessingSecurityScopedResource(cfURL.get());
+                unloadAndLoadFont(path);
+                CFURLStopAccessingSecurityScopedResource(cfURL.get());
+            }
+        }
+#else
         if (property == StringRef("path")) {
             String soundFontPath = treeWhosePropertyHasChanged.getProperty("path", "");
             if (soundFontPath.isNotEmpty()) {
                 unloadAndLoadFont(soundFontPath);
             }
         }
+#endif
     }
 }
 

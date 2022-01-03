@@ -30,12 +30,14 @@ JuicySFAudioProcessor::JuicySFAudioProcessor()
     createParameterLayout()}
 , fluidSynthModel{valueTreeState}
 {
+    MemoryBlock bookmarkBuffer;
     valueTreeState.state.appendChild({ "uiState", {
             { "width", GuiConstants::minWidth },
             { "height", GuiConstants::minHeight }
         }, {} }, nullptr);
     valueTreeState.state.appendChild({ "soundFont", {
         { "path", "" },
+        { "bookmark", std::move(bookmarkBuffer) },
     }, {} }, nullptr);
     // no properties, no subtrees (yet)
     valueTreeState.state.appendChild({ "banks", {}, {} }, nullptr);
@@ -171,6 +173,15 @@ AudioProcessor::BusesProperties JuicySFAudioProcessor::getBusesProperties() {
 void JuicySFAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
     jassert (!isUsingDoublePrecision());
 
+    // In case we have more outputs than inputs, this code clears any output
+    // channels that didn't contain input data, (because these aren't
+    // guaranteed to be empty - they may contain garbage).
+    // This is here to avoid people getting screaming feedback
+    // when they first compile a plugin, but obviously you don't need to keep
+    // this code if your algorithm always overwrites all the output channels.
+    for (int i = getTotalNumInputChannels(); i < getTotalNumOutputChannels(); ++i)
+        buffer.clear (i, 0, buffer.getNumSamples());
+
     // Now pass any incoming midi messages to our keyboard state object, and let it
     // add messages to the buffer if the user is clicking on the on-screen keys
     keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
@@ -183,15 +194,6 @@ void JuicySFAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer&
     // (see juce_VST3_Wrapper.cpp for the assertion this would trip otherwise)
     // we are !JucePlugin_ProducesMidiOutput, so clear remaining MIDI messages from our buffer
     midiMessages.clear();
-
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-//    for (int i = getTotalNumInputChannels(); i < getTotalNumOutputChannels(); ++i)
-//        buffer.clear (i, 0, numSamples);
 }
 
 //==============================================================================
@@ -242,6 +244,12 @@ void JuicySFAudioProcessor::getStateInformation (MemoryBlock& destData)
             String value = tree.getProperty("path", "");
             newElement->setAttribute("path", value);
         }
+        {
+            MemoryBlock buffer;
+            var value = tree.getProperty("bookmark", buffer);
+            jassert(value.isBinaryData());
+            newElement->setAttribute("bookmark", value.getBinaryData()->toBase64Encoding());
+        }
     }
     
     DEBUG_PRINT(xml.createDocument("",false,false));
@@ -264,8 +272,17 @@ void JuicySFAudioProcessor::setStateInformation (const void* data, int sizeInByt
                 XmlElement* xmlElement{xmlState->getChildByName("soundFont")};
                 if (xmlElement) {
                     ValueTree tree{valueTreeState.state.getChildWithName("soundFont")};
-                    Value value{tree.getPropertyAsValue("path", nullptr)};
-                    value = xmlElement->getStringAttribute("path", value.getValue());
+                    {
+                        Value value{tree.getPropertyAsValue("path", nullptr)};
+                        value = xmlElement->getStringAttribute("path", value.getValue());
+                    }
+                    {
+                        Value value{tree.getPropertyAsValue("bookmark", nullptr)};
+                        jassert(value.getValue().isBinaryData());
+                        MemoryBlock buffer;
+                        buffer.fromBase64Encoding(xmlElement->getStringAttribute("bookmark", value.getValue()));
+                        value = buffer;
+                    }
                 }
             }
             {
