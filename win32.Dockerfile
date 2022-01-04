@@ -1,5 +1,5 @@
 # docker build . -f win32.Dockerfile --tag=llvm-mingw
-# docker run -it --rm --name llvm-mingw llvm-mingw
+# docker run -it --rm --name llvm-mingw -v "$HOME/SDKs/VST_SDK/VST2_SDK/:/VST2_SDK/:ro,delegated" llvm-mingw
 # docker cp get_fluidsynth_deps.sh llvm-mingw:/build/get_fluidsynth_deps.sh && docker exec llvm-mingw /build/get_fluidsynth_deps.sh
 
 FROM mstorsjo/llvm-mingw
@@ -20,12 +20,18 @@ COPY win32_cross_compile/make_minimal_fluidsynth.sh make_minimal_fluidsynth.sh
 RUN /build/make_minimal_fluidsynth.sh
 COPY win32_cross_compile/clone_juce.sh clone_juce.sh
 RUN /build/clone_juce.sh
+# TODO: move these to top layer when we're ready to do Release builds
+RUN apt-get update -qq && \
+apt-get install -qqy --no-install-recommends libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libfreetype6-dev && \
+apt-get clean -y && \
+rm -rf /var/lib/apt/lists/*
 COPY win32_cross_compile/make_juce.sh make_juce.sh
-# RUN /build/make_juce.sh
-# WORKDIR juicysfplugin
-# COPY cmake/Modules/FindPkgConfig.cmake cmake/Modules/FindPkgConfig.cmake
-# COPY Source/ Source/
-# COPY JuceLibraryCode/ JuceLibraryCode/
-# COPY CMakeLists.txt CMakeLists.txt
-# COPY win32_cross_compile/init.sh init.sh
-# RUN /build/init.sh
+RUN /build/make_juce.sh
+WORKDIR juicysfplugin
+COPY resources/Logo512.png resources/Logo512.png
+COPY cmake/Modules/FindPkgConfig.cmake cmake/Modules/FindPkgConfig.cmake
+COPY Source/ Source/
+COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+COPY CMakeLists.txt CMakeLists.txt
+COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
+# RUN /build/juicysfplugin/make_juicysfplugin.sh

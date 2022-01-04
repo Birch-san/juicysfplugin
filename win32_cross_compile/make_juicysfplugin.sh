@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-cd juicysfplugin
 
 # declare -a ARCHS=("x64" "x86" "arm64")
 declare -a ARCHS=("x64")
@@ -19,16 +18,14 @@ for ARCH in ${ARCHS[@]}; do
 
   BUILD="build_$ARCH"
 
-  # PKG_CONFIG_PATH="/$REPO/lib/pkgconfig" pkg-config flac --static --libs-only-l
-
-  PKG_CONFIG_PATH="/$REPO/lib/pkgconfig" cmake -B"$BUILD" -DCMAKE_INSTALL_PREFIX="/$REPO" \
+  VERBOSE=1 PKG_CONFIG_PATH="/$REPO/lib/pkgconfig" cmake -B"$BUILD" \
+-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
+-DCMAKE_PREFIX_PATH="/linux_native" \
+-DCMAKE_INSTALL_PREFIX="/$REPO" \
+-DVST2_SDK_PATH="/VST2_SDK" \
+-DCMAKE_CXX_STANDARD=17 \
+-DCMAKE_C_STANDARD=11 \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
 -DCMAKE_BUILD_TYPE=Debug
   cmake --build "$BUILD" --target JuicySFPlugin_Standalone
-
-  # cp "$BUILD"/fluidsynth.pc /$REPO/lib/pkgconfig/
-  # cp "$BUILD"/src/libfluidsynth*.a /$REPO/lib/libfluidsynth.a
-  # mkdir -p /$REPO/include/fluidsynth
-  # cp "$BUILD"/include/fluidsynth.h /$REPO/include/fluidsynth.h
-  # cp "$BUILD"/include/fluidsynth/*.h /$REPO/include/fluidsynth/
 done
