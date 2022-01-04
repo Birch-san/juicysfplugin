@@ -5,7 +5,7 @@
 FROM mstorsjo/llvm-mingw
 COPY win32_cross_compile/FindPkgConfig.cmake /opt/cmake/share/cmake-3.20/Modules/FindPkgConfig.cmake
 RUN apt-get update -qq && \
-apt-get install -qqy --no-install-recommends zstd && \
+apt-get install -qqy --no-install-recommends zstd libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libfreetype6-dev && \
 apt-get clean -y && \
 rm -rf /var/lib/apt/lists/*
 COPY win32_cross_compile/clone_fluidsynth.sh clone_fluidsynth.sh
@@ -20,11 +20,6 @@ COPY win32_cross_compile/make_minimal_fluidsynth.sh make_minimal_fluidsynth.sh
 RUN /build/make_minimal_fluidsynth.sh
 COPY win32_cross_compile/clone_juce.sh clone_juce.sh
 RUN /build/clone_juce.sh
-# TODO: move these to top layer when we're ready to do Release builds
-RUN apt-get update -qq && \
-apt-get install -qqy --no-install-recommends libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libfreetype6-dev && \
-apt-get clean -y && \
-rm -rf /var/lib/apt/lists/*
 COPY win32_cross_compile/make_juce.sh make_juce.sh
 RUN /build/make_juce.sh
 WORKDIR juicysfplugin
