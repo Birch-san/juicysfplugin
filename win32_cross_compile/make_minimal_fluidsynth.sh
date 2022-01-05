@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 cd fluidsynth
 
-declare -a ARCHS=("x64" "x86" "arm64")
+# declare -a ARCHS=("x64" "x86" "arm64")
+declare -a ARCHS=("x64" "x86")
 declare -A TOOLCHAINS=( [x64]=x86_64 [x86]=i686 [arm64]=aarch64 )
 declare -A REPOS=( [x64]=clang64 [x86]=clang32 [arm64]=clangarm64 )
  
@@ -51,13 +52,5 @@ for ARCH in ${ARCHS[@]}; do
 -Denable-systemd=off \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
 -DCMAKE_BUILD_TYPE=Release
-	cmake --build "$BUILD" --target libfluidsynth
-  # manual installation :( we can't run install target because linker doesn't support --as-needed option
-  # TODO: this may be a hint that we found the system linker instead of llvm-ld
-  cp "$BUILD"/fluidsynth.pc /$REPO/lib/pkgconfig/
-  cp "$BUILD"/src/libfluidsynth*.a /$REPO/lib/libfluidsynth.a
-  mkdir -p /$REPO/include/fluidsynth
-  cp include/fluidsynth/*.h /$REPO/include/fluidsynth/
-  cp "$BUILD"/include/fluidsynth.h /$REPO/include/fluidsynth.h
-  cp "$BUILD"/include/fluidsynth/*.h /$REPO/include/fluidsynth/
+	cmake --build "$BUILD" --target install
 done

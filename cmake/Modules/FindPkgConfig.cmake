@@ -259,9 +259,6 @@ function(_pkg_find_libs _prefix _no_cmake_path _no_cmake_environment_path _stati
     list(APPEND _find_opts "NO_CMAKE_ENVIRONMENT_PATH")
   endif()
 
-  set(_CMAKE_FIND_LIBRARY_PREFIXES_BACKUP "${CMAKE_FIND_LIBRARY_PREFIXES}")
-  set(_CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP "${CMAKE_FIND_LIBRARY_SUFFIXES}")
-
   if(_static)
     set(var_prefix ${_prefix}_STATIC)
     set(pkgcfg_lib_prefix pkgcfg_static_lib_${_prefix})
@@ -310,15 +307,12 @@ function(_pkg_find_libs _prefix _no_cmake_path _no_cmake_environment_path _stati
                  ${_find_opts})
 
     mark_as_advanced(${lib_var_name})
-    if(${lib_var_name})
+    if(lib_var_name)
       list(APPEND _libs "${${lib_var_name}}")
     else()
       list(APPEND _libs ${_pkg_search})
     endif()
   endforeach()
-
-  set(CMAKE_FIND_LIBRARY_PREFIXES "${_CMAKE_FIND_LIBRARY_PREFIXES_BACKUP}")
-  set(CMAKE_FIND_LIBRARY_SUFFIXES "${_CMAKE_FIND_LIBRARY_SUFFIXES_BACKUP}")
 
   _pkgconfig_set(${var_prefix}_LINK_LIBRARIES "${_libs}")
 endfunction()

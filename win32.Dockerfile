@@ -3,7 +3,6 @@
 # docker cp get_fluidsynth_deps.sh llvm-mingw:/build/get_fluidsynth_deps.sh && docker exec llvm-mingw /build/get_fluidsynth_deps.sh
 
 FROM mstorsjo/llvm-mingw
-COPY win32_cross_compile/FindPkgConfig.cmake /opt/cmake/share/cmake-3.20/Modules/FindPkgConfig.cmake
 RUN apt-get update -qq && \
 apt-get install -qqy --no-install-recommends zstd libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libfreetype6-dev && \
 apt-get clean -y && \
