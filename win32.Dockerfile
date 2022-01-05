@@ -1,8 +1,9 @@
-# docker build . -f win32.Dockerfile --tag=llvm-mingw
+# DOCKER_BUILDKIT=0 docker build . -f win32.Dockerfile --tag=llvm-mingw
 # docker run -it --rm --name llvm-mingw -v "$HOME/SDKs/VST_SDK/VST2_SDK/:/VST2_SDK/:ro,delegated" llvm-mingw
 # docker cp get_fluidsynth_deps.sh llvm-mingw:/build/get_fluidsynth_deps.sh && docker exec llvm-mingw /build/get_fluidsynth_deps.sh
 
 FROM mstorsjo/llvm-mingw
+VOLUME /VST2_SDK
 RUN apt-get update -qq && \
 apt-get install -qqy --no-install-recommends zstd libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libfreetype6-dev && \
 apt-get clean -y && \
@@ -28,4 +29,4 @@ COPY Source/ Source/
 COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
 COPY CMakeLists.txt CMakeLists.txt
 COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
-# RUN /build/juicysfplugin/make_juicysfplugin.sh
+RUN /build/juicysfplugin/make_juicysfplugin.sh

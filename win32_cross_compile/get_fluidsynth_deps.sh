@@ -4,7 +4,9 @@
 declare -a ARCHS=("x64" "x86")
 declare -A REPOS=( [x64]=clang64 [x86]=clang32 [arm64]=clangarm64 )
 declare -A PKG_PREFIX_ARCHS=( [x64]=x86_64 [x86]=i686 [arm64]=aarch64 )
-declare -a PKGS=("libiconv" "flac" "glib2" "libogg" "opus-1" "libvorbis" "pcre-" "libsndfile")
+# https://waterlan.home.xs4all.nl/libintl.html
+# apparently libintl is part of gettext
+declare -a PKGS=("libiconv" "flac" "glib2" "libogg" "opus-1" "libvorbis" "pcre-" "libsndfile" "gettext")
  
 for ARCH in ${ARCHS[@]}; do
   echo "arch: $ARCH"
