@@ -7,6 +7,7 @@ set(CMAKE_CXX_COMPILER aarch64-w64-mingw32-clang++)
 
 # where is the target environment located
 set(CMAKE_FIND_ROOT_PATH  /clangarm64)
+set(CMAKE_FIND_ROOT_PATH  /clangarm64;/opt/llvm-mingw/aarch64-w64-mingw32)
 
 # adjust the default behavior of the FIND_XXX() commands:
 # search programs in the host environment

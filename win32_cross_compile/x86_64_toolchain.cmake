@@ -6,7 +6,8 @@ set(CMAKE_C_COMPILER   x86_64-w64-mingw32-clang)
 set(CMAKE_CXX_COMPILER x86_64-w64-mingw32-clang++)
 
 # where is the target environment located
-set(CMAKE_FIND_ROOT_PATH  /clang64)
+# https://cmake.org/cmake/help/latest/command/find_library.html
+set(CMAKE_FIND_ROOT_PATH  /clang64;/opt/llvm-mingw/x86_64-w64-mingw32)
 
 # adjust the default behavior of the FIND_XXX() commands:
 # search programs in the host environment
