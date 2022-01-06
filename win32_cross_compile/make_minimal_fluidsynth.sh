@@ -52,5 +52,12 @@ for ARCH in ${ARCHS[@]}; do
 -Denable-systemd=off \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
 -DCMAKE_BUILD_TYPE=Release
-	cmake --build "$BUILD" --target install
+	cmake --build "$BUILD" --target libfluidsynth
+  # manual installation; not sure how to ask it to "only install libfluidsynth".
+  cp "$BUILD"/fluidsynth.pc /$REPO/lib/pkgconfig/
+  cp "$BUILD"/src/libfluidsynth*.a /$REPO/lib/libfluidsynth.a
+  mkdir -p /$REPO/include/fluidsynth
+  cp include/fluidsynth/*.h /$REPO/include/fluidsynth/
+  cp "$BUILD"/include/fluidsynth.h /$REPO/include/fluidsynth.h
+  cp "$BUILD"/include/fluidsynth/*.h /$REPO/include/fluidsynth/
 done

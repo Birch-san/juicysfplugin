@@ -17,6 +17,9 @@ cmake_minimum_required(VERSION 3.15)
 
 project(JUICY_SF_PLUGIN VERSION 3.0.0)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
 # included JUCE directly in your source tree (perhaps as a submodule), you'll need to tell CMake to
@@ -37,6 +40,20 @@ if (BUILD_SHARED_LIBS)
   set(TARGET_STATIC_QUALIFIER "")
 else (BUILD_SHARED_LIBS)
   set(TARGET_STATIC_QUALIFIER "-static")
+
+  # in our Docker "cross-compile for Windows using Clang+MinGW" image,
+  # we find that glib *tries* to invoke pthread symbols, yet doesn't declare
+  # any dependency on pthread in pkgconfig.
+  #   ld.lld: error: undefined symbol: pthread_mutex_init
+  #   >>> referenced by libglib-2.0.a(gthread-posix.c.obj):(g_mutex_init)
+  # so it falls to us to link to pthreads explicitly.
+  if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    # https://stackoverflow.com/a/29871891/5257399
+    # https://stackoverflow.com/a/61439452/5257399
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+    set(THREADS_TARGET "Threads::Threads")
+  endif()
 endif (BUILD_SHARED_LIBS)
 
 set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH off)
@@ -58,6 +75,7 @@ set(AU_COPY_DIR "${JUCE_AU_COPY_DIR}" CACHE STRING "AU installation dir")
 
 if (VST2_SDK_PATH)
   set(HAS_VST2_SDK_PATH 1)
+  set(VST2_FORMAT "VST")
   juce_set_vst2_sdk_path(${VST2_SDK_PATH})
 else (VST2_SDK_PATH)
   set(HAS_VST2_SDK_PATH 0)
@@ -113,7 +131,7 @@ juce_add_plugin(JuicySFPlugin
     PLUGIN_MANUFACTURER_CODE Blbs               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE Jsfp                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS AU AUv3 VST VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    FORMATS AU AUv3 ${VST2_FORMAT} VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     VST_COPY_DIR "${VST_COPY_DIR}"
     VST3_COPY_DIR "${VST3_COPY_DIR}"
     AU_COPY_DIR "${AU_COPY_DIR}"
@@ -186,6 +204,7 @@ target_link_libraries(JuicySFPlugin
         juce::juce_gui_extra
         ${FLUIDSYNTH_TARGET}
         ${EXTRA_ARCH_FLUIDSYNTH_TARGET}
+        ${THREADS_TARGET}
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
