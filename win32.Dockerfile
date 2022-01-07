@@ -31,4 +31,4 @@ COPY CMakeLists.txt CMakeLists.txt
 COPY win32_cross_compile/configure_juicysfplugin.sh configure_juicysfplugin.sh
 RUN /build/juicysfplugin/configure_juicysfplugin.sh
 COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
-# RUN /build/juicysfplugin/make_juicysfplugin.sh
+RUN /build/juicysfplugin/make_juicysfplugin.sh
