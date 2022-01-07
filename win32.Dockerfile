@@ -28,5 +28,7 @@ COPY cmake/Modules/FindPkgConfig.cmake cmake/Modules/FindPkgConfig.cmake
 COPY Source/ Source/
 COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
 COPY CMakeLists.txt CMakeLists.txt
+COPY win32_cross_compile/configure_juicysfplugin.sh configure_juicysfplugin.sh
+RUN /build/juicysfplugin/configure_juicysfplugin.sh
 COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
-RUN /build/juicysfplugin/make_juicysfplugin.sh
+# RUN /build/juicysfplugin/make_juicysfplugin.sh
