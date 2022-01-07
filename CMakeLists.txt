@@ -40,20 +40,7 @@ if (BUILD_SHARED_LIBS)
   set(TARGET_STATIC_QUALIFIER "")
 else (BUILD_SHARED_LIBS)
   set(TARGET_STATIC_QUALIFIER "-static")
-
-  # in our Docker "cross-compile for Windows using Clang+MinGW" image,
-  # we find that glib *tries* to invoke pthread symbols, yet doesn't declare
-  # any dependency on pthread in pkgconfig.
-  #   ld.lld: error: undefined symbol: pthread_mutex_init
-  #   >>> referenced by libglib-2.0.a(gthread-posix.c.obj):(g_mutex_init)
-  # so it falls to us to link to pthreads explicitly.
-  if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    # https://stackoverflow.com/a/29871891/5257399
-    # https://stackoverflow.com/a/61439452/5257399
-    set(THREADS_PREFER_PTHREAD_FLAG ON)
-    find_package(Threads REQUIRED)
-    set(THREADS_TARGET "Threads::Threads")
-  endif()
+  set(PACKAGE_STATIC_QUALIFIER "_STATIC")
 endif (BUILD_SHARED_LIBS)
 
 set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH off)
@@ -204,8 +191,22 @@ target_link_libraries(JuicySFPlugin
         juce::juce_gui_extra
         ${FLUIDSYNTH_TARGET}
         ${EXTRA_ARCH_FLUIDSYNTH_TARGET}
-        ${THREADS_TARGET}
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+
+# pkg-config says that MinGW fluidsynth wants compile options such as:
+#   -pthread -mms-bitfields
+# yes, CMake has more idiomatic ways to integrate pthreads, but "knowledge of our dependencies"
+# is pkg-config's strength, so let's prefer pkg-config idioms.
+target_compile_options(JuicySFPlugin PRIVATE "${FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_CFLAGS_OTHER}")
+
+# pkg-config says that MinGW fluidsynth wants link options such as:
+#   /opt/llvm-mingw/x86_64-w64-mingw32/lib/libomp.dll.a -pthread
+# TODO: consider patching FindPkgConfig to place the .dll.a option into _LINK_LIBRARIES instead of _LDFLAGS_OTHER
+target_link_options(JuicySFPlugin PRIVATE "${FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}")
+
+if (EXTRA_ARCH_PKG_CONFIG_PATH)
+  target_link_options(JuicySFPlugin PRIVATE "${EXTRA_ARCH_FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}")
+endif (EXTRA_ARCH_PKG_CONFIG_PATH)
