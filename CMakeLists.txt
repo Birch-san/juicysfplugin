@@ -200,13 +200,13 @@ target_link_libraries(JuicySFPlugin
 #   -pthread -mms-bitfields
 # yes, CMake has more idiomatic ways to integrate pthreads, but "knowledge of our dependencies"
 # is pkg-config's strength, so let's prefer pkg-config idioms.
-target_compile_options(JuicySFPlugin PRIVATE "${FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_CFLAGS_OTHER}")
+target_compile_options(JuicySFPlugin PUBLIC "${FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_CFLAGS_OTHER}")
 
 # pkg-config says that MinGW fluidsynth wants link options such as:
 #   /opt/llvm-mingw/x86_64-w64-mingw32/lib/libomp.dll.a -pthread
 # TODO: consider patching FindPkgConfig to place the .dll.a option into _LINK_LIBRARIES instead of _LDFLAGS_OTHER
-target_link_options(JuicySFPlugin PRIVATE "${FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}")
+target_link_options(JuicySFPlugin PUBLIC "${FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}")
 
 if (EXTRA_ARCH_PKG_CONFIG_PATH)
-  target_link_options(JuicySFPlugin PRIVATE "${EXTRA_ARCH_FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}")
+  target_link_options(JuicySFPlugin PUBLIC "${EXTRA_ARCH_FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}")
 endif (EXTRA_ARCH_PKG_CONFIG_PATH)
