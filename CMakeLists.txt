@@ -85,15 +85,6 @@ endif (VST3_SDK_PATH)
 # otherwise you'll get error:
 # Run Build Command(s):/usr/bin/xcodebuild -project CMAKE_TRY_COMPILE.xcodeproj build -target cmTC_33f26 -parallelizeTargets -configuration Debug -hideShellScriptEnvironment && xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
 
-# we almost support sandboxing (com.apple.security.files.user-selected.read-only is sufficient for picking a soundfont),
-# but when you re-open the plugin we fail to re-open the file (whose path we saved).
-# the correct way to support Sandboxing is to create a security-scoped bookmark after the user selects a file, and then load soundfont from that location in future.
-# but I don't know how to do this from C++ (and don't know how we would serialize the bookmark to save it for next use).
-# you could solve this by requesting temporary-exception.files.all.read entitlement,
-# but then XCode asks you to provide a provisioning profile (I don't have one; haven't purchased an Apple Developer account).
-# https://developer.apple.com/library/archive/technotes/tn2247/_index.html
-# https://developer.apple.com/library/archive/documentation/Security/Conceptual/AppSandboxDesignGuide/AppSandboxInDepth/AppSandboxInDepth.html
-
 # https://github.com/juce-framework/JUCE/blob/master/docs/CMake%20API.md
 juce_add_plugin(JuicySFPlugin
     # VERSION ...                               # Set this if the plugin version is different to the project version
@@ -168,8 +159,6 @@ target_compile_definitions(JuicySFPlugin
 
 # juce_add_binary_data(AudioPluginData SOURCES ...)
 
-# set_target_properties("PkgConfig::FLUIDSYNTH${TARGET_STATIC_QUALIFIER}" PROPERTIES LINK_SEARCH_START_STATIC ON LINK_SEARCH_END_STATIC ON)
-
 # `target_link_libraries` links libraries and JUCE modules to other libraries or executables. Here,
 # we're linking our executable target to the `juce::juce_audio_utils` module. Inter-module
 # dependencies are resolved automatically, so `juce_core`, `juce_events` and so on will also be
@@ -198,42 +187,6 @@ target_link_libraries(JuicySFPlugin
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
 
-# pkg-config says that MinGW fluidsynth wants compile options such as:
-#   -pthread -mms-bitfields
-# yes, CMake has more idiomatic ways to integrate pthreads, but "knowledge of our dependencies"
-# is pkg-config's strength, so let's prefer pkg-config idioms.
-target_compile_options(JuicySFPlugin PUBLIC "${FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_CFLAGS_OTHER}")
-
-# pkg-config says that MinGW fluidsynth wants link options such as:
-#   /opt/llvm-mingw/x86_64-w64-mingw32/lib/libomp.dll.a -pthread
-# TODO: consider patching FindPkgConfig to place the .dll.a option into _LINK_LIBRARIES instead of _LDFLAGS_OTHER
-# I switch the linker into static mode for these options, since otherwise we seem to end up with a dynamic link to libomp.dll.
-# likewise, -pthread seems to give us a dynamic link to libwinpthread-1.dll.
-
 if (NOT BUILD_SHARED_LIBS)
-  set(LINK_OPTIONS_PREFIX "-Wl,-Bstatic")
-  set(LINK_OPTIONS_SUFFIX "-Wl,-Bdynamic")
-endif (NOT BUILD_SHARED_LIBS)
-target_link_options(JuicySFPlugin PUBLIC ${LINK_OPTIONS_PREFIX} "${FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}" ${LINK_OPTIONS_SUFFIX})
-
-if (EXTRA_ARCH_PKG_CONFIG_PATH)
-  target_link_options(JuicySFPlugin PUBLIC ${LINK_OPTIONS_PREFIX} "${EXTRA_ARCH_FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}" ${LINK_OPTIONS_SUFFIX})
-endif (EXTRA_ARCH_PKG_CONFIG_PATH)
-
-if (NOT BUILD_SHARED_LIBS)
-  # # https://stackoverflow.com/a/17032841/5257399
-  # # https://stackoverflow.com/a/68351329/5257399
-  # # the LINK_SEARCH_… properties, whilst _recommended_… don't seem to make any difference to
-  # # the content of linklibs.rsp or link.txt (on Clang 13 + MinGW x86_64)
-  # # I don't see any -Wl,-Bstatic or -Wl,-Bdynamic emitted.
-  # 
-  # set_target_properties(JuicySFPlugin PROPERTIES LINK_SEARCH_START_STATIC ON LINK_SEARCH_END_STATIC ON)
-  #
-  # # that didn't seem to do anything.. how about this?
-  # foreach (target IN LISTS JuicySFPlugin_Standalone JuicySFPlugin_VST JuicySFPlugin_VST3)
-  #   set_target_properties(${target} PROPERTIES LINK_SEARCH_START_STATIC ON LINK_SEARCH_END_STATIC ON)
-  # endforeach()
-
-  # -static links "everything" statically but that may well be what we want.
   set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
 endif (NOT BUILD_SHARED_LIBS)
