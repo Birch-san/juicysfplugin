@@ -168,6 +168,8 @@ target_compile_definitions(JuicySFPlugin
 
 # juce_add_binary_data(AudioPluginData SOURCES ...)
 
+# set_target_properties("PkgConfig::FLUIDSYNTH${TARGET_STATIC_QUALIFIER}" PROPERTIES LINK_SEARCH_START_STATIC ON LINK_SEARCH_END_STATIC ON)
+
 # `target_link_libraries` links libraries and JUCE modules to other libraries or executables. Here,
 # we're linking our executable target to the `juce::juce_audio_utils` module. Inter-module
 # dependencies are resolved automatically, so `juce_core`, `juce_events` and so on will also be
@@ -205,8 +207,33 @@ target_compile_options(JuicySFPlugin PUBLIC "${FLUIDSYNTH${PACKAGE_STATIC_QUALIF
 # pkg-config says that MinGW fluidsynth wants link options such as:
 #   /opt/llvm-mingw/x86_64-w64-mingw32/lib/libomp.dll.a -pthread
 # TODO: consider patching FindPkgConfig to place the .dll.a option into _LINK_LIBRARIES instead of _LDFLAGS_OTHER
-target_link_options(JuicySFPlugin PUBLIC "${FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}")
+# I switch the linker into static mode for these options, since otherwise we seem to end up with a dynamic link to libomp.dll.
+# likewise, -pthread seems to give us a dynamic link to libwinpthread-1.dll.
+
+if (NOT BUILD_SHARED_LIBS)
+  set(LINK_OPTIONS_PREFIX "-Wl,-Bstatic")
+  set(LINK_OPTIONS_SUFFIX "-Wl,-Bdynamic")
+endif (NOT BUILD_SHARED_LIBS)
+target_link_options(JuicySFPlugin PUBLIC ${LINK_OPTIONS_PREFIX} "${FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}" ${LINK_OPTIONS_SUFFIX})
 
 if (EXTRA_ARCH_PKG_CONFIG_PATH)
-  target_link_options(JuicySFPlugin PUBLIC "${EXTRA_ARCH_FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}")
+  target_link_options(JuicySFPlugin PUBLIC ${LINK_OPTIONS_PREFIX} "${EXTRA_ARCH_FLUIDSYNTH${PACKAGE_STATIC_QUALIFIER}_LDFLAGS_OTHER}" ${LINK_OPTIONS_SUFFIX})
 endif (EXTRA_ARCH_PKG_CONFIG_PATH)
+
+if (NOT BUILD_SHARED_LIBS)
+  # # https://stackoverflow.com/a/17032841/5257399
+  # # https://stackoverflow.com/a/68351329/5257399
+  # # the LINK_SEARCH_… properties, whilst _recommended_… don't seem to make any difference to
+  # # the content of linklibs.rsp or link.txt (on Clang 13 + MinGW x86_64)
+  # # I don't see any -Wl,-Bstatic or -Wl,-Bdynamic emitted.
+  # 
+  # set_target_properties(JuicySFPlugin PROPERTIES LINK_SEARCH_START_STATIC ON LINK_SEARCH_END_STATIC ON)
+  #
+  # # that didn't seem to do anything.. how about this?
+  # foreach (target IN LISTS JuicySFPlugin_Standalone JuicySFPlugin_VST JuicySFPlugin_VST3)
+  #   set_target_properties(${target} PROPERTIES LINK_SEARCH_START_STATIC ON LINK_SEARCH_END_STATIC ON)
+  # endforeach()
+
+  # -static links "everything" statically but that may well be what we want.
+  set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
+endif (NOT BUILD_SHARED_LIBS)

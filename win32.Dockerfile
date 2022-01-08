@@ -32,3 +32,5 @@ COPY win32_cross_compile/configure_juicysfplugin.sh configure_juicysfplugin.sh
 RUN /build/juicysfplugin/configure_juicysfplugin.sh
 COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN /build/juicysfplugin/make_juicysfplugin.sh
+# TODO: use https://stackoverflow.com/a/54245466/5257399
+#   to make the build conditionally pull in VST2 SDK
