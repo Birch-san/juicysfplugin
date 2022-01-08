@@ -19,6 +19,10 @@ for ARCH in ${ARCHS[@]}; do
 
   BUILD="build_$ARCH"
 
+  # OpenMP doesn't support static libraries on Windows:
+  # https://github.com/llvm/llvm-project/blob/main/openmp/README.rst#options-for-libomp
+  # Yet, our priority is "statically-link everything" (in order to build a single-file binary,
+  # which can be installed by drag-and-drop).
   PKG_CONFIG_PATH="/$REPO/lib/pkgconfig" cmake -B"$BUILD" -DCMAKE_INSTALL_PREFIX="/$REPO" \
 -DBUILD_SHARED_LIBS=off \
 -Denable-portaudio=off \
@@ -43,7 +47,7 @@ for ARCH in ${ARCHS[@]}; do
 -Denable-pulseaudio=off \
 -Denable-readline=off \
 -Denable-threads=on \
--Denable-openmp=on \
+-Denable-openmp=off \
 -Denable-coreaudio=off \
 -Denable-coremidi=off \
 -Denable-framework=off \
