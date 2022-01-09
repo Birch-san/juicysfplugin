@@ -7,5 +7,6 @@ for ARCH in ${ARCHS[@]}; do
   echo "arch: $ARCH"
 
   BUILD="build_$ARCH"
-  cmake --build "$BUILD" --target JuicySFPlugin_Standalone
+  # cmake --build "$BUILD" --target JuicySFPlugin_Standalone
+  cmake --build "$BUILD"
 done
