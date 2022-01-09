@@ -37,10 +37,13 @@ for ARCH in ${ARCHS[@]}; do
   # ends up dynamically linking it, even if we preface with -Wl,Bstatic
   # so I've told CMakeFiles not to use the "libs other" advice.
   # consequentially it's up to us to link in a suitable pthread archive via CMAKE_EXE_LINKER_FLAGS
+
+  # MODULE_LINKER flags are for the VST2/VST3 modules (they don't listen to the EXE_LINKER flags)
   VERBOSE=1 PKG_CONFIG_PATH="/$REPO/lib/pkgconfig" cmake -B"$BUILD" \
 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
 -DCMAKE_PREFIX_PATH="/linux_native" \
 -DCMAKE_EXE_LINKER_FLAGS="/$REPO/lib/libiconv.a $TOOLCHAIN_LIB_DIR/libwinpthread.a" \
+-DCMAKE_MODULE_LINKER_FLAGS="/$REPO/lib/libiconv.a $TOOLCHAIN_LIB_DIR/libwinpthread.a" \
 -DCMAKE_INSTALL_PREFIX="/$REPO" \
 "$VST2_OPTION" \
 -DCMAKE_CXX_FLAGS='-DJUCE_DISABLE_ASSERTIONS' \

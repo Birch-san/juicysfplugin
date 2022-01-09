@@ -189,4 +189,6 @@ target_link_libraries(JuicySFPlugin
 
 if (NOT BUILD_SHARED_LIBS)
   set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
+  # the VST2 and VST3 distributions are "modules", so they don't listen to the EXE_LINKER flags
+  set(CMAKE_MODULE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_MODULE_LINKER_FLAGS}")
 endif (NOT BUILD_SHARED_LIBS)
