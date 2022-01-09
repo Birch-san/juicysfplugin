@@ -1,9 +1,8 @@
 # DOCKER_BUILDKIT=0 docker build . -f win32.Dockerfile --tag=llvm-mingw
-# docker run -it --rm --name llvm-mingw -v "$HOME/SDKs/VST_SDK/VST2_SDK/:/VST2_SDK/:ro,delegated" llvm-mingw
+# docker run -it --rm --name llvm-mingw llvm-mingw
 # docker cp get_fluidsynth_deps.sh llvm-mingw:/build/get_fluidsynth_deps.sh && docker exec llvm-mingw /build/get_fluidsynth_deps.sh
 
 FROM mstorsjo/llvm-mingw
-VOLUME /VST2_SDK
 RUN apt-get update -qq && \
 apt-get install -qqy --no-install-recommends zstd libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libfreetype6-dev && \
 apt-get clean -y && \
@@ -23,6 +22,7 @@ RUN /build/clone_juce.sh
 COPY win32_cross_compile/make_juce.sh make_juce.sh
 RUN /build/make_juce.sh
 WORKDIR juicysfplugin
+COPY VST2_SDK/ /VST2_SDK/
 COPY resources/Logo512.png resources/Logo512.png
 COPY cmake/Modules/FindPkgConfig.cmake cmake/Modules/FindPkgConfig.cmake
 COPY Source/ Source/
@@ -32,5 +32,3 @@ COPY win32_cross_compile/configure_juicysfplugin.sh configure_juicysfplugin.sh
 RUN /build/juicysfplugin/configure_juicysfplugin.sh
 COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN /build/juicysfplugin/make_juicysfplugin.sh
-# TODO: use https://stackoverflow.com/a/54245466/5257399
-#   to make the build conditionally pull in VST2 SDK

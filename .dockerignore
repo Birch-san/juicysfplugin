@@ -5,3 +5,5 @@
 !/CMakeLists.txt
 !/win32_cross_compile/**
 !/cmake/Modules/FindPkgConfig.cmake
+!/VST2_SDK/**
+/VST2_SDK/README.md

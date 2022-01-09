@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 
 # declare -a ARCHS=("x64" "x86" "arm64")
-declare -a ARCHS=("x64")
+declare -a ARCHS=("x64" "x86")
 declare -A TOOLCHAINS=( [x64]=x86_64 [x86]=i686 [arm64]=aarch64 )
 declare -A REPOS=( [x64]=clang64 [x86]=clang32 [arm64]=clangarm64 )
+
+TEST_DIR=/VST2_SDK/pluginterfaces
+if [ -d "$TEST_DIR" ]; then
+  echo "$TEST_DIR found; enabling VST2 build"
+  VST2_OPTION='-DVST2_SDK_PATH=/VST2_SDK'
+else
+  echo "$TEST_DIR not found found; disabling VST2 build"
+  VST2_OPTION=''
+fi
  
 for ARCH in ${ARCHS[@]}; do
   echo "arch: $ARCH"
@@ -14,8 +23,9 @@ for ARCH in ${ARCHS[@]}; do
   TOOLCHAIN="${TOOLCHAINS[$ARCH]}"
   echo "toolchain: $TOOLCHAIN"
   TOOLCHAIN_FILE="/build/${TOOLCHAIN}_toolchain.cmake"
-  TOOLCHAIN_LIB_DIR="/opt/llvm-mingw/${TOOLCHAIN}-w64-mingw32/lib"
   echo "toolchain file: $TOOLCHAIN_FILE"
+  TOOLCHAIN_LIB_DIR="/opt/llvm-mingw/${TOOLCHAIN}-w64-mingw32/lib"
+  echo "toolchain lib dir: $TOOLCHAIN_LIB_DIR"
 
   BUILD="build_$ARCH"
 
@@ -32,8 +42,8 @@ for ARCH in ${ARCHS[@]}; do
 -DCMAKE_PREFIX_PATH="/linux_native" \
 -DCMAKE_EXE_LINKER_FLAGS="/$REPO/lib/libiconv.a $TOOLCHAIN_LIB_DIR/libwinpthread.a" \
 -DCMAKE_INSTALL_PREFIX="/$REPO" \
--DVST2_SDK_PATH="/VST2_SDK" \
+"$VST2_OPTION" \
 -DCMAKE_CXX_FLAGS='-DJUCE_DISABLE_ASSERTIONS' \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
--DCMAKE_BUILD_TYPE=Debug
+-DCMAKE_BUILD_TYPE=Release
 done
