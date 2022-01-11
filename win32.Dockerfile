@@ -30,5 +30,11 @@ COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
 COPY CMakeLists.txt CMakeLists.txt
 COPY win32_cross_compile/configure_juicysfplugin.sh configure_juicysfplugin.sh
 RUN /build/juicysfplugin/configure_juicysfplugin.sh
+# TODO: move this up to top layer
+RUN dpkg --add-architecture i386 && \
+apt-get update -qq && \
+apt-get install -qqy --no-install-recommends wine-stable wine32 && \
+rm -rf /var/lib/apt/lists/*
+COPY win32_cross_compile/attrib.sh /usr/local/bin/attrib
 COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN /build/juicysfplugin/make_juicysfplugin.sh
