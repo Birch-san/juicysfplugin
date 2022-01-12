@@ -2,10 +2,12 @@
 
 Latest stable release:
 
-- macOS [2.3.3](https://github.com/Birch-san/juicysfplugin/releases/tag/2.3.3.macOS)
-- Windows x64 [2.3.3](https://github.com/Birch-san/juicysfplugin/releases/tag/2.3.3)
-- Windows x86 [2.3.3](https://github.com/Birch-san/juicysfplugin/releases/tag/2.3.3)
-- Linux was [supported as of 1.0.8](https://github.com/Birch-san/juicysfplugin/pull/3). It has regressed since, but shouldn't be super-hard to get working again. No binary was ever distributed; It has only ever been build-from-source.
+- macOS ARM/Intel [3.0.0](https://github.com/Birch-san/juicysfplugin/releases/tag/3.0.0.macOS)
+- Windows x64 [3.0.0](https://github.com/Birch-san/juicysfplugin/releases/tag/3.0.0.win32)
+- Windows x86 [3.0.0](https://github.com/Birch-san/juicysfplugin/releases/tag/3.0.0.win32)
+- Linux _was_ [supported as of 1.0.8](https://github.com/Birch-san/juicysfplugin/pull/3). It has regressed since, but shouldn't be super-hard to get working again. No binary was ever distributed; It has only ever been build-from-source.
+  - The [new CMake build system](https://github.com/Birch-san/juicysfplugin/pull/32) may work on Linux already; give it a try
+  - Refer to the [Win32 cross-compile Dockerfile](https://github.com/Birch-san/juicysfplugin/pull/33) to understand the steps required to run CMake
 
 Demo track: [mp3](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.mp3), [FLAC](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track.flac), [FLAC +Soundgoodizer](https://github.com/Birch-san/juicysfplugin/releases/download/1.0.5/Demo_track_soundgoodizer.flac)
 
