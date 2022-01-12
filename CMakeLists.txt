@@ -17,6 +17,9 @@ cmake_minimum_required(VERSION 3.15)
 
 project(JUICY_SF_PLUGIN VERSION 3.0.0)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
 # included JUCE directly in your source tree (perhaps as a submodule), you'll need to tell CMake to
@@ -37,6 +40,7 @@ if (BUILD_SHARED_LIBS)
   set(TARGET_STATIC_QUALIFIER "")
 else (BUILD_SHARED_LIBS)
   set(TARGET_STATIC_QUALIFIER "-static")
+  set(PACKAGE_STATIC_QUALIFIER "_STATIC")
 endif (BUILD_SHARED_LIBS)
 
 set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH off)
@@ -58,6 +62,7 @@ set(AU_COPY_DIR "${JUCE_AU_COPY_DIR}" CACHE STRING "AU installation dir")
 
 if (VST2_SDK_PATH)
   set(HAS_VST2_SDK_PATH 1)
+  set(VST2_FORMAT "VST")
   juce_set_vst2_sdk_path(${VST2_SDK_PATH})
 else (VST2_SDK_PATH)
   set(HAS_VST2_SDK_PATH 0)
@@ -79,15 +84,6 @@ endif (VST3_SDK_PATH)
 # and your "XCode > Preferences > Locations > Command Line Tools" set to "XCode"
 # otherwise you'll get error:
 # Run Build Command(s):/usr/bin/xcodebuild -project CMAKE_TRY_COMPILE.xcodeproj build -target cmTC_33f26 -parallelizeTargets -configuration Debug -hideShellScriptEnvironment && xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
-
-# we almost support sandboxing (com.apple.security.files.user-selected.read-only is sufficient for picking a soundfont),
-# but when you re-open the plugin we fail to re-open the file (whose path we saved).
-# the correct way to support Sandboxing is to create a security-scoped bookmark after the user selects a file, and then load soundfont from that location in future.
-# but I don't know how to do this from C++ (and don't know how we would serialize the bookmark to save it for next use).
-# you could solve this by requesting temporary-exception.files.all.read entitlement,
-# but then XCode asks you to provide a provisioning profile (I don't have one; haven't purchased an Apple Developer account).
-# https://developer.apple.com/library/archive/technotes/tn2247/_index.html
-# https://developer.apple.com/library/archive/documentation/Security/Conceptual/AppSandboxDesignGuide/AppSandboxInDepth/AppSandboxInDepth.html
 
 # https://github.com/juce-framework/JUCE/blob/master/docs/CMake%20API.md
 juce_add_plugin(JuicySFPlugin
@@ -113,7 +109,7 @@ juce_add_plugin(JuicySFPlugin
     PLUGIN_MANUFACTURER_CODE Blbs               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE Jsfp                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS AU AUv3 VST VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    FORMATS AU AUv3 ${VST2_FORMAT} VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     VST_COPY_DIR "${VST_COPY_DIR}"
     VST3_COPY_DIR "${VST3_COPY_DIR}"
     AU_COPY_DIR "${AU_COPY_DIR}"
@@ -190,3 +186,9 @@ target_link_libraries(JuicySFPlugin
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+
+if (NOT BUILD_SHARED_LIBS)
+  set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
+  # the VST2 and VST3 distributions are "modules", so they don't listen to the EXE_LINKER flags
+  set(CMAKE_MODULE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_MODULE_LINKER_FLAGS}")
+endif (NOT BUILD_SHARED_LIBS)

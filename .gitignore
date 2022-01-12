@@ -1,3 +1,5 @@
 .vscode
 /build/
 .DS_Store
+/VST2_SDK/*
+!/VST2_SDK/README.md
