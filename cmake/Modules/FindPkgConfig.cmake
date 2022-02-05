@@ -307,7 +307,7 @@ function(_pkg_find_libs _prefix _no_cmake_path _no_cmake_environment_path _stati
                  ${_find_opts})
 
     mark_as_advanced(${lib_var_name})
-    if(lib_var_name)
+    if(${lib_var_name})
       list(APPEND _libs "${${lib_var_name}}")
     else()
       list(APPEND _libs ${_pkg_search})

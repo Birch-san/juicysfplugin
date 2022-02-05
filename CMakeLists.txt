@@ -187,8 +187,9 @@ target_link_libraries(JuicySFPlugin
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
 
-if (NOT BUILD_SHARED_LIBS)
+# Apple clang doesn't support -static-libgcc flag, but seems to make a portable binary regardless
+if (NOT BUILD_SHARED_LIBS AND CMAKE_SYSTEM_NAME EQUAL "Windows")
   set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
   # the VST2 and VST3 distributions are "modules", so they don't listen to the EXE_LINKER flags
   set(CMAKE_MODULE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_MODULE_LINKER_FLAGS}")
-endif (NOT BUILD_SHARED_LIBS)
+endif (NOT BUILD_SHARED_LIBS AND CMAKE_SYSTEM_NAME EQUAL "Windows")
