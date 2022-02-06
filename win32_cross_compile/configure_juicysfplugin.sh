@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
-# declare -a ARCHS=("x64" "x86" "arm64")
-declare -a ARCHS=("x64" "x86")
+if test -n "$1"; then
+  declare -a ARCHS=("$1")
+else
+  # declare -a ARCHS=("x64" "x86" "arm64")
+  declare -a ARCHS=("x64" "x86")
+fi
+
 declare -A TOOLCHAINS=( [x64]=x86_64 [x86]=i686 [arm64]=aarch64 )
 declare -A REPOS=( [x64]=clang64 [x86]=clang32 [arm64]=clangarm64 )
 
