@@ -8,7 +8,8 @@ apt-get clean -y && \
 rm -rf /var/lib/apt/lists/*
 
 FROM wgetter AS get_llvm_mingw
-RUN wget https://github.com/mstorsjo/llvm-mingw/releases/download/20211002/llvm-mingw-20211002-ucrt-ubuntu-18.04-aarch64.tar.xz
+COPY win32_cross_compile/download_llvm_mingw.sh download_llvm_mingw.sh
+RUN ./download_llvm_mingw.sh download_llvm_mingw.sh
 
 FROM ubuntu:22.04 AS gitter
 RUN apt-get update -qq && \
@@ -46,7 +47,7 @@ apt-get install -qqy --no-install-recommends \
 xz-utils cmake build-essential pkg-config && \
 apt-get clean -y && \
 rm -rf /var/lib/apt/lists/*
-COPY --from=get_llvm_mingw llvm-mingw-*.tar.xz llvm-mingw.tar.xz
+COPY --from=get_llvm_mingw llvm-mingw.tar.xz llvm-mingw.tar.xz
 # here's how to merge it into existing /bin, but that could have unintended clashes
 # RUN tar -xvf llvm-mingw.tar.xz --strip-components=1 -k && rm llvm-mingw.tar.xz
 RUN mkdir -p /opt/llvm-mingw && tar -xvf llvm-mingw.tar.xz --strip-components=1 -C /opt/llvm-mingw && rm llvm-mingw.tar.xz
@@ -107,8 +108,14 @@ RUN ./configure_fluidsynth.sh x64
 COPY win32_cross_compile/build_fluidsynth.sh build_fluidsynth.sh
 RUN ./build_fluidsynth.sh x64
 
-FROM toolchain
+FROM toolchain AS juicysfplugin_common
+RUN apt-get update -qq && \
+apt-get install -qqy --no-install-recommends \
+libfreetype6-dev && \
+apt-get clean -y && \
+rm -rf /var/lib/apt/lists/*
 COPY --from=xwin_x86_64 /xwin/sdk/include/um/ /xwin/sdk/include/um/
+COPY --from=xwin_x86_64 /xwin/sdk/include/shared/ /xwin/sdk/include/shared/
 COPY --from=xwin_x86_64 /xwin/sdk/lib/um/x86_64/ /xwin/sdk/lib/um/x86_64/
 COPY --from=xwin_x86 /xwin/sdk/lib/um/x86/ /xwin/sdk/lib/um/x86/
 COPY --from=make_juce /linux_native/ /linux_native/
@@ -122,3 +129,26 @@ COPY --from=make_fluidsynth_x86 /clang32/include/fluidsynth.h /clang32/include/f
 COPY --from=make_fluidsynth_x86 /clang32/include/fluidsynth/ /clang32/include/fluidsynth/
 COPY --from=make_fluidsynth_x86 /clang32/lib/pkgconfig/fluidsynth.pc /clang32/lib/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_x86 /clang32/lib/libfluidsynth.a /clang32/lib/libfluidsynth.a
+COPY win32_cross_compile/attrib_noop.sh /usr/local/bin/attrib
+WORKDIR juicysfplugin
+COPY VST2_SDK/ /VST2_SDK/
+COPY resources/Logo512.png resources/Logo512.png
+COPY cmake/Modules/FindPkgConfig.cmake cmake/Modules/FindPkgConfig.cmake
+COPY Source/ Source/
+COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+COPY CMakeLists.txt CMakeLists.txt
+COPY win32_cross_compile/configure_juicysfplugin.sh configure_juicysfplugin.sh
+
+FROM juicysfplugin_common AS juicysfplugin_x86
+RUN /juicysfplugin/configure_juicysfplugin.sh x86
+COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
+RUN /juicysfplugin/make_juicysfplugin.sh x86
+
+FROM juicysfplugin_common AS juicysfplugin_x64
+RUN /juicysfplugin/configure_juicysfplugin.sh x64
+COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
+RUN /juicysfplugin/make_juicysfplugin.sh x64
+
+FROM wine AS icons
+COPY --from=juicysfplugin_x86 /juicysfplugin/build_x86/ /juicysfplugin/build_x86/
+COPY --from=juicysfplugin_x64 /juicysfplugin/build_x64/ /juicysfplugin/build_x64/
