@@ -9,6 +9,7 @@ fi
 
 declare -A TOOLCHAINS=( [x64]=x86_64 [x86]=i686 [arm64]=aarch64 )
 declare -A XWIN_ARCHS=( [x64]=x86_64 [x86]=x86 [arm64]=aarch64 )
+declare -A ARCH_DEFINES=( [x64]=_AMD64_ [x86]=_X86_ [arm64]=_ARM64_ )
 declare -A REPOS=( [x64]=clang64 [x86]=clang32 [arm64]=clangarm64 )
 
 TEST_DIR=/VST2_SDK/pluginterfaces
@@ -36,6 +37,9 @@ for ARCH in ${ARCHS[@]}; do
   TOOLCHAIN_LIB_DIR="/opt/llvm-mingw/${TOOLCHAIN}-w64-mingw32/lib"
   echo "toolchain lib dir: $TOOLCHAIN_LIB_DIR"
 
+  ARCH_DEFINE="${ARCH_DEFINES[$ARCH]}"
+  echo "arch define: $ARCH_DEFINE"
+
   BUILD="build_$ARCH"
 
   # we don't have pkg-config files for system libraries (e.g. libintl),
@@ -58,6 +62,6 @@ for ARCH in ${ARCHS[@]}; do
 -DCMAKE_INSTALL_PREFIX="/$REPO" \
 "$VST2_OPTION" \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
--DCMAKE_CXX_FLAGS="-I/xwin/sdk/include/um -I/xwin/sdk/include/shared" \
+-DCMAKE_CXX_FLAGS="-I/xwin/sdk/include/um -I/xwin/sdk/include/shared -DWIN32_LEAN_AND_MEAN -D$ARCH_DEFINE -fms-extensions" \
 -DCMAKE_BUILD_TYPE=Debug
 done
