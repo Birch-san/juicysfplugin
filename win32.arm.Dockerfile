@@ -108,6 +108,37 @@ RUN ./configure_fluidsynth.sh x64
 COPY win32_cross_compile/build_fluidsynth.sh build_fluidsynth.sh
 RUN ./build_fluidsynth.sh x64
 
+FROM toolchain AS wine_from_source
+RUN apt-get update -qq && \
+DEBIAN_FRONTEND=noninteractive apt-get install -qqy --no-install-recommends \
+git ca-certificates build-essential pkg-config gpg wget software-properties-common flex bison && \
+apt-get clean -y && \
+rm -rf /var/lib/apt/lists/*
+RUN wget -nc https://apt.llvm.org/llvm-snapshot.gpg.key && \
+gpg -o /etc/apt/trusted.gpg.d/winehq.key.gpg --dearmor llvm-snapshot.gpg.key && \
+rm llvm-snapshot.gpg.key
+RUN apt-add-repository -y "deb http://apt.llvm.org/hirsute/ llvm-toolchain-hirsute-14 main" && \
+apt-get update -qq && \
+apt-get install -qqy --no-install-recommends clang-14 lld-14 && \
+rm -rf /var/lib/apt/lists/*
+COPY win32_cross_compile/clone_wine.sh clone_wine.sh
+RUN ./clone_wine.sh
+COPY win32_cross_compile/configure_wine.sh configure_wine.sh
+RUN ./configure_wine.sh
+COPY win32_cross_compile/make_wine.sh make_wine.sh
+RUN ./make_wine.sh
+
+FROM wine_from_source AS winmeta_widl
+RUN apt-get update -qq && \
+apt-get install -qqy --no-install-recommends \
+rename && \
+apt-get clean -y && \
+rm -rf /var/lib/apt/lists/*
+COPY win32_cross_compile/clone_winmeta.sh clone_winmeta.sh
+RUN ./clone_winmeta.sh
+COPY win32_cross_compile/build_winmeta.sh build_winmeta.sh
+RUN ./build_winmeta.sh
+
 FROM toolchain AS juicysfplugin_common
 RUN apt-get update -qq && \
 apt-get install -qqy --no-install-recommends \
@@ -129,6 +160,9 @@ COPY --from=make_fluidsynth_x86 /clang32/include/fluidsynth.h /clang32/include/f
 COPY --from=make_fluidsynth_x86 /clang32/include/fluidsynth/ /clang32/include/fluidsynth/
 COPY --from=make_fluidsynth_x86 /clang32/lib/pkgconfig/fluidsynth.pc /clang32/lib/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_x86 /clang32/lib/libfluidsynth.a /clang32/lib/libfluidsynth.a
+# /usr/local/lib/wine/aarch64-windows/libuiautomationcore.a
+COPY --from=wine_from_source /usr/local/lib/wine/aarch64-windows/ /usr/local/lib/wine/aarch64-windows/
+COPY --from=wine_from_source /usr/local/include/wine/ /usr/local/include/wine/
 COPY win32_cross_compile/attrib_noop.sh /usr/local/bin/attrib
 WORKDIR juicysfplugin
 COPY VST2_SDK/ /VST2_SDK/
@@ -146,6 +180,7 @@ RUN /juicysfplugin/make_juicysfplugin.sh x86
 
 FROM juicysfplugin_common AS juicysfplugin_x64
 RUN /juicysfplugin/configure_juicysfplugin.sh x64
+RUN ln -s ./uiautomation.h /usr/local/include/wine/windows/UIAutomation.h
 COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN /juicysfplugin/make_juicysfplugin.sh x64
 
