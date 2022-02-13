@@ -2,8 +2,8 @@
 
 Latest stable release:
 
-- macOS ARM/Intel [3.0.0](https://github.com/Birch-san/juicysfplugin/releases/tag/3.0.0.macOS)
-- Windows x64 [3.0.0](https://github.com/Birch-san/juicysfplugin/releases/tag/3.0.0.win32)
+- macOS ARM/Intel [3.1.0](https://github.com/Birch-san/juicysfplugin/releases/tag/3.1.0)
+- Windows x64 [3.1.0](https://github.com/Birch-san/juicysfplugin/releases/tag/3.1.0)
 - Windows x86 [3.0.0](https://github.com/Birch-san/juicysfplugin/releases/tag/3.0.0.win32)
 - Linux _was_ [supported as of 1.0.8](https://github.com/Birch-san/juicysfplugin/pull/3). It has regressed since, but shouldn't be super-hard to get working again. No binary was ever distributed; It has only ever been build-from-source.
   - The [new CMake build system](https://github.com/Birch-san/juicysfplugin/pull/32) may work on Linux already; give it a try
