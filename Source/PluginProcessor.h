@@ -13,14 +13,6 @@
 #if JUCE_MAC || JUCE_IOS
   #include <Foundation/NSString.h>
   #include <Foundation/NSArray.h>
-  class X {
-    public:
-    void y() {
-      char z;
-      NSString s;
-      NSArray a;
-    }
-  }
 #endif
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FluidSynthModel.h"

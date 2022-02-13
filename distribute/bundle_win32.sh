@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ./bundle_win32.sh 3.0.0
+# ./bundle_win32.sh 3.1.0
 
 set -eo pipefail
 DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -9,7 +9,10 @@ mkdir -p "$OUT"
 
 VERSION="$1"
 
-declare -a ARCHS=("x64" "x86")
+# x86 build fails in JUCE 6.1.5; problem compiling UUIDGetter
+# https://gist.github.com/Birch-san/a36b10155e51bd814ecc7109501e1e64
+# declare -a ARCHS=("x64" "x86")
+declare -a ARCHS=("x64")
 
 # macOS bundled GNU bash doesn't support associative arrays
 arch_long_ix() {
@@ -50,9 +53,9 @@ for ARCH in ${ARCHS[@]}; do
   VST3="$ARCH_OUT/VST3"
   mkdir -p "$VST3"
 
-  docker cp "$CONTAINER_NAME":"/build/juicysfplugin/build_$ARCH/JuicySFPlugin_artefacts/$FLAVOUR/Standalone/juicysfplugin.exe" "$STANDALONE/juicysfplugin.exe"
-  docker cp "$CONTAINER_NAME":"/build/juicysfplugin/build_$ARCH/JuicySFPlugin_artefacts/$FLAVOUR/VST/libjuicysfplugin.dll" "$VST2/libjuicysfplugin.dll"
-  docker cp "$CONTAINER_NAME":"/build/juicysfplugin/build_$ARCH/JuicySFPlugin_artefacts/$FLAVOUR/VST3/juicysfplugin.vst3/Contents/$ARCH_LONG/juicysfplugin.vst3" "$VST3/juicysfplugin.vst3"
+  docker cp "$CONTAINER_NAME":"$ARCH/$FLAVOUR/Standalone/juicysfplugin.exe" "$STANDALONE/juicysfplugin.exe"
+  docker cp "$CONTAINER_NAME":"$ARCH/$FLAVOUR/VST/libjuicysfplugin.dll" "$VST2/libjuicysfplugin.dll"
+  docker cp "$CONTAINER_NAME":"$ARCH/$FLAVOUR/VST3/juicysfplugin.vst3/Contents/$ARCH_LONG/juicysfplugin.vst3" "$VST3/juicysfplugin.vst3"
 
   cp -r "$DIR/../licenses_of_dependencies" "$ARCH_OUT"
   cp "$DIR/../LICENSE.txt" "$ARCH_OUT"
