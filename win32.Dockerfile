@@ -11,10 +11,7 @@ rm -rf /var/lib/apt/lists/*
 
 FROM wgetter AS get_llvm_mingw
 COPY win32_cross_compile/download_llvm_mingw.sh download_llvm_mingw.sh
-# 20220209 didn't work:
-# https://gist.github.com/Birch-san/7f4f2679da9f4b32e060f4b0ac2574c1
-# ARG LLVM_MINGW_VER=20220209
-ARG LLVM_MINGW_VER=20211002
+ARG LLVM_MINGW_VER=20220209
 RUN LLVM_MINGW_VER=$LLVM_MINGW_VER ./download_llvm_mingw.sh download_llvm_mingw.sh
 
 FROM ubuntu:$UBUNTU_VER AS gitter
@@ -122,5 +119,7 @@ COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN /juicysfplugin/make_juicysfplugin.sh x64
 
 FROM ubuntu:$UBUNTU_VER AS distribute
-COPY --from=juicysfplugin_x86 /juicysfplugin/x86/JuicySFPlugin_artefacts/ /x86/
-COPY --from=juicysfplugin_x64 /juicysfplugin/x64/JuicySFPlugin_artefacts/ /x64/
+# x86 build fails in JUCE 6.1.5; problem compiling UUIDGetter
+# https://gist.github.com/Birch-san/a36b10155e51bd814ecc7109501e1e64
+# COPY --from=juicysfplugin_x86 /juicysfplugin/build_x86/JuicySFPlugin_artefacts/ /x86/
+COPY --from=juicysfplugin_x64 /juicysfplugin/build_x64/JuicySFPlugin_artefacts/ /x64/

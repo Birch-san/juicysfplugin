@@ -13,5 +13,6 @@ for ARCH in ${ARCHS[@]}; do
   BUILD="build_$ARCH"
   # cmake --build "$BUILD" --target JuicySFPlugin_Standalone
   # cmake --build "$BUILD" --target JuicySFPlugin_VST3
+  # cmake --build "$BUILD" --target JuicySFPlugin_VST
   cmake --build "$BUILD"
 done
