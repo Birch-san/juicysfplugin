@@ -11,7 +11,10 @@ rm -rf /var/lib/apt/lists/*
 
 FROM wgetter AS get_llvm_mingw
 COPY win32_cross_compile/download_llvm_mingw.sh download_llvm_mingw.sh
-ARG LLVM_MINGW_VER=20220209
+# 20220209 didn't work:
+# https://gist.github.com/Birch-san/7f4f2679da9f4b32e060f4b0ac2574c1
+# ARG LLVM_MINGW_VER=20220209
+ARG LLVM_MINGW_VER=20211002
 RUN LLVM_MINGW_VER=$LLVM_MINGW_VER ./download_llvm_mingw.sh download_llvm_mingw.sh
 
 FROM ubuntu:$UBUNTU_VER AS gitter

@@ -44,6 +44,9 @@ for ARCH in ${ARCHS[@]}; do
   # consequentially it's up to us to link in a suitable pthread archive via CMAKE_EXE_LINKER_FLAGS
   LINKER_FLAGS="/$REPO/lib/libiconv.a $TOOLCHAIN_LIB_DIR/libwinpthread.a"
 
+  # CMAKE_CXX_FLAGS="-DWIN32_LEAN_AND_MEAN -D__UIAutomationClient_LIBRARY_DEFINED__"
+  CMAKE_CXX_FLAGS="-DWIN32_LEAN_AND_MEAN"
+
   # MODULE_LINKER flags are for the VST2/VST3 modules (they don't listen to the EXE_LINKER flags)
   VERBOSE=1 PKG_CONFIG_PATH="/$REPO/lib/pkgconfig" cmake -B"$BUILD" \
 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
@@ -53,6 +56,6 @@ for ARCH in ${ARCHS[@]}; do
 -DCMAKE_INSTALL_PREFIX="/$REPO" \
 "$VST2_OPTION" \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
--DCMAKE_CXX_FLAGS="-DWIN32_LEAN_AND_MEAN -D__UIAutomationClient_LIBRARY_DEFINED__" \
+-DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
 -DCMAKE_BUILD_TYPE=Release
 done
