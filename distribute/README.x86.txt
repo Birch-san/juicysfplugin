@@ -14,7 +14,7 @@ VST2\libjuicysfplugin.dll -> "C:\Program Files (x86)\Common Files\VST2\libjuicys
 VST3\juicysfplugin.vst3 -> "C:\Program Files (x86)\Common Files\VST3\juicysfplugin.vst3"
 Standalone\juicysfplugin.exe -> "C:\Program Files (x86)\Birchlabs\juicysfplugin.exe"
 
-### Upgrading from a previous version of juicysfplugin
+### Upgrading from juicysfplugin 2.x or older
 
 Run the uninstaller that came with juicysfplugin, or delete the files that are described in these release notes:  
 https://github.com/Birch-san/juicysfplugin/releases/tag/2.3.3
