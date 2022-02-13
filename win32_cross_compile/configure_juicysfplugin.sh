@@ -57,10 +57,11 @@ for ARCH in ${ARCHS[@]}; do
 
   # LINKER_FLAGS="/$REPO/lib/libiconv.a $TOOLCHAIN_LIB_DIR/libwinpthread.a /xwin/sdk/lib/um/$XWIN_ARCH/UIAutomationCore.lib"
   # LINKER_FLAGS="/$REPO/lib/libiconv.a $TOOLCHAIN_LIB_DIR/libwinpthread.a /usr/local/lib/wine/$UNAME_ARCH-windows/libuiautomationcore.a"
-  LINKER_FLAGS="/$REPO/lib/libiconv.a $TOOLCHAIN_LIB_DIR/libwinpthread.a /usr/local/lib/wine/aarch64-windows/libuiautomationcore.a"
+  # LINKER_FLAGS="/$REPO/lib/libiconv.a $TOOLCHAIN_LIB_DIR/libwinpthread.a /usr/local/lib/wine/aarch64-windows/libuiautomationcore.a"
+  LINKER_FLAGS="/$REPO/lib/libiconv.a $TOOLCHAIN_LIB_DIR/libwinpthread.a -DWIN32_LEAN_AND_MEAN"
 
   # CXX_FLAGS="-I/xwin/sdk/include/um -I/xwin/sdk/include/shared -DWIN32_LEAN_AND_MEAN -D$ARCH_DEFINE -fms-extensions"
-  CXX_FLAGS="-I/usr/local/include/wine/windows"
+  # CXX_FLAGS="-I/usr/local/include/wine/windows -DUSE___UUIDOF=1"
 
   # MODULE_LINKER flags are for the VST2/VST3 modules (they don't listen to the EXE_LINKER flags)
   VERBOSE=1 PKG_CONFIG_PATH="/$REPO/lib/pkgconfig" cmake -B"$BUILD" \

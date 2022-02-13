@@ -163,6 +163,8 @@ COPY --from=make_fluidsynth_x86 /clang32/lib/libfluidsynth.a /clang32/lib/libflu
 # /usr/local/lib/wine/aarch64-windows/libuiautomationcore.a
 COPY --from=wine_from_source /usr/local/lib/wine/aarch64-windows/ /usr/local/lib/wine/aarch64-windows/
 COPY --from=wine_from_source /usr/local/include/wine/ /usr/local/include/wine/
+# RUN ln -s ./uiautomation.h /usr/local/include/wine/windows/UIAutomation.h
+RUN ln -s ./uiautomation.h /opt/llvm-mingw/generic-w64-mingw32/include/UIAutomation.h
 COPY win32_cross_compile/attrib_noop.sh /usr/local/bin/attrib
 WORKDIR juicysfplugin
 COPY VST2_SDK/ /VST2_SDK/
@@ -180,7 +182,6 @@ RUN /juicysfplugin/make_juicysfplugin.sh x86
 
 FROM juicysfplugin_common AS juicysfplugin_x64
 RUN /juicysfplugin/configure_juicysfplugin.sh x64
-RUN ln -s ./uiautomation.h /usr/local/include/wine/windows/UIAutomation.h
 COPY win32_cross_compile/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN /juicysfplugin/make_juicysfplugin.sh x64
 
