@@ -126,11 +126,9 @@ COPY resources/Logo512.png resources/Logo512.png
 COPY VST2_SDK/ /VST2_SDK/
 COPY llvm-scripts/configure_juicysfplugin.sh configure_juicysfplugin.sh
 COPY cmake/Modules/FindPkgConfig.cmake cmake/Modules/FindPkgConfig.cmake
-# ensure that empty Source directory exists before cmake references it via
-# add_subdirectory().
-# delay the actual `COPY Source` to the last moment, for fast incremental build
-RUN mkdir -p Source/
 COPY CMakeLists.txt CMakeLists.txt
+COPY Source/ Source/
+COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
 
 FROM juicysfplugin_common AS juicysfplugin_common_win32
 COPY llvm-scripts/fix_mingw_headers.sh fix_mingw_headers.sh
@@ -143,11 +141,9 @@ COPY --from=make_fluidsynth_win32_x64 /clang64/include/fluidsynth.h /clang64/inc
 COPY --from=make_fluidsynth_win32_x64 /clang64/include/fluidsynth/ /clang64/include/fluidsynth/
 COPY --from=make_fluidsynth_win32_x64 /clang64/lib/pkgconfig/fluidsynth.pc /clang64/lib/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_win32_x64 /clang64/lib/libfluidsynth.a /clang64/lib/libfluidsynth.a
-COPY Source/ Source/
-COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
-RUN /juicysfplugin/configure_juicysfplugin.sh x64
+RUN /juicysfplugin/configure_juicysfplugin.sh win32 x64
 COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
-RUN /juicysfplugin/make_juicysfplugin.sh x64
+RUN /juicysfplugin/make_juicysfplugin.sh win32 x64
 
 FROM juicysfplugin_common_win32 AS juicysfplugin_win32_x86
 COPY --from=msys2_deps_x86 /clang32/ /clang32/
@@ -155,11 +151,9 @@ COPY --from=make_fluidsynth_win32_x86 /clang32/include/fluidsynth.h /clang32/inc
 COPY --from=make_fluidsynth_win32_x86 /clang32/include/fluidsynth/ /clang32/include/fluidsynth/
 COPY --from=make_fluidsynth_win32_x86 /clang32/lib/pkgconfig/fluidsynth.pc /clang32/lib/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_win32_x86 /clang32/lib/libfluidsynth.a /clang32/lib/libfluidsynth.a
-RUN /juicysfplugin/configure_juicysfplugin.sh x86
-COPY Source/ Source/
-COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+RUN /juicysfplugin/configure_juicysfplugin.sh win32 x86
 COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
-RUN /juicysfplugin/make_juicysfplugin.sh x86
+RUN /juicysfplugin/make_juicysfplugin.sh win32 x86
 
 FROM juicysfplugin_common_win32 AS juicysfplugin_win32_aarch64
 COPY --from=msys2_deps_aarch64 /clangarm64/ /clangarm64/
@@ -167,11 +161,9 @@ COPY --from=make_fluidsynth_win32_aarch64 /clangarm64/include/fluidsynth.h /clan
 COPY --from=make_fluidsynth_win32_aarch64 /clangarm64/include/fluidsynth/ /clangarm64/include/fluidsynth/
 COPY --from=make_fluidsynth_win32_aarch64 /clangarm64/lib/pkgconfig/fluidsynth.pc /clangarm64/lib/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_win32_aarch64 /clangarm64/lib/libfluidsynth.a /clangarm64/lib/libfluidsynth.a
-RUN /juicysfplugin/configure_juicysfplugin.sh arm64
-COPY Source/ Source/
-COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+RUN /juicysfplugin/configure_juicysfplugin.sh win32 arm64
 COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
-RUN /juicysfplugin/make_juicysfplugin.sh arm64
+RUN /juicysfplugin/make_juicysfplugin.sh win32 arm64
 
 FROM juicysfplugin_common AS juicysfplugin_linux_x86_64
 COPY --from=linux_deps_x86_64 /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
@@ -179,8 +171,9 @@ COPY --from=make_fluidsynth_linux_x86_64 /usr/include/fluidsynth.h /usr/include/
 COPY --from=make_fluidsynth_linux_x86_64 /usr/include/fluidsynth/ /usr/include/fluidsynth/
 COPY --from=make_fluidsynth_linux_x86_64 /usr/lib/x86_64-linux-gnu/pkgconfig/fluidsynth.pc /usr/lib/x86_64-linux-gnu/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_linux_x86_64 /usr/lib/x86_64-linux-gnu/libfluidsynth.a /usr/lib/x86_64-linux-gnu/libfluidsynth.a
-COPY Source/ Source/
-COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+RUN /juicysfplugin/configure_juicysfplugin.sh linux x64
+COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
+RUN /juicysfplugin/make_juicysfplugin.sh linux x64
 
 FROM juicysfplugin_common AS juicysfplugin_linux_i386
 COPY --from=linux_deps_i386 /usr/lib/i386-linux-gnu /usr/lib/i386-linux-gnu
@@ -188,8 +181,9 @@ COPY --from=make_fluidsynth_linux_i386 /usr/include/fluidsynth.h /usr/include/fl
 COPY --from=make_fluidsynth_linux_i386 /usr/include/fluidsynth/ /usr/include/fluidsynth/
 COPY --from=make_fluidsynth_linux_i386 /usr/lib/i386-linux-gnu/pkgconfig/fluidsynth.pc /usr/lib/i386-linux-gnu/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_linux_i386 /usr/lib/i386-linux-gnu/libfluidsynth.a /usr/lib/i386-linux-gnu/libfluidsynth.a
-COPY Source/ Source/
-COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+RUN /juicysfplugin/configure_juicysfplugin.sh linux x86
+COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
+RUN /juicysfplugin/make_juicysfplugin.sh linux x86
 
 FROM juicysfplugin_common AS juicysfplugin_linux_aarch64
 COPY --from=linux_deps_aarch64 /usr/lib/aarch64-linux-gnu /usr/lib/aarch64-linux-gnu
@@ -197,15 +191,14 @@ COPY --from=make_fluidsynth_linux_aarch64 /usr/include/fluidsynth.h /usr/include
 COPY --from=make_fluidsynth_linux_aarch64 /usr/include/fluidsynth/ /usr/include/fluidsynth/
 COPY --from=make_fluidsynth_linux_aarch64 /usr/lib/aarch64-linux-gnu/pkgconfig/fluidsynth.pc /usr/lib/aarch64-linux-gnu/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_linux_aarch64 /usr/lib/aarch64-linux-gnu/libfluidsynth.a /usr/lib/aarch64-linux-gnu/libfluidsynth.a
-COPY Source/ Source/
-COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+RUN /juicysfplugin/configure_juicysfplugin.sh linux arm64
+COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
+RUN /juicysfplugin/make_juicysfplugin.sh linux arm64
 
 FROM ubuntu:$UBUNTU_VER AS distribute
-# temporary
-COPY --from=juicysfplugin_linux_x86_64 /usr/lib/x86_64-linux-gnu/pkgconfig/fluidsynth.pc /linux_x86_64/
-COPY --from=juicysfplugin_linux_i386 /usr/lib/i386-linux-gnu/pkgconfig/fluidsynth.pc /linux_i386/
-COPY --from=juicysfplugin_linux_aarch64 /usr/lib/aarch64-linux-gnu/pkgconfig/fluidsynth.pc /linux_aarch64/
-
-COPY --from=juicysfplugin_win32_x64 /juicysfplugin/build_x64/JuicySFPlugin_artefacts/ /win32_x64/
-COPY --from=juicysfplugin_win32_x86 /juicysfplugin/build_x86/JuicySFPlugin_artefacts/ /win32_x86/
-COPY --from=juicysfplugin_win32_aarch64 /juicysfplugin/build_arm64/JuicySFPlugin_artefacts/ /win32_arm64/
+COPY --from=juicysfplugin_linux_x86_64 /juicysfplugin/build_linux_x64/JuicySFPlugin_artefacts/ /linux_x64/
+COPY --from=juicysfplugin_linux_i386 /juicysfplugin/build_linux_x86/JuicySFPlugin_artefacts/ /linux_x86/
+COPY --from=juicysfplugin_linux_aarch64 /juicysfplugin/build_linux_arm64/JuicySFPlugin_artefacts/ /linux_arm64/
+COPY --from=juicysfplugin_win32_x64 /juicysfplugin/build_win32_x64/JuicySFPlugin_artefacts/ /win32_x64/
+COPY --from=juicysfplugin_win32_x86 /juicysfplugin/build_win32_x86/JuicySFPlugin_artefacts/ /win32_x86/
+COPY --from=juicysfplugin_win32_aarch64 /juicysfplugin/build_win32_arm64/JuicySFPlugin_artefacts/ /win32_arm64/
