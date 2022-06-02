@@ -2,12 +2,12 @@
 set(CMAKE_SYSTEM_NAME Windows)
 
 # which compilers to use for C and C++
-set(CMAKE_C_COMPILER   x86_64-w64-mingw32-clang)
-set(CMAKE_CXX_COMPILER x86_64-w64-mingw32-clang++)
+set(CMAKE_C_COMPILER   i686-w64-mingw32-clang)
+set(CMAKE_CXX_COMPILER i686-w64-mingw32-clang++)
 
 # where is the target environment located
-# https://cmake.org/cmake/help/latest/command/find_library.html
-set(CMAKE_FIND_ROOT_PATH  /clang64;/opt/llvm-mingw/x86_64-w64-mingw32)
+set(CMAKE_FIND_ROOT_PATH  /clang32;/opt/llvm-mingw/i686-w64-mingw32)
+set(CMAKE_INSTALL_PREFIX /clang32)
 
 # adjust the default behavior of the FIND_XXX() commands:
 # search programs in the host environment

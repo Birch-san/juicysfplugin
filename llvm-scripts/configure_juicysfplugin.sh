@@ -55,7 +55,7 @@ for ARCH in ${ARCHS[@]}; do
 
   TOOLCHAIN="${TOOLCHAINS[$ARCH]}"
   echo "toolchain: $TOOLCHAIN"
-  TOOLCHAIN_FILE="/${TOOLCHAIN}_toolchain.cmake"
+  TOOLCHAIN_FILE="/win32_${TOOLCHAIN}_toolchain.cmake"
   echo "toolchain file: $TOOLCHAIN_FILE"
   TOOLCHAIN_LIB_DIR="/opt/llvm-mingw/${TOOLCHAIN}-w64-mingw32/lib"
   echo "toolchain lib dir: $TOOLCHAIN_LIB_DIR"

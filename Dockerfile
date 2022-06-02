@@ -1,4 +1,5 @@
 # docker build . --tag=juicy-llvm
+# docker build . --tag=juicy-llvm --target=juicysfplugin_win32_x64
 # docker run -it --rm --name juicy-llvm juicy-llvm
 ARG UBUNTU_VER=22.10
 
@@ -7,7 +8,7 @@ FROM ubuntu:$UBUNTU_VER AS toolchain-common
 # lib* - for compiling JUCE
 # zstd - for extracting MSYS2 packages
 RUN apt-get update -qq && \
-apt-get install -qqy --no-install-recommends \
+DEBIAN_FRONTEND=noninteractive apt-get install -qqy --no-install-recommends \
 wget ca-certificates \
 git xz-utils \
 cmake build-essential pkg-config \
@@ -21,6 +22,27 @@ FROM toolchain-common AS llvm_mingw
 COPY llvm-scripts/download_llvm_mingw.sh download_llvm_mingw.sh
 ARG LLVM_MINGW_VER=20220323
 RUN LLVM_MINGW_VER=$LLVM_MINGW_VER ./download_llvm_mingw.sh download_llvm_mingw.sh
+# here's how to merge it into existing /bin, but that could have unintended clashes
+# RUN tar -xvf llvm-mingw.tar.xz --strip-components=1 -k && rm llvm-mingw.tar.xz
+RUN mkdir -p /opt/llvm-mingw && tar -xvf llvm-mingw.tar.xz --strip-components=1 -C /opt/llvm-mingw && rm llvm-mingw.tar.xz
+ENV PATH="/opt/llvm-mingw/bin:$PATH"
+
+FROM llvm_mingw AS linux_xcompile
+COPY llvm-scripts/multi-arch-apt.sh multi-arch-apt.sh
+RUN ./multi-arch-apt.sh
+COPY llvm-scripts/get_fluidsynth_deps_linux.sh get_fluidsynth_deps_linux.sh
+COPY llvm-scripts/linux_amd64_toolchain.cmake /linux_amd64_toolchain.cmake
+COPY llvm-scripts/linux_i386_toolchain.cmake /linux_i386_toolchain.cmake
+COPY llvm-scripts/linux_arm64_toolchain.cmake /linux_arm64_toolchain.cmake
+
+FROM linux_xcompile AS linux_deps_aarch64
+RUN ./get_fluidsynth_deps_linux.sh arm64
+
+FROM linux_xcompile AS linux_deps_x86_64
+RUN ./get_fluidsynth_deps_linux.sh amd64
+
+FROM linux_xcompile AS linux_deps_i386
+RUN ./get_fluidsynth_deps_linux.sh i386
 
 FROM toolchain-common AS get_juce
 COPY llvm-scripts/clone_juce.sh clone_juce.sh
@@ -30,15 +52,10 @@ FROM toolchain-common AS get_fluidsynth
 COPY llvm-scripts/clone_fluidsynth.sh clone_fluidsynth.sh
 RUN ./clone_fluidsynth.sh
 
-FROM toolchain-common AS toolchain-win32
-COPY --from=llvm_mingw llvm-mingw.tar.xz llvm-mingw.tar.xz
-# here's how to merge it into existing /bin, but that could have unintended clashes
-# RUN tar -xvf llvm-mingw.tar.xz --strip-components=1 -k && rm llvm-mingw.tar.xz
-RUN mkdir -p /opt/llvm-mingw && tar -xvf llvm-mingw.tar.xz --strip-components=1 -C /opt/llvm-mingw && rm llvm-mingw.tar.xz
-ENV PATH="/opt/llvm-mingw/bin:$PATH"
-COPY llvm-scripts/x86_64_toolchain.cmake /x86_64_toolchain.cmake
-COPY llvm-scripts/i686_toolchain.cmake /i686_toolchain.cmake
-COPY llvm-scripts/aarch64_toolchain.cmake /aarch64_toolchain.cmake
+FROM llvm_mingw AS toolchain-win32
+COPY llvm-scripts/win32_x86_64_toolchain.cmake /win32_x86_64_toolchain.cmake
+COPY llvm-scripts/win32_i686_toolchain.cmake /win32_i686_toolchain.cmake
+COPY llvm-scripts/win32_aarch64_toolchain.cmake /win32_aarch64_toolchain.cmake
 
 FROM toolchain-common AS make_juce
 COPY --from=get_juce JUCE JUCE
@@ -46,40 +63,61 @@ COPY llvm-scripts/make_juce.sh make_juce.sh
 RUN ./make_juce.sh
 
 FROM toolchain-common AS msys2_deps
-COPY llvm-scripts/get_fluidsynth_deps.sh get_fluidsynth_deps.sh
+COPY llvm-scripts/get_fluidsynth_deps_win32.sh get_fluidsynth_deps_win32.sh
 
 FROM msys2_deps AS msys2_deps_x64
-RUN ./get_fluidsynth_deps.sh x64
+RUN ./get_fluidsynth_deps_win32.sh x64
 
 FROM msys2_deps AS msys2_deps_x86
-RUN ./get_fluidsynth_deps.sh x86
+RUN ./get_fluidsynth_deps_win32.sh x86
 
 FROM msys2_deps AS msys2_deps_aarch64
-RUN ./get_fluidsynth_deps.sh arm64
-
-FROM toolchain-win32 AS make_fluidsynth_win32_x86
-COPY --from=msys2_deps_x86 clang32 clang32
-COPY --from=get_fluidsynth fluidsynth fluidsynth
-COPY llvm-scripts/configure_fluidsynth.sh configure_fluidsynth.sh
-RUN ./configure_fluidsynth.sh x86
-COPY llvm-scripts/build_fluidsynth.sh build_fluidsynth.sh
-RUN ./build_fluidsynth.sh x86
+RUN ./get_fluidsynth_deps_win32.sh arm64
 
 FROM toolchain-win32 AS make_fluidsynth_win32_x64
 COPY --from=msys2_deps_x64 clang64 clang64
 COPY --from=get_fluidsynth fluidsynth fluidsynth
 COPY llvm-scripts/configure_fluidsynth.sh configure_fluidsynth.sh
-RUN ./configure_fluidsynth.sh x64
+RUN ./configure_fluidsynth.sh win32 x64
 COPY llvm-scripts/build_fluidsynth.sh build_fluidsynth.sh
-RUN ./build_fluidsynth.sh x64
+RUN ./build_fluidsynth.sh win32 x64
+
+FROM toolchain-win32 AS make_fluidsynth_win32_x86
+COPY --from=msys2_deps_x86 clang32 clang32
+COPY --from=get_fluidsynth fluidsynth fluidsynth
+COPY llvm-scripts/configure_fluidsynth.sh configure_fluidsynth.sh
+RUN ./configure_fluidsynth.sh win32 x86
+COPY llvm-scripts/build_fluidsynth.sh build_fluidsynth.sh
+RUN ./build_fluidsynth.sh win32 x86
 
 FROM toolchain-win32 AS make_fluidsynth_win32_aarch64
 COPY --from=msys2_deps_aarch64 clangarm64 clangarm64
 COPY --from=get_fluidsynth fluidsynth fluidsynth
 COPY llvm-scripts/configure_fluidsynth.sh configure_fluidsynth.sh
-RUN ./configure_fluidsynth.sh arm64
+RUN ./configure_fluidsynth.sh win32 arm64
 COPY llvm-scripts/build_fluidsynth.sh build_fluidsynth.sh
-RUN ./build_fluidsynth.sh arm64
+RUN ./build_fluidsynth.sh win32 arm64
+
+FROM linux_deps_x86_64 AS make_fluidsynth_linux_x86_64
+COPY --from=get_fluidsynth fluidsynth fluidsynth
+COPY llvm-scripts/configure_fluidsynth.sh configure_fluidsynth.sh
+RUN ./configure_fluidsynth.sh linux x64
+COPY llvm-scripts/build_fluidsynth.sh build_fluidsynth.sh
+RUN ./build_fluidsynth.sh linux x64
+
+FROM linux_deps_i386 AS make_fluidsynth_linux_i386
+COPY --from=get_fluidsynth fluidsynth fluidsynth
+COPY llvm-scripts/configure_fluidsynth.sh configure_fluidsynth.sh
+RUN ./configure_fluidsynth.sh linux x86
+COPY llvm-scripts/build_fluidsynth.sh build_fluidsynth.sh
+RUN ./build_fluidsynth.sh linux x86
+
+FROM linux_deps_aarch64 AS make_fluidsynth_linux_aarch64
+COPY --from=get_fluidsynth fluidsynth fluidsynth
+COPY llvm-scripts/configure_fluidsynth.sh configure_fluidsynth.sh
+RUN ./configure_fluidsynth.sh linux arm64
+COPY llvm-scripts/build_fluidsynth.sh build_fluidsynth.sh
+RUN ./build_fluidsynth.sh linux arm64
 
 FROM toolchain-win32 AS juicysfplugin_common
 COPY --from=make_juce /linux_native/ /linux_native/
@@ -135,7 +173,39 @@ COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
 COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN /juicysfplugin/make_juicysfplugin.sh arm64
 
+FROM juicysfplugin_common AS juicysfplugin_linux_x86_64
+COPY --from=linux_deps_x86_64 /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
+COPY --from=make_fluidsynth_linux_x86_64 /usr/include/fluidsynth.h /usr/include/fluidsynth.h
+COPY --from=make_fluidsynth_linux_x86_64 /usr/include/fluidsynth/ /usr/include/fluidsynth/
+COPY --from=make_fluidsynth_linux_x86_64 /usr/lib/x86_64-linux-gnu/pkgconfig/fluidsynth.pc /usr/lib/x86_64-linux-gnu/pkgconfig/fluidsynth.pc
+COPY --from=make_fluidsynth_linux_x86_64 /usr/lib/x86_64-linux-gnu/libfluidsynth.a /usr/lib/x86_64-linux-gnu/libfluidsynth.a
+COPY Source/ Source/
+COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+
+FROM juicysfplugin_common AS juicysfplugin_linux_i386
+COPY --from=linux_deps_i386 /usr/lib/i386-linux-gnu /usr/lib/i386-linux-gnu
+COPY --from=make_fluidsynth_linux_i386 /usr/include/fluidsynth.h /usr/include/fluidsynth.h
+COPY --from=make_fluidsynth_linux_i386 /usr/include/fluidsynth/ /usr/include/fluidsynth/
+COPY --from=make_fluidsynth_linux_i386 /usr/lib/i386-linux-gnu/pkgconfig/fluidsynth.pc /usr/lib/i386-linux-gnu/pkgconfig/fluidsynth.pc
+COPY --from=make_fluidsynth_linux_i386 /usr/lib/i386-linux-gnu/libfluidsynth.a /usr/lib/i386-linux-gnu/libfluidsynth.a
+COPY Source/ Source/
+COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+
+FROM juicysfplugin_common AS juicysfplugin_linux_aarch64
+COPY --from=linux_deps_aarch64 /usr/lib/aarch64-linux-gnu /usr/lib/aarch64-linux-gnu
+COPY --from=make_fluidsynth_linux_aarch64 /usr/include/fluidsynth.h /usr/include/fluidsynth.h
+COPY --from=make_fluidsynth_linux_aarch64 /usr/include/fluidsynth/ /usr/include/fluidsynth/
+COPY --from=make_fluidsynth_linux_aarch64 /usr/lib/aarch64-linux-gnu/pkgconfig/fluidsynth.pc /usr/lib/aarch64-linux-gnu/pkgconfig/fluidsynth.pc
+COPY --from=make_fluidsynth_linux_aarch64 /usr/lib/aarch64-linux-gnu/libfluidsynth.a /usr/lib/aarch64-linux-gnu/libfluidsynth.a
+COPY Source/ Source/
+COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+
 FROM ubuntu:$UBUNTU_VER AS distribute
-COPY --from=juicysfplugin_win32_x64 /juicysfplugin/build_x64/JuicySFPlugin_artefacts/ /x64/
-COPY --from=juicysfplugin_win32_x86 /juicysfplugin/build_x86/JuicySFPlugin_artefacts/ /x86/
-COPY --from=juicysfplugin_win32_aarch64 /juicysfplugin/build_arm64/JuicySFPlugin_artefacts/ /arm64/
+# temporary
+COPY --from=juicysfplugin_linux_x86_64 /usr/lib/x86_64-linux-gnu/pkgconfig/fluidsynth.pc /linux_x86_64/
+COPY --from=juicysfplugin_linux_i386 /usr/lib/i386-linux-gnu/pkgconfig/fluidsynth.pc /linux_i386/
+COPY --from=juicysfplugin_linux_aarch64 /usr/lib/aarch64-linux-gnu/pkgconfig/fluidsynth.pc /linux_aarch64/
+
+COPY --from=juicysfplugin_win32_x64 /juicysfplugin/build_x64/JuicySFPlugin_artefacts/ /win32_x64/
+COPY --from=juicysfplugin_win32_x86 /juicysfplugin/build_x86/JuicySFPlugin_artefacts/ /win32_x86/
+COPY --from=juicysfplugin_win32_aarch64 /juicysfplugin/build_arm64/JuicySFPlugin_artefacts/ /win32_arm64/

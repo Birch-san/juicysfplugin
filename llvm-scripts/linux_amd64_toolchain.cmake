@@ -1,12 +1,16 @@
 # the name of the target operating system
-set(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR arm64)
+set(CMAKE_LIBRARY_ARCHITECTURE aarch64-linux-gnu)
 
 # which compilers to use for C and C++
-set(CMAKE_C_COMPILER   aarch64-w64-mingw32-clang)
-set(CMAKE_CXX_COMPILER aarch64-w64-mingw32-clang++)
+set(CMAKE_C_COMPILER   /opt/llvm-mingw/bin/clang)
+set(CMAKE_CXX_COMPILER /opt/llvm-mingw/bin/clang++)
 
 # where is the target environment located
-set(CMAKE_FIND_ROOT_PATH  /clangarm64;/opt/llvm-mingw/aarch64-w64-mingw32)
+# https://cmake.org/cmake/help/latest/command/find_library.html
+set(CMAKE_FIND_ROOT_PATH /usr)
+set(CMAKE_INSTALL_PREFIX /usr)
 
 # adjust the default behavior of the FIND_XXX() commands:
 # search programs in the host environment

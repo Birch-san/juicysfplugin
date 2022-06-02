@@ -4,29 +4,84 @@ shopt -s nullglob
 
 cd fluidsynth
 
-if test -n "$1"; then
-  declare -a ARCHS=("$1")
-else
-  declare -a ARCHS=("x64" "x86" "arm64")
-fi
+TARGET_OS="$1"
+ARCH="$2"
 
-declare -A TOOLCHAINS=( [x64]=x86_64 [x86]=i686 [arm64]=aarch64 )
-declare -A REPOS=( [x64]=clang64 [x86]=clang32 [arm64]=clangarm64 )
+declare -A win32_REPOS=( [x64]=clang64 [x86]=clang32 [arm64]=clangarm64 )
+declare -A linux_REPOS=( [x64]=x86_64 [x86]=i386 [arm64]=aarch64 )
+
+# builds include paths such as the following:
+# /clang64/include
+# /usr/include
+resolve_include_install_path () {
+  local TARGET_OS="$1"
+  local ARCH="$2"
+  local REPO_ARCH="${TARGET_OS}_REPOS[$ARCH]"
+  local REPO="${!REPO_ARCH}"
+  case $TARGET_OS in
+    win32)
+      echo "/$REPO/include"
+      ;;
+
+    linux)
+      echo "/usr/include"
+      ;;
+    *)
+      >&2 echo "Unsupported TARGET_OS '$TARGET_OS'"
+      exit 1
+  esac
+}
+
+# builds lib paths such as the following:
+# /clang64/lib
+# /usr/lib/x86_64-linux-gnu
+resolve_lib_install_path () {
+  local TARGET_OS="$1"
+  local ARCH="$2"
+  local REPO_ARCH="${TARGET_OS}_REPOS[$ARCH]"
+  local REPO="${!REPO_ARCH}"
+  case $TARGET_OS in
+    win32)
+      echo "/$REPO/lib"
+      ;;
+
+    linux)
+      echo "/usr/lib/$REPO-linux-gnu"
+      ;;
+    *)
+      >&2 echo "Unsupported TARGET_OS '$TARGET_OS'"
+      exit 1
+  esac
+}
+
+
+# builds PKG_CONFIG_PATHs such as the following:
+# /clang64/lib/pkgconfig
+# /usr/lib/x86_64-linux-gnu/pkgconfig
+resolve_pkg_config_path () {
+  local LIB_INSTALL_PATH="$1"
+  echo "$LIB_INSTALL_PATH/pkgconfig"
+}
  
-for ARCH in ${ARCHS[@]}; do
-  echo "arch: $ARCH"
+echo "arch: $ARCH"
 
-  REPO="${REPOS[$ARCH]}"
-  echo "repo: $REPO"
+REPO="${REPOS[$ARCH]}"
+echo "repo: $REPO"
 
-  BUILD="build_$ARCH"
+BUILD="build_${TARGET_OS}_${ARCH}"
 
-  cmake --build "$BUILD" --target libfluidsynth
-  # manual installation; not sure how to ask it to "only install libfluidsynth".
-  cp "$BUILD"/fluidsynth.pc "/$REPO/lib/pkgconfig/"
-  cp "$BUILD"/src/libfluidsynth*.a "/$REPO/lib/libfluidsynth.a"
-  mkdir -p /$REPO/include/fluidsynth
-  cp include/fluidsynth/*.h "/$REPO/include/fluidsynth/"
-  cp "$BUILD"/include/fluidsynth.h "/$REPO/include/fluidsynth.h"
-  cp "$BUILD"/include/fluidsynth/*.h "/$REPO/include/fluidsynth/"
-done
+INCLUDE_INSTALL_PATH="$(resolve_include_install_path "$TARGET_OS" "$ARCH")"
+LIB_INSTALL_PATH="$(resolve_lib_install_path "$TARGET_OS" "$ARCH")"
+echo "LIB_INSTALL_PATH: $LIB_INSTALL_PATH"
+
+PKG_CONFIG_PATH="$(resolve_pkg_config_path "$LIB_INSTALL_PATH")"
+echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
+
+cmake --build "$BUILD" --target libfluidsynth
+# manual installation; not sure how to ask it to "only install libfluidsynth".
+cp "$BUILD"/fluidsynth.pc "/$PKG_CONFIG_PATH/"
+cp "$BUILD"/src/libfluidsynth*.a "/$LIB_INSTALL_PATH/libfluidsynth.a"
+mkdir -p "/$INCLUDE_INSTALL_PATH/fluidsynth"
+cp include/fluidsynth/*.h "/$INCLUDE_INSTALL_PATH/fluidsynth/"
+cp "$BUILD"/include/fluidsynth.h "/$INCLUDE_INSTALL_PATH/fluidsynth.h"
+cp "$BUILD"/include/fluidsynth/*.h "/$INCLUDE_INSTALL_PATH/fluidsynth/"
