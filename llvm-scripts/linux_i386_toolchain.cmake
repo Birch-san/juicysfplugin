@@ -7,8 +7,6 @@ set(CMAKE_LIBRARY_ARCHITECTURE i386-linux-gnu)
 set(CMAKE_C_COMPILER   /opt/llvm-mingw/bin/clang)
 set(CMAKE_CXX_COMPILER /opt/llvm-mingw/bin/clang++)
 
-set(CMAKE_MAKE_PROGRAM /usr/bin/make)
-
 # where is the target environment located
 # https://cmake.org/cmake/help/latest/command/find_library.html
 set(CMAKE_FIND_ROOT_PATH /usr)

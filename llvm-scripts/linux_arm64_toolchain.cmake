@@ -1,13 +1,11 @@
 # the name of the target operating system
 set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_PROCESSOR amd64)
-set(CMAKE_LIBRARY_ARCHITECTURE x86_64-linux-gnu)
+set(CMAKE_SYSTEM_PROCESSOR arm64)
+set(CMAKE_LIBRARY_ARCHITECTURE aarch64-linux-gnu)
 
 # which compilers to use for C and C++
 set(CMAKE_C_COMPILER   /opt/llvm-mingw/bin/clang)
 set(CMAKE_CXX_COMPILER /opt/llvm-mingw/bin/clang++)
-
-set(CMAKE_MAKE_PROGRAM /usr/bin/make)
 
 # where is the target environment located
 # https://cmake.org/cmake/help/latest/command/find_library.html

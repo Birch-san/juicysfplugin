@@ -45,10 +45,10 @@ resolve_pkg_config_path () {
 echo "target OS: $TARGET_OS"
 echo "arch: $ARCH"
 
-TOOLCHAIN_VAR="${TARGET_OS}_TOOLCHAINS[$ARCH]"
-TOOLCHAIN="${!TOOLCHAIN_VAR}"
-echo "toolchain: $TOOLCHAIN"
-TOOLCHAIN_FILE="/${TARGET_OS}_${TOOLCHAIN}_toolchain.cmake"
+TOOLCHAIN_ARCH_VAR="${TARGET_OS}_TOOLCHAINS[$ARCH]"
+TOOLCHAIN_ARCH="${!TOOLCHAIN_ARCH_VAR}"
+echo "toolchain arch: $TOOLCHAIN_ARCH"
+TOOLCHAIN_FILE="/${TARGET_OS}_${TOOLCHAIN_ARCH}_toolchain.cmake"
 echo "toolchain file: $TOOLCHAIN_FILE"
 
 BUILD="build_${TARGET_OS}_${ARCH}"
