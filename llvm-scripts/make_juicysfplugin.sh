@@ -3,8 +3,7 @@
 if test -n "$1"; then
   declare -a ARCHS=("$1")
 else
-  # declare -a ARCHS=("x64" "x86" "arm64")
-  declare -a ARCHS=("x64" "x86")
+  declare -a ARCHS=("x64" "x86" "arm64")
 fi
  
 for ARCH in ${ARCHS[@]}; do

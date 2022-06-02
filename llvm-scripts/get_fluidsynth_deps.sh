@@ -10,9 +10,11 @@ Purple="${BC}35m"
 Cyan="${BC}36m"
 NC="${BC}0m" # No Color
 
-# deps such as libsndfile aren't available in clangarm64 repo
-# declare -a ARCHS=("x64" "x86" "arm64")
-declare -a ARCHS=("x64" "x86")
+if test -n "$1"; then
+  declare -a ARCHS=("$1")
+else
+  declare -a ARCHS=("x64" "x86" "arm64")
+fi
 
 declare -A REPOS=( [x64]=clang64 [x86]=clang32 [arm64]=clangarm64 )
 declare -A PKG_PREFIX_ARCHS=( [x64]=x86_64 [x86]=i686 [arm64]=aarch64 )

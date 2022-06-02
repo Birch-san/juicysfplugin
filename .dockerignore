@@ -3,7 +3,7 @@
 !/Source/**
 !/resources/**
 !/CMakeLists.txt
-!/win32_cross_compile/**
+!/llvm-scripts/**
 !/cmake/Modules/FindPkgConfig.cmake
 !/VST2_SDK/**
 /VST2_SDK/README.md
