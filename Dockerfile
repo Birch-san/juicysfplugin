@@ -117,7 +117,7 @@ RUN ./configure_fluidsynth.sh linux arm64
 COPY llvm-scripts/build_fluidsynth.sh build_fluidsynth.sh
 RUN ./build_fluidsynth.sh linux arm64
 
-FROM llvm_mingw AS juicysfplugin_common
+FROM llvm_mingw AS juicysfplugin_common_win32
 COPY --from=make_juce /linux_native/ /linux_native/
 WORKDIR juicysfplugin
 COPY resources/Logo512.png resources/Logo512.png
@@ -127,8 +127,6 @@ COPY cmake/Modules/FindPkgConfig.cmake cmake/Modules/FindPkgConfig.cmake
 COPY CMakeLists.txt CMakeLists.txt
 COPY Source/ Source/
 COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
-
-FROM juicysfplugin_common AS juicysfplugin_common_win32
 COPY llvm-scripts/fix_mingw_headers.sh fix_mingw_headers.sh
 RUN ./fix_mingw_headers.sh
 COPY llvm-scripts/attrib_noop.sh /usr/local/bin/attrib
@@ -139,8 +137,8 @@ COPY --from=make_fluidsynth_win32_x64 /clang64/include/fluidsynth.h /clang64/inc
 COPY --from=make_fluidsynth_win32_x64 /clang64/include/fluidsynth/ /clang64/include/fluidsynth/
 COPY --from=make_fluidsynth_win32_x64 /clang64/lib/pkgconfig/fluidsynth.pc /clang64/lib/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_win32_x64 /clang64/lib/libfluidsynth.a /clang64/lib/libfluidsynth.a
-RUN /juicysfplugin/configure_juicysfplugin.sh win32 x64
 COPY llvm-scripts/win32_x86_64_toolchain.cmake /win32_x86_64_toolchain.cmake
+RUN /juicysfplugin/configure_juicysfplugin.sh win32 x64
 COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN /juicysfplugin/make_juicysfplugin.sh win32 x64
 
@@ -166,38 +164,65 @@ RUN /juicysfplugin/configure_juicysfplugin.sh win32 arm64
 COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN /juicysfplugin/make_juicysfplugin.sh win32 arm64
 
-FROM juicysfplugin_common AS juicysfplugin_linux_x86_64
+FROM linux_deps_x86_64 AS juicysfplugin_linux_x86_64
+COPY --from=make_juce /linux_native/ /linux_native/
 COPY --from=linux_deps_x86_64 /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
 COPY --from=make_fluidsynth_linux_x86_64 /usr/include/fluidsynth.h /usr/include/fluidsynth.h
 COPY --from=make_fluidsynth_linux_x86_64 /usr/include/fluidsynth/ /usr/include/fluidsynth/
 COPY --from=make_fluidsynth_linux_x86_64 /usr/lib/x86_64-linux-gnu/pkgconfig/fluidsynth.pc /usr/lib/x86_64-linux-gnu/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_linux_x86_64 /usr/lib/x86_64-linux-gnu/libfluidsynth.a /usr/lib/x86_64-linux-gnu/libfluidsynth.a
 COPY llvm-scripts/linux_amd64_toolchain.cmake /linux_amd64_toolchain.cmake
-RUN /juicysfplugin/configure_juicysfplugin.sh linux x64
+WORKDIR juicysfplugin
+COPY resources/Logo512.png resources/Logo512.png
+COPY VST2_SDK/ /VST2_SDK/
+COPY cmake/Modules/FindPkgConfig.cmake cmake/Modules/FindPkgConfig.cmake
+COPY CMakeLists.txt CMakeLists.txt
+COPY Source/ Source/
+COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+COPY llvm-scripts/configure_juicysfplugin.sh configure_juicysfplugin.sh
+RUN ./configure_juicysfplugin.sh linux x64
 COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
-RUN /juicysfplugin/make_juicysfplugin.sh linux x64
+RUN ./make_juicysfplugin.sh linux x64
 
-FROM juicysfplugin_common AS juicysfplugin_linux_i386
+FROM linux_deps_i386 AS juicysfplugin_linux_i386
+COPY --from=make_juce /linux_native/ /linux_native/
 COPY --from=linux_deps_i386 /usr/lib/i386-linux-gnu /usr/lib/i386-linux-gnu
 COPY --from=make_fluidsynth_linux_i386 /usr/include/fluidsynth.h /usr/include/fluidsynth.h
 COPY --from=make_fluidsynth_linux_i386 /usr/include/fluidsynth/ /usr/include/fluidsynth/
 COPY --from=make_fluidsynth_linux_i386 /usr/lib/i386-linux-gnu/pkgconfig/fluidsynth.pc /usr/lib/i386-linux-gnu/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_linux_i386 /usr/lib/i386-linux-gnu/libfluidsynth.a /usr/lib/i386-linux-gnu/libfluidsynth.a
 COPY llvm-scripts/linux_i386_toolchain.cmake /linux_i386_toolchain.cmake
-RUN /juicysfplugin/configure_juicysfplugin.sh linux x86
+WORKDIR juicysfplugin
+COPY resources/Logo512.png resources/Logo512.png
+COPY VST2_SDK/ /VST2_SDK/
+COPY cmake/Modules/FindPkgConfig.cmake cmake/Modules/FindPkgConfig.cmake
+COPY CMakeLists.txt CMakeLists.txt
+COPY Source/ Source/
+COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+COPY llvm-scripts/configure_juicysfplugin.sh configure_juicysfplugin.sh
+RUN ./configure_juicysfplugin.sh linux x86
 COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
-RUN /juicysfplugin/make_juicysfplugin.sh linux x86
+RUN ./make_juicysfplugin.sh linux x86
 
-FROM juicysfplugin_common AS juicysfplugin_linux_aarch64
+FROM linux_deps_aarch64 AS juicysfplugin_linux_aarch64
+COPY --from=make_juce /linux_native/ /linux_native/
 COPY --from=linux_deps_aarch64 /usr/lib/aarch64-linux-gnu /usr/lib/aarch64-linux-gnu
 COPY --from=make_fluidsynth_linux_aarch64 /usr/include/fluidsynth.h /usr/include/fluidsynth.h
 COPY --from=make_fluidsynth_linux_aarch64 /usr/include/fluidsynth/ /usr/include/fluidsynth/
 COPY --from=make_fluidsynth_linux_aarch64 /usr/lib/aarch64-linux-gnu/pkgconfig/fluidsynth.pc /usr/lib/aarch64-linux-gnu/pkgconfig/fluidsynth.pc
 COPY --from=make_fluidsynth_linux_aarch64 /usr/lib/aarch64-linux-gnu/libfluidsynth.a /usr/lib/aarch64-linux-gnu/libfluidsynth.a
 COPY llvm-scripts/linux_arm64_toolchain.cmake /linux_arm64_toolchain.cmake
-RUN /juicysfplugin/configure_juicysfplugin.sh linux arm64
+WORKDIR juicysfplugin
+COPY resources/Logo512.png resources/Logo512.png
+COPY VST2_SDK/ /VST2_SDK/
+COPY cmake/Modules/FindPkgConfig.cmake cmake/Modules/FindPkgConfig.cmake
+COPY CMakeLists.txt CMakeLists.txt
+COPY Source/ Source/
+COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
+COPY llvm-scripts/configure_juicysfplugin.sh configure_juicysfplugin.sh
+RUN ./configure_juicysfplugin.sh linux arm64
 COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
-RUN /juicysfplugin/make_juicysfplugin.sh linux arm64
+RUN ./make_juicysfplugin.sh linux arm64
 
 FROM ubuntu:$UBUNTU_VER AS distribute
 COPY --from=juicysfplugin_linux_x86_64 /juicysfplugin/build_linux_x64/JuicySFPlugin_artefacts/ /linux_x64/
