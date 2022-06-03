@@ -4,8 +4,8 @@ set(CMAKE_SYSTEM_PROCESSOR i386)
 set(CMAKE_LIBRARY_ARCHITECTURE i386-linux-gnu)
 
 # which compilers to use for C and C++
-set(CMAKE_C_COMPILER   /opt/llvm-mingw/bin/clang)
-set(CMAKE_CXX_COMPILER /opt/llvm-mingw/bin/clang++)
+set(CMAKE_C_COMPILER   /usr/bin/clang)
+set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 
 # where is the target environment located
 # https://cmake.org/cmake/help/latest/command/find_library.html
