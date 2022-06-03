@@ -230,4 +230,5 @@ COPY --from=juicysfplugin_linux_i386 /juicysfplugin/build_linux_x86/JuicySFPlugi
 COPY --from=juicysfplugin_linux_aarch64 /juicysfplugin/build_linux_arm64/JuicySFPlugin_artefacts/ /linux_arm64/
 COPY --from=juicysfplugin_win32_x64 /juicysfplugin/build_win32_x64/JuicySFPlugin_artefacts/ /win32_x64/
 COPY --from=juicysfplugin_win32_x86 /juicysfplugin/build_win32_x86/JuicySFPlugin_artefacts/ /win32_x86/
+## win32 aarch64 fails to compile asm in juce_win32_SystemStats.cpp
 COPY --from=juicysfplugin_win32_aarch64 /juicysfplugin/build_win32_arm64/JuicySFPlugin_artefacts/ /win32_arm64/
