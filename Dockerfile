@@ -66,18 +66,6 @@ RUN ./make_alsa.sh i386
 RUN ./get_fluidsynth_deps_linux.sh i386
 COPY llvm-scripts/linux_i386_toolchain.cmake /linux_i386_toolchain.cmake
 
-FROM linux_deps_aarch64 AS alsa_aarch64
-RUN ./get_fluidsynth_deps_linux.sh arm64
-COPY llvm-scripts/linux_arm64_toolchain.cmake /linux_arm64_toolchain.cmake
-
-FROM linux_xcompile AS linux_deps_x86_64
-RUN ./get_fluidsynth_deps_linux.sh amd64
-COPY llvm-scripts/linux_amd64_toolchain.cmake /linux_amd64_toolchain.cmake
-
-FROM linux_xcompile AS linux_deps_i386
-RUN ./get_fluidsynth_deps_linux.sh i386
-COPY llvm-scripts/linux_i386_toolchain.cmake /linux_i386_toolchain.cmake
-
 FROM toolchain-common AS get_juce
 COPY llvm-scripts/clone_juce.sh clone_juce.sh
 RUN ./clone_juce.sh
@@ -254,14 +242,17 @@ COPY CMakeLists.txt CMakeLists.txt
 COPY Source/ Source/
 COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
 COPY llvm-scripts/configure_juicysfplugin.sh configure_juicysfplugin.sh
-COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN ./configure_juicysfplugin.sh linux arm64
-# RUN ./make_juicysfplugin.sh linux arm64
+COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
+RUN ./make_juicysfplugin.sh linux arm64
 
 FROM ubuntu:$UBUNTU_VER AS distribute
 COPY --from=juicysfplugin_linux_x86_64 /juicysfplugin/build_linux_x64/JuicySFPlugin_artefacts/ /linux_x64/
 COPY --from=juicysfplugin_linux_i386 /juicysfplugin/build_linux_x86/JuicySFPlugin_artefacts/ /linux_x86/
-COPY --from=juicysfplugin_linux_aarch64 /juicysfplugin/build_linux_arm64/JuicySFPlugin_artefacts/ /linux_arm64/
+# aarch64 fails due to a few static libraries' not being compiled with -fPIC
+# (e.g. libfreetype.a libpng16.a libogg.a and *maybe* libstdc++,
+# which complained about std::_Sp_make_shared_tag::_S_ti()::__tag )
+# COPY --from=juicysfplugin_linux_aarch64 /juicysfplugin/build_linux_arm64/JuicySFPlugin_artefacts/ /linux_arm64/
 COPY --from=juicysfplugin_win32_x64 /juicysfplugin/build_win32_x64/JuicySFPlugin_artefacts/ /win32_x64/
 COPY --from=juicysfplugin_win32_x86 /juicysfplugin/build_win32_x86/JuicySFPlugin_artefacts/ /win32_x86/
 ## win32 aarch64 fails to compile asm in juce_win32_SystemStats.cpp

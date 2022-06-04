@@ -9,9 +9,13 @@ else
 fi
 
 # "libasound2-dev:$ARCH" was no use (no static distribution included)
+# not sure why it was necessary (for cross-arch only) to specify 
+# libselinux (a transitive dependency of libglib).
+# this suggests that I missed something when setting up the cross-arch
+# apt repositories.
 apt-get update -qq && \
 DEBIAN_FRONTEND=noninteractive apt-get install -qqy --no-install-recommends \
-"libsndfile1-dev:$ARCH" "libglib2.0-dev:$ARCH" \
+"libsndfile1-dev:$ARCH" "libglib2.0-dev:$ARCH" "libselinux1:$ARCH" \
 && \
 apt-get clean -y && \
 rm -rf /var/lib/apt/lists/*

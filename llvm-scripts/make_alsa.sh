@@ -15,6 +15,7 @@ make -j"$(($(grep -c ^processor /proc/cpuinfo)+1))"
 make install
 # --prefix doesn't understand multi-arch very well, so we move files
 # and rewrite pkgconfig to make sense for the new location
+mkdir -p "$DEST_PKG_CONFIG_DIR"
 mv "$SRC_INCLUDE_DIR"/* "$DEST_INCLUDE_DIR/"
 mv "$SRC_LIB_DIR"/liba{sound,topology}.a "$DEST_LIB_DIR/"
 mv "$SRC_PKG_CONFIG_DIR"/alsa{,-topology}.pc "$DEST_PKG_CONFIG_DIR/"

@@ -110,6 +110,8 @@ juce_add_plugin(JuicySFPlugin
     APP_SANDBOX_ENABLED TRUE
     APP_SANDBOX_OPTIONS com.apple.security.files.user-selected.read-only
     HARDENED_RUNTIME_ENABLED TRUE
+    # NEEDS_CURL FALSE
+    # NEEDS_WEB_BROWSER FALSE
     VST2_CATEGORY kPlugCategSynth
     VST3_CATEGORIES Instrument Synth
     AU_MAIN_TYPE kAudioUnitType_MusicDevice
@@ -126,6 +128,8 @@ juce_add_plugin(JuicySFPlugin
 # https://cmake.org/cmake/help/latest/guide/tutorial/Selecting%20Static%20or%20Shared%20Libraries.html
 set_target_properties(JuicySFPlugin PROPERTIES
                         POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
+
+# target_compile_definitions(JuicySFPlugin PUBLIC JUCE_USE_CURL=0 JUCE_USE_FREETYPE=0 JUCE_WEB_BROWSER=0)
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
