@@ -50,19 +50,19 @@ COPY llvm-scripts/get_fluidsynth_deps_linux.sh get_fluidsynth_deps_linux.sh
 
 FROM linux_xcompile AS linux_deps_aarch64
 RUN ./configure_alsa.sh aarch64
-RUN ./make_alsa.sh
+RUN ./make_alsa.sh aarch64
 RUN ./get_fluidsynth_deps_linux.sh arm64
 COPY llvm-scripts/linux_arm64_toolchain.cmake /linux_arm64_toolchain.cmake
 
 FROM linux_xcompile AS linux_deps_x86_64
 RUN ./configure_alsa.sh x86_64
-RUN ./make_alsa.sh
+RUN ./make_alsa.sh x86_64
 RUN ./get_fluidsynth_deps_linux.sh amd64
 COPY llvm-scripts/linux_amd64_toolchain.cmake /linux_amd64_toolchain.cmake
 
 FROM linux_xcompile AS linux_deps_i386
 RUN ./configure_alsa.sh i386
-RUN ./make_alsa.sh
+RUN ./make_alsa.sh i386
 RUN ./get_fluidsynth_deps_linux.sh i386
 COPY llvm-scripts/linux_i386_toolchain.cmake /linux_i386_toolchain.cmake
 
@@ -199,8 +199,6 @@ COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN /juicysfplugin/make_juicysfplugin.sh win32 arm64
 
 FROM linux_deps_x86_64 AS juicysfplugin_linux_x86_64
-RUN mv /usr/lib/lib/libasound.a /usr/lib/lib/libatopology.a /usr/lib/x86_64-linux-gnu/
-RUN mv /usr/lib/lib/pkgconfig/alsa.pc /usr/lib/lib/pkgconfig/alsa-topology.pc /usr/lib/x86_64-linux-gnu/pkgconfig/
 COPY --from=make_juce /linux_native/ /linux_native/
 COPY --from=linux_deps_x86_64 /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
 COPY --from=make_fluidsynth_linux_x86_64 /usr/include/fluidsynth.h /usr/include/fluidsynth.h
@@ -221,8 +219,6 @@ COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN ./make_juicysfplugin.sh linux x64
 
 FROM linux_deps_i386 AS juicysfplugin_linux_i386
-RUN mv /usr/lib/lib/libasound.a /usr/lib/lib/libatopology.a /usr/lib/i386-linux-gnu/
-RUN mv /usr/lib/lib/pkgconfig/alsa.pc /usr/lib/lib/pkgconfig/alsa-topology.pc /usr/lib/i386-linux-gnu/pkgconfig/
 COPY --from=make_juce /linux_native/ /linux_native/
 COPY --from=linux_deps_i386 /usr/lib/i386-linux-gnu /usr/lib/i386-linux-gnu
 COPY --from=make_fluidsynth_linux_i386 /usr/include/fluidsynth.h /usr/include/fluidsynth.h
@@ -243,8 +239,6 @@ COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
 RUN ./make_juicysfplugin.sh linux x86
 
 FROM linux_deps_aarch64 AS juicysfplugin_linux_aarch64
-RUN mv /usr/lib/lib/libasound.a /usr/lib/lib/libatopology.a /usr/lib/aarch64-linux-gnu/
-RUN mv /usr/lib/lib/pkgconfig/alsa.pc /usr/lib/lib/pkgconfig/alsa-topology.pc /usr/lib/aarch64-linux-gnu/pkgconfig/
 COPY --from=make_juce /linux_native/ /linux_native/
 COPY --from=linux_deps_aarch64 /usr/lib/aarch64-linux-gnu /usr/lib/aarch64-linux-gnu
 COPY --from=make_fluidsynth_linux_aarch64 /usr/include/fluidsynth.h /usr/include/fluidsynth.h
@@ -260,8 +254,8 @@ COPY CMakeLists.txt CMakeLists.txt
 COPY Source/ Source/
 COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
 COPY llvm-scripts/configure_juicysfplugin.sh configure_juicysfplugin.sh
-RUN ./configure_juicysfplugin.sh linux arm64
 COPY llvm-scripts/make_juicysfplugin.sh make_juicysfplugin.sh
+RUN ./configure_juicysfplugin.sh linux arm64
 # RUN ./make_juicysfplugin.sh linux arm64
 
 FROM ubuntu:$UBUNTU_VER AS distribute

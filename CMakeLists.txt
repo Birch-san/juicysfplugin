@@ -25,6 +25,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # included JUCE directly in your source tree (perhaps as a submodule), you'll need to tell CMake to
 # include that subdirectory as part of the build.
 
+if (BUILD_SHARED_LIBS)
+  set(FINDPKG_STATIC_TARGET "")
+  set(FINDPKG_VAR_QUALIFIER "")
+else (BUILD_SHARED_LIBS)
+  set(FINDPKG_STATIC_TARGET "STATIC_TARGET")
+  set(FINDPKG_VAR_QUALIFIER "STATIC_")
+endif (BUILD_SHARED_LIBS)
+
 find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
 # or
 # add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
@@ -34,14 +42,6 @@ option(BUILD_SHARED_LIBS "Build using shared libraries" off)
 set(VST2_SDK_PATH "" CACHE STRING "VST2 SDK path")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-
-if (BUILD_SHARED_LIBS)
-  set(FINDPKG_STATIC_TARGET "")
-  set(FINDPKG_VAR_QUALIFIER "")
-else (BUILD_SHARED_LIBS)
-  set(FINDPKG_STATIC_TARGET "STATIC_TARGET")
-  set(FINDPKG_VAR_QUALIFIER "STATIC_")
-endif (BUILD_SHARED_LIBS)
 
 find_package(PkgConfig REQUIRED)
 
