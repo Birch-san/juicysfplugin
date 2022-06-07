@@ -35,7 +35,7 @@ FROM ubuntu:$UBUNTU_VER AS linux_xcompile
 RUN apt-get update -qq && \
 DEBIAN_FRONTEND=noninteractive apt-get install -qqy --no-install-recommends \
 automake libtool git ca-certificates \
-cmake make pkg-config clang \
+cmake make pkg-config clang lld \
 libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libfreetype6-dev \
 && \
 apt-get clean -y && \

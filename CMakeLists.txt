@@ -17,6 +17,16 @@ cmake_minimum_required(VERSION 3.15)
 
 project(JUICY_SF_PLUGIN VERSION 3.0.0)
 
+include(CheckCXXCompilerFlag)
+
+function(append_if condition value)
+  if (${condition})
+    foreach(variable ${ARGN})
+      set(${variable} "${${variable}} ${value}" PARENT_SCOPE)
+    endforeach(variable)
+  endif()
+endfunction()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -37,6 +47,7 @@ find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your sys
 # or
 # add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
 
+option(LLVM_ENABLE_LLD "Use lld as C and C++ linker." OFF)
 # default to static libraries, since distribution is easier
 option(BUILD_SHARED_LIBS "Build using shared libraries" off)
 set(VST2_SDK_PATH "" CACHE STRING "VST2 SDK path")
@@ -201,7 +212,17 @@ target_link_libraries(JuicySFPlugin
 
 # Apple clang doesn't support -static-libgcc flag, but seems to make a portable binary regardless
 if (NOT BUILD_SHARED_LIBS AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
-  # the VST2 and VST3 distributions are "modules", so they don't listen to the EXE_LINKER flags
-  set(CMAKE_MODULE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_MODULE_LINKER_FLAGS}")
+  check_cxx_compiler_flag("-static-libgcc" CXX_SUPPORTS_STATIC_LIBGCC)
+  append_if(CXX_SUPPORTS_STATIC_LIBGCC "-static-libgcc"
+    CMAKE_EXE_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_SHARED_LINKER_FLAGS)
+  check_cxx_compiler_flag("-static-libstdc++" CXX_SUPPORTS_STATIC_LIBSTDCPP)
+  append_if(CXX_SUPPORTS_STATIC_LIBSTDCPP "-static-libstdc++"
+    CMAKE_EXE_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_SHARED_LINKER_FLAGS)
+  # VST2 and VST3 distributions are "modules"
 endif (NOT BUILD_SHARED_LIBS AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+
+if (LLVM_ENABLE_LLD)
+  check_cxx_compiler_flag("-fuse-ld=lld" CXX_SUPPORTS_LLD)
+  append_if(CXX_SUPPORTS_LLD "-fuse-ld=lld"
+    CMAKE_EXE_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_SHARED_LINKER_FLAGS)
+endif (LLVM_ENABLE_LLD)

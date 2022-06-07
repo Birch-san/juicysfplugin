@@ -7,6 +7,9 @@ declare -A win32_TOOLCHAINS=( [x64]=x86_64 [x86]=i686 [arm64]=aarch64 )
 declare -A linux_TOOLCHAINS=( [x64]=amd64 [x86]=i386 [arm64]=arm64 )
 declare -A win32_REPOS=( [x64]=clang64 [x86]=clang32 [arm64]=clangarm64 )
 declare -A linux_REPOS=( [x64]=x86_64 [x86]=i386 [arm64]=aarch64 )
+# for some reason the llvm-mingw toolchain gets the linker right by default
+# so no override needed; we can leave it OFF on win32
+declare -A LLVM_ENABLE_LLD=( [win32]=OFF [linux]=ON )
 
 TEST_DIR=/VST2_SDK/pluginterfaces
 if [ -d "$TEST_DIR" ]; then
@@ -87,7 +90,7 @@ resolve_linker_flags () {
   esac
 }
 
-resolve_cxx_flags () {
+resolve_cxx_flags_option () {
   local TARGET_OS="$1"
   case $TARGET_OS in
     win32)
@@ -127,7 +130,8 @@ resolve_cxx_flags () {
       do
         UIA_DEFINES="$UIA_DEFINES -D${UIA_CONST}=\"(${UIA_CONSTS[$UIA_CONST]})\""
       done
-      echo "-D__UIAutomationClient_LIBRARY_DEFINED__ $UIA_DEFINES"
+      local CMAKE_CXX_FLAGS="-D__UIAutomationClient_LIBRARY_DEFINED__ $UIA_DEFINES"
+      echo "-DCMAKE_CXX_FLAGS=$CMAKE_CXX_FLAGS"
       ;;
 
     linux)
@@ -162,7 +166,7 @@ echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
 
 LINKER_FLAGS="$(resolve_linker_flags "$TARGET_OS" "$LIB_INSTALL_PATH" "$TOOLCHAIN_LIB_DIR")"
 
-CMAKE_CXX_FLAGS="$(resolve_cxx_flags "$TARGET_OS")"
+CMAKE_CXX_FLAGS_OPTION="$(resolve_cxx_flags_option "$TARGET_OS")"
 
 # MODULE_LINKER flags are for the VST2/VST3 modules (they don't listen to the EXE_LINKER flags)
 VERBOSE=1 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" cmake -B"$BUILD" \
@@ -171,6 +175,7 @@ VERBOSE=1 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" cmake -B"$BUILD" \
 -DCMAKE_EXE_LINKER_FLAGS="$LINKER_FLAGS" \
 -DCMAKE_MODULE_LINKER_FLAGS="$LINKER_FLAGS" \
 "$VST2_OPTION" \
+-DLLVM_ENABLE_LLD="${LLVM_ENABLE_LLD[$TARGET_OS]}" \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
--DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS" \
--DCMAKE_BUILD_TYPE=Release
+"$CMAKE_CXX_FLAGS_OPTION" \
+-DCMAKE_BUILD_TYPE=Debug # TODO: put back to Release
