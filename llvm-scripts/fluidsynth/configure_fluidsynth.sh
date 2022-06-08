@@ -63,6 +63,8 @@ echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
 # https://github.com/llvm/llvm-project/blob/main/openmp/README.rst#options-for-libomp
 # Yet, our priority is "statically-link everything" (in order to build a single-file binary,
 # which can be installed by drag-and-drop).
+# Use position-independent code because we need to be able to link our
+# libfluidsynth.a into juicysfplugin.so, which must contain only PIC
 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" cmake -B"$BUILD" \
 -DBUILD_SHARED_LIBS=off \
 -Denable-portaudio=off \
@@ -91,5 +93,6 @@ PKG_CONFIG_PATH="$PKG_CONFIG_PATH" cmake -B"$BUILD" \
 -Denable-lash=off \
 -Denable-alsa=off \
 -Denable-systemd=off \
+-DCMAKE_POSITION_INDEPENDENT_CODE=on \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
 -DCMAKE_BUILD_TYPE=Release

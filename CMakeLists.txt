@@ -38,14 +38,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if (BUILD_SHARED_LIBS)
   set(FINDPKG_STATIC_TARGET "")
   set(FINDPKG_VAR_QUALIFIER "")
-else (BUILD_SHARED_LIBS)
+else ()
   set(FINDPKG_STATIC_TARGET "STATIC_TARGET")
   set(FINDPKG_VAR_QUALIFIER "STATIC_")
-endif (BUILD_SHARED_LIBS)
+endif ()
 
-find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
-# or
-# add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
+if (LOCAL_JUCE)
+  add_subdirectory("${LOCAL_JUCE}")                    # If you've put JUCE in a subdirectory called JUCE
+else ()
+  find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
+endif()
 
 option(LLVM_ENABLE_LLD "Use lld as C and C++ linker." OFF)
 # default to static libraries, since distribution is easier
@@ -70,7 +72,7 @@ if (EXTRA_ARCH_PKG_CONFIG_PATH)
   set(ENV{PKG_CONFIG_PATH} "${EXTRA_ARCH_PKG_CONFIG_PATH}")
   pkg_search_module(EXTRA_ARCH_FLUIDSYNTH REQUIRED IMPORTED_TARGET fluidsynth>=2)
   set(EXTRA_ARCH_FLUIDSYNTH_TARGET "PkgConfig::EXTRA_ARCH_FLUIDSYNTH")
-endif (EXTRA_ARCH_PKG_CONFIG_PATH)
+endif ()
 
 set(VST_COPY_DIR "${JUCE_VST_COPY_DIR}" CACHE STRING "VST2 installation dir")
 set(VST3_COPY_DIR "${JUCE_VST3_COPY_DIR}" CACHE STRING "VST3 installation dir")
@@ -83,13 +85,13 @@ if (VST2_SDK_PATH)
   set(HAS_VST2_SDK_PATH 1)
   set(VST2_FORMAT "VST")
   juce_set_vst2_sdk_path(${VST2_SDK_PATH})
-else (VST2_SDK_PATH)
+else ()
   set(HAS_VST2_SDK_PATH 0)
-endif (VST2_SDK_PATH)
+endif ()
 
 if (VST3_SDK_PATH)
   juce_set_vst3_sdk_path(${VST3_SDK_PATH})
-endif (VST3_SDK_PATH)
+endif ()
 
 # juce_set_aax_sdk_path(...)
 
@@ -135,10 +137,6 @@ juce_add_plugin(JuicySFPlugin
     VST3_COPY_DIR "${VST3_COPY_DIR}"
     AU_COPY_DIR "${AU_COPY_DIR}"
     PRODUCT_NAME "juicysfplugin")        # The name of the final executable, which can differ from the target name
-
-# https://cmake.org/cmake/help/latest/guide/tutorial/Selecting%20Static%20or%20Shared%20Libraries.html
-set_target_properties(JuicySFPlugin PROPERTIES
-                        POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
 
 # target_compile_definitions(JuicySFPlugin PUBLIC JUCE_USE_CURL=0 JUCE_USE_FREETYPE=0 JUCE_WEB_BROWSER=0)
 
@@ -219,10 +217,13 @@ if (NOT BUILD_SHARED_LIBS AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   append_if(CXX_SUPPORTS_STATIC_LIBSTDCPP "-static-libstdc++"
     CMAKE_EXE_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_SHARED_LINKER_FLAGS)
   # VST2 and VST3 distributions are "modules"
-endif (NOT BUILD_SHARED_LIBS AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+endif ()
 
 if (LLVM_ENABLE_LLD)
   check_cxx_compiler_flag("-fuse-ld=lld" CXX_SUPPORTS_LLD)
   append_if(CXX_SUPPORTS_LLD "-fuse-ld=lld"
     CMAKE_EXE_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_SHARED_LINKER_FLAGS)
-endif (LLVM_ENABLE_LLD)
+endif ()
+
+get_target_property(SHARED_PIC JuicySFPlugin POSITION_INDEPENDENT_CODE)
+message(STATUS "SHARED_PIC: ${SHARED_PIC}")

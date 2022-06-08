@@ -9,4 +9,4 @@ autoheader
 automake --foreign --copy --add-missing
 autoconf
 # --prefix doesn't understand multi-arch very well, so this will require some postprocessing
-CC=/usr/bin/clang CFLAGS=-fuse-ld=lld ./configure --enable-static=yes --enable-shared=no --host="$TARGET_TRIPLE" --prefix=/alsa-install
+CC=/usr/bin/clang CFLAGS=-fPIC LDFLAGS=-fuse-ld=lld ./configure --enable-static=yes --enable-shared=no --host="$TARGET_TRIPLE" --prefix=/alsa-install
