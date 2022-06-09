@@ -10,6 +10,7 @@ declare -A linux_REPOS=( [x64]=x86_64 [x86]=i386 [arm64]=aarch64 )
 # for some reason the llvm-mingw toolchain gets the linker right by default
 # so no override needed; we can leave it OFF on win32
 declare -A LLVM_ENABLE_LLD=( [win32]=OFF [linux]=ON )
+declare -A USE_JACK=( [win32]=OFF [linux]=ON )
 
 TEST_DIR=/VST2_SDK/pluginterfaces
 if [ -d "$TEST_DIR" ]; then
@@ -176,6 +177,7 @@ VERBOSE=1 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" cmake -B"$BUILD" \
 -DCMAKE_MODULE_LINKER_FLAGS="$LINKER_FLAGS" \
 "$VST2_OPTION" \
 -DLLVM_ENABLE_LLD="${LLVM_ENABLE_LLD[$TARGET_OS]}" \
+-DUSE_JACK="${USE_JACK[$TARGET_OS]}" \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
 "$CMAKE_CXX_FLAGS_OPTION" \
 -DCMAKE_BUILD_TYPE=Debug # TODO: put back to Release

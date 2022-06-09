@@ -49,6 +49,7 @@ else ()
   find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
 endif()
 
+option(USE_JACK "compile+link JACK library for Linux audio output." OFF)
 option(LLVM_ENABLE_LLD "Use lld as C and C++ linker." OFF)
 # default to static libraries, since distribution is easier
 option(BUILD_SHARED_LIBS "Build using shared libraries" off)
@@ -138,6 +139,12 @@ juce_add_plugin(JuicySFPlugin
     AU_COPY_DIR "${AU_COPY_DIR}"
     PRODUCT_NAME "juicysfplugin")        # The name of the final executable, which can differ from the target name
 
+if (USE_JACK)
+  target_compile_definitions(JuicySFPlugin PUBLIC JUCE_JACK=1)
+  pkg_search_module(JACK REQUIRED IMPORTED_TARGET ${FINDPKG_STATIC_TARGET} jack)
+  set(JACK_TARGET "PkgConfig::JACK")
+endif()
+
 # target_compile_definitions(JuicySFPlugin PUBLIC JUCE_USE_CURL=0 JUCE_USE_FREETYPE=0 JUCE_WEB_BROWSER=0)
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
@@ -203,6 +210,7 @@ target_link_libraries(JuicySFPlugin
         juce::juce_gui_extra
         ${FLUIDSYNTH_TARGET}
         ${EXTRA_ARCH_FLUIDSYNTH_TARGET}
+        ${JACK_TARGET}
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags

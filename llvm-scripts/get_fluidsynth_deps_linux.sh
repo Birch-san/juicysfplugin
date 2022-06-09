@@ -13,9 +13,11 @@ fi
 # libselinux (a transitive dependency of libglib).
 # this suggests that I missed something when setting up the cross-arch
 # apt repositories.
+# musl for anything we compile ourselves, to reduce exposure to super-new glibc
 apt-get update -qq && \
 DEBIAN_FRONTEND=noninteractive apt-get install -qqy --no-install-recommends \
 "libsndfile1-dev:$ARCH" "libglib2.0-dev:$ARCH" "libselinux1:$ARCH" \
+"musl-dev:$ARCH" \
 && \
 apt-get clean -y && \
 rm -rf /var/lib/apt/lists/*

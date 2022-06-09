@@ -2,6 +2,12 @@
 # docker build . --tag=juicy-llvm --target=juicysfplugin_win32_x64
 # docker run -it --rm --name juicy-llvm juicy-llvm
 ARG UBUNTU_VER=22.10
+# when we target Linux, we want to target an old glibc to ensure wide compatibility.
+# older OS gives us older glibc, and any dependencies we get from apt will match
+# sadly older LTSes (e.g. 20.04) encountered undefined symbols linking freetype into juicysfplugin,
+# and even 21.04 had missing symbol _dlopen. so 22.04 is the oldest that works without further accommodations.
+# https://ubuntu.com/blog/what-is-an-ubuntu-lts-release
+ARG DEPS_UBUNTU_VER=22.04
 
 FROM ubuntu:$UBUNTU_VER AS toolchain-common
 # xz-utils - for extracting llvm-mingw releases
@@ -27,19 +33,21 @@ RUN LLVM_MINGW_VER=$LLVM_MINGW_VER ./download_llvm_mingw.sh download_llvm_mingw.
 RUN mkdir -p /opt/llvm-mingw && tar -xvf llvm-mingw.tar.xz --strip-components=1 -C /opt/llvm-mingw && rm llvm-mingw.tar.xz
 ENV PATH="/opt/llvm-mingw/bin:$PATH"
 
-FROM ubuntu:$UBUNTU_VER AS linux_xcompile
+FROM ubuntu:$DEPS_UBUNTU_VER AS linux_xcompile
 # automake, libtool, git, ca-certificates needed to build libasound
-# lib* - needed to build JUCE plugins (i.e. juicysfplugin)
+# libx* to build JUCE GUI plugins
+# lib* - dependencies of libfreetype, which juicysfplugin needs on Linux
 #   instead of installing libfreetype6-dev, we install its lib* dependencies
 #   and compile it ourselves (we need a libfreetype.a compiled with -fPIC,
 #   so we can link it into our libjuicysfplugin.so when we target Linux VST)
-#   TODO: may need to build our own libpng too
+# libjack - because ALSA failed to detect any output devices on Linux
 RUN apt-get update -qq && \
 DEBIAN_FRONTEND=noninteractive apt-get install -qqy --no-install-recommends \
 automake libtool git ca-certificates \
 cmake make pkg-config clang lld \
 libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev \
 libbrotli-dev libc6-dev libpng-dev zlib1g-dev \
+libjack-jackd2-dev \
 && \
 apt-get clean -y && \
 rm -rf /var/lib/apt/lists/*
