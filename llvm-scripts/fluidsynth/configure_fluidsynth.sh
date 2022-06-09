@@ -56,7 +56,7 @@ resolve_cxx_flags_option () {
         local CMAKE_CXX_FLAGS=(
           "--target=$TARGET_TRIPLE"
         )
-        echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[@]}"
+        echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[*]}"
       fi
       ;;
     *)

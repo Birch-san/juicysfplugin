@@ -18,7 +18,7 @@ if [ "$(dpkg --print-architecture)" != "$ARCH" ]; then
 fi
 
 echo "CROSS_COMPILE_SYSROOT_DEPS:
-${CROSS_COMPILE_SYSROOT_DEPS[@]}"
+${CROSS_COMPILE_SYSROOT_DEPS[*]}"
 
 # "libasound2-dev:$ARCH" was no use (no static distribution included).
 # "libjack-jackd2-dev:$ARCH" was no use (no static distribution included).

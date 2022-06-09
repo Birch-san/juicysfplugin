@@ -14,6 +14,9 @@ declare -A LLVM_ENABLE_LLD=( [win32]=OFF [linux]=ON )
 # and because there's no static distribution on apt
 declare -A USE_JACK=( [win32]=OFF [linux]=OFF )
 
+# TODO: set back to Release
+CMAKE_BUILD_TYPE=Debug
+
 TEST_DIR=/VST2_SDK/pluginterfaces
 if [ -d "$TEST_DIR" ]; then
   echo "$TEST_DIR found; enabling VST2 build"
@@ -139,7 +142,19 @@ resolve_cxx_flags_option () {
         "-D__UIAutomationClient_LIBRARY_DEFINED__"
         "${UIA_DEFINES[@]}"
       )
-      echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[@]}"
+      if [ "$CMAKE_BUILD_TYPE" == 'Debug' ]; then
+        # JUCE doesn't have extensive support for win32 aarch64
+        # so juce_PlatformDefs.h implements debug breakpoints
+        # with a non-clang-compatible style of ASM expression.
+        # if we're building Debug, it's only because we want the
+        # build to go faster (than Release)
+        # so we can tolerate having breakpoints and assertions not work.
+
+        # actually nevermind; my JUCE branch patches juce_PlatformDefs.h
+        # to fix this properly
+        # CMAKE_CXX_FLAGS+=('-DJUCE_NO_INLINE_ASM')
+      fi
+      echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[*]}"
       ;;
 
     linux)
@@ -150,7 +165,7 @@ resolve_cxx_flags_option () {
         local CMAKE_CXX_FLAGS=(
           "--target=$TARGET_TRIPLE"
         )
-        echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[@]}"
+        echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[*]}"
       fi
       ;;
     *)
@@ -196,4 +211,4 @@ VERBOSE=1 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" cmake -B"$BUILD" \
 -DUSE_JACK="${USE_JACK[$TARGET_OS]}" \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
 "$CMAKE_CXX_FLAGS_OPTION" \
--DCMAKE_BUILD_TYPE=Debug # TODO: put back to Release
+-DCMAKE_BUILD_TYPE="$CMAKE_BUILD_TYPE"

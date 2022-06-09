@@ -12,7 +12,7 @@ if [ "$(dpkg --print-architecture)" != "$DPKG_ARCH" ]; then
     "--target=$TARGET_TRIPLE"
   )
 fi
-echo "CFLAGS: ${CFLAGS[@]}"
+echo "CFLAGS: ${CFLAGS[*]}"
 
 cd alsa-lib
 libtoolize --force --copy --automake
@@ -21,4 +21,4 @@ autoheader
 automake --foreign --copy --add-missing
 autoconf
 # --prefix doesn't understand multi-arch very well, so this will require some postprocessing
-CC=/usr/bin/clang CFLAGS="${CFLAGS[@]}" LDFLAGS=-fuse-ld=lld ./configure --enable-static=yes --enable-shared=no --host="$TARGET_TRIPLE" --prefix=/alsa-install
+CC=/usr/bin/clang CFLAGS="${CFLAGS[*]}" LDFLAGS=-fuse-ld=lld ./configure --enable-static=yes --enable-shared=no --host="$TARGET_TRIPLE" --prefix=/alsa-install
