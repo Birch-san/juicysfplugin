@@ -64,11 +64,11 @@ RUN ./clone_alsa.sh
 COPY llvm-scripts/get_fluidsynth_deps_linux.sh get_fluidsynth_deps_linux.sh
 
 FROM linux_xcompile AS linux_deps_aarch64
+RUN ./get_fluidsynth_deps_linux.sh arm64
 COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
 RUN ./configure_alsa.sh aarch64
 COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
 RUN ./make_alsa.sh aarch64
-RUN ./get_fluidsynth_deps_linux.sh arm64
 COPY llvm-scripts/toolchain/linux_arm64_toolchain.cmake /linux_arm64_toolchain.cmake
 COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
 RUN ./clone_freetype.sh
@@ -78,11 +78,11 @@ COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
 RUN ./make_freetype.sh aarch64
 
 FROM linux_xcompile AS linux_deps_x86_64
+RUN ./get_fluidsynth_deps_linux.sh amd64
 COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
 RUN ./configure_alsa.sh x86_64
 COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
 RUN ./make_alsa.sh x86_64
-RUN ./get_fluidsynth_deps_linux.sh amd64
 COPY llvm-scripts/toolchain/linux_amd64_toolchain.cmake /linux_amd64_toolchain.cmake
 COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
 RUN ./clone_freetype.sh
@@ -92,11 +92,11 @@ COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
 RUN ./make_freetype.sh x86_64
 
 FROM linux_xcompile AS linux_deps_i386
+RUN ./get_fluidsynth_deps_linux.sh i386
 COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
 RUN ./configure_alsa.sh i386
 COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
 RUN ./make_alsa.sh i386
-RUN ./get_fluidsynth_deps_linux.sh i386
 COPY llvm-scripts/toolchain/linux_i386_toolchain.cmake /linux_i386_toolchain.cmake
 COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
 RUN ./clone_freetype.sh

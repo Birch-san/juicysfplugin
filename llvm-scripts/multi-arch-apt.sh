@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-LISTS=( /etc/apt/sources.list /etc/apt/sources.list.d/proposed.list )
+APT_SOURCES='/etc/apt/sources.list'
+LISTS=("$APT_SOURCES")
+PROPOSED='/etc/apt/sources.list.d/proposed.list'
+if test -f "$PROPOSED"; then
+  LISTS+=("$PROPOSED")
+fi
 for LIST in "${LISTS[@]}"
 do
   TMPFILE="$(mktemp)"
@@ -31,8 +36,10 @@ deb [arch=$TARGET_ARCHS] $ARCHIVE $DISTRIB_CODENAME-updates multiverse
 deb [arch=$TARGET_ARCHS] $ARCHIVE $DISTRIB_CODENAME-backports main restricted universe multiverse
 deb [arch=$TARGET_ARCHS] $SECURITY $DISTRIB_CODENAME-security main restricted
 deb [arch=$TARGET_ARCHS] $SECURITY $DISTRIB_CODENAME-security universe
-deb [arch=$TARGET_ARCHS] $SECURITY $DISTRIB_CODENAME-security multiverse" >> /etc/apt/sources.list
-  echo "deb [arch=$TARGET_ARCHS] $ARCHIVE $DISTRIB_CODENAME-proposed main restricted" >> /etc/apt/sources.list.d/proposed.list
+deb [arch=$TARGET_ARCHS] $SECURITY $DISTRIB_CODENAME-security multiverse" >> "$APT_SOURCES"
+  if test -f "$PROPOSED"; then
+    echo "deb [arch=$TARGET_ARCHS] $ARCHIVE $DISTRIB_CODENAME-proposed main restricted" >> "$PROPOSED"
+  fi
   dpkg --add-architecture amd64
   dpkg --add-architecture i386
 fi
@@ -48,7 +55,9 @@ deb [arch=$TARGET_ARCHS] $REPO $DISTRIB_CODENAME-updates multiverse
 deb [arch=$TARGET_ARCHS] $REPO $DISTRIB_CODENAME-backports main restricted universe multiverse
 deb [arch=$TARGET_ARCHS] $REPO $DISTRIB_CODENAME-security main restricted
 deb [arch=$TARGET_ARCHS] $REPO $DISTRIB_CODENAME-security universe
-deb [arch=$TARGET_ARCHS] $REPO $DISTRIB_CODENAME-security multiverse" >> /etc/apt/sources.list
-  echo "deb [arch=$TARGET_ARCHS] $REPO $DISTRIB_CODENAME-proposed main restricted" >> /etc/apt/sources.list.d/proposed.list
+deb [arch=$TARGET_ARCHS] $REPO $DISTRIB_CODENAME-security multiverse" >> "$APT_SOURCES"
+  if test -f "$PROPOSED"; then
+    echo "deb [arch=$TARGET_ARCHS] $REPO $DISTRIB_CODENAME-proposed main restricted" >> "$PROPOSED"
+  fi
   dpkg --add-architecture arm64
 fi
