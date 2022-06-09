@@ -8,16 +8,28 @@ else
   exit 1
 fi
 
-# "libasound2-dev:$ARCH" was no use (no static distribution included)
-# not sure why it was necessary (for cross-arch only) to specify 
-# libselinux (a transitive dependency of libglib).
-# this suggests that I missed something when setting up the cross-arch
-# apt repositories.
-# musl for anything we compile ourselves, to reduce exposure to super-new glibc
+if [ "$(dpkg --print-architecture)" == "$ARCH" ]
+then
+  CROSS_COMPILE_SYSROOT_DEPS=""
+else
+  CROSS_COMPILE_SYSROOT_DEPS=(
+    "libc6-$ARCH-cross"
+    "libgcc-12-dev-$ARCH-cross"
+    "libstdc++-12-dev-$ARCH-cross"
+  )
+fi
+
+# "libasound2-dev:$ARCH" was no use (no static distribution included).
+# "libjack-jackd2-dev:$ARCH" was no use (no static distribution included).
+# libselinux1 is included because it's a transitive dependency of libglib,
+# which on cross-arch was not automatically located in the repositories (not sure why).
+# libjack - because ALSA failed to detect any output devices on Linux
 apt-get update -qq && \
 DEBIAN_FRONTEND=noninteractive apt-get install -qqy --no-install-recommends \
 "libsndfile1-dev:$ARCH" "libglib2.0-dev:$ARCH" "libselinux1:$ARCH" \
-"musl-dev:$ARCH" \
+"libx11-dev:$ARCH" "libxrandr-dev:$ARCH" "libxinerama-dev:$ARCH" "libxcursor-dev:$ARCH" \
+"libbrotli-dev:$ARCH" "libc6-dev:$ARCH" "libpng-dev:$ARCH" "zlib1g-dev:$ARCH" \
+"${CROSS_COMPILE_SYSROOT_DEPS[@]}" \
 && \
 apt-get clean -y && \
 rm -rf /var/lib/apt/lists/*

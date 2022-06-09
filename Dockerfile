@@ -1,11 +1,21 @@
 # docker build . --tag=juicy-llvm
 # docker build . --tag=juicy-llvm --target=juicysfplugin_win32_x64
 # docker run -it --rm --name juicy-llvm juicy-llvm
-ARG UBUNTU_VER=22.10
-# when we target Linux, we want to target an old glibc to ensure wide compatibility.
-# older OS gives us older glibc, and any dependencies we get from apt will match
-# sadly older LTSes (e.g. 20.04) encountered undefined symbols linking freetype into juicysfplugin,
-# and even 21.04 had missing symbol _dlopen. so 22.04 is the oldest that works without further accommodations.
+
+# used for host-native work and for cross-compile-to-win32 work.
+# works fine on 22.10 too, but we align with DEPS_UBUNTU_VER
+# to save some image fetching (if the version gap were bigger than this,
+# then we'd instead prefer to keep UBUNTU_VER as new as it can go, to have
+# access to latest toolchains and deps from apt)
+ARG UBUNTU_VER=22.04
+# oldest Ubuntu on which we can build Linux targets successfully.
+# this is basically "how old a glibc should juicy + its dependencies to target".
+# older is better (support more systems).
+# sadly 20.04 encountered undefined symbols linking freetype into juicysfplugin,
+# and even 21.04 had missing symbol _dlopen.
+# 21.04 is probably solveable (add -dl flag in right position), but
+# for now we target 22.04 because it's the oldest LTS that works without
+# further accommodations.
 # https://ubuntu.com/blog/what-is-an-ubuntu-lts-release
 ARG DEPS_UBUNTU_VER=22.04
 
@@ -40,14 +50,10 @@ FROM ubuntu:$DEPS_UBUNTU_VER AS linux_xcompile
 #   instead of installing libfreetype6-dev, we install its lib* dependencies
 #   and compile it ourselves (we need a libfreetype.a compiled with -fPIC,
 #   so we can link it into our libjuicysfplugin.so when we target Linux VST)
-# libjack - because ALSA failed to detect any output devices on Linux
 RUN apt-get update -qq && \
 DEBIAN_FRONTEND=noninteractive apt-get install -qqy --no-install-recommends \
 automake libtool git ca-certificates \
 cmake make pkg-config clang lld \
-libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev \
-libbrotli-dev libc6-dev libpng-dev zlib1g-dev \
-libjack-jackd2-dev \
 && \
 apt-get clean -y && \
 rm -rf /var/lib/apt/lists/*
@@ -260,7 +266,7 @@ COPY JuceLibraryCode/JuceHeader.h JuceLibraryCode/JuceHeader.h
 COPY llvm-scripts/juicysfplugin/configure_juicysfplugin.sh configure_juicysfplugin.sh
 RUN ./configure_juicysfplugin.sh linux x64
 COPY llvm-scripts/juicysfplugin/make_juicysfplugin.sh make_juicysfplugin.sh
-RUN ./make_juicysfplugin.sh linux x64
+# RUN ./make_juicysfplugin.sh linux x64
 
 FROM linux_deps_i386 AS juicysfplugin_linux_i386
 COPY --from=make_juce /linux_native/ /linux_native/

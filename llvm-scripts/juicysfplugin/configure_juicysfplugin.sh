@@ -10,7 +10,9 @@ declare -A linux_REPOS=( [x64]=x86_64 [x86]=i386 [arm64]=aarch64 )
 # for some reason the llvm-mingw toolchain gets the linker right by default
 # so no override needed; we can leave it OFF on win32
 declare -A LLVM_ENABLE_LLD=( [win32]=OFF [linux]=ON )
-declare -A USE_JACK=( [win32]=OFF [linux]=ON )
+# turning off Jack because it didn't solve the "no audio output devices detected"
+# and because there's no static distribution on apt
+declare -A USE_JACK=( [win32]=OFF [linux]=OFF )
 
 TEST_DIR=/VST2_SDK/pluginterfaces
 if [ -d "$TEST_DIR" ]; then
@@ -84,6 +86,7 @@ resolve_linker_flags () {
       ;;
 
     linux)
+      echo "-fuse-ld=lld"
       ;;
     *)
       >&2 echo "Unsupported TARGET_OS '$TARGET_OS'"
@@ -126,16 +129,29 @@ resolve_cxx_flags_option () {
         [UIA_NativeWindowHandlePropertyId]=30020
       )
 
-      local UIA_DEFINES=''
-      for UIA_CONST in "${!UIA_CONSTS[@]}"
-      do
-        UIA_DEFINES="$UIA_DEFINES -D${UIA_CONST}=\"(${UIA_CONSTS[$UIA_CONST]})\""
+      local UIA_DEFINES=()
+      for UIA_CONST in "${!UIA_CONSTS[@]}"; do
+        UIA_DEFINES+=(
+          "-D${UIA_CONST}=\"(${UIA_CONSTS[$UIA_CONST]})\""
+        )
       done
-      local CMAKE_CXX_FLAGS="-D__UIAutomationClient_LIBRARY_DEFINED__ $UIA_DEFINES"
-      echo "-DCMAKE_CXX_FLAGS=$CMAKE_CXX_FLAGS"
+      local CMAKE_CXX_FLAGS=(
+        "-D__UIAutomationClient_LIBRARY_DEFINED__"
+        "${UIA_DEFINES[@]}"
+      )
+      echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[@]}"
       ;;
 
     linux)
+      local DPKG_ARCH="${linux_TOOLCHAINS[$ARCH]}"
+      local LINUX_ARCH="${linux_REPOS[$ARCH]}"
+      if [ "$(dpkg --print-architecture)" != "$DPKG_ARCH" ]; then
+        local TARGET_TRIPLE="$LINUX_ARCH-linux-gnu"
+        local CMAKE_CXX_FLAGS=(
+          "--target=$TARGET_TRIPLE"
+        )
+        echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[@]}"
+      fi
       ;;
     *)
       >&2 echo "Unsupported TARGET_OS '$TARGET_OS'"
