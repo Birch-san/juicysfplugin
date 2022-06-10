@@ -14,6 +14,13 @@ declare -A LLVM_ENABLE_LLD=( [win32]=OFF [linux]=ON )
 # and because there's no static distribution on apt
 declare -A USE_JACK=( [win32]=OFF [linux]=OFF )
 
+DPKG_ARCH="${linux_TOOLCHAINS[$ARCH]}"
+if [ "$(dpkg --print-architecture)" != "$DPKG_ARCH" ]; then
+  CROSS_COMPILING='1'
+else
+  CROSS_COMPILING=''
+fi
+
 # TODO: set back to Release
 CMAKE_BUILD_TYPE=Debug
 
@@ -142,7 +149,7 @@ resolve_cxx_flags_option () {
         "-D__UIAutomationClient_LIBRARY_DEFINED__"
         "${UIA_DEFINES[@]}"
       )
-      if [ "$CMAKE_BUILD_TYPE" == 'Debug' ]; then
+      # if [ "$CMAKE_BUILD_TYPE" == 'Debug' ]; then
         # JUCE doesn't have extensive support for win32 aarch64
         # so juce_PlatformDefs.h implements debug breakpoints
         # with a non-clang-compatible style of ASM expression.
@@ -153,19 +160,35 @@ resolve_cxx_flags_option () {
         # actually nevermind; my JUCE branch patches juce_PlatformDefs.h
         # to fix this properly
         # CMAKE_CXX_FLAGS+=('-DJUCE_NO_INLINE_ASM')
-      fi
+      # fi
       echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[*]}"
       ;;
 
     linux)
-      local DPKG_ARCH="${linux_TOOLCHAINS[$ARCH]}"
       local LINUX_ARCH="${linux_REPOS[$ARCH]}"
-      if [ "$(dpkg --print-architecture)" != "$DPKG_ARCH" ]; then
+      if [ "$CROSS_COMPILING" == '1' ]; then
         local TARGET_TRIPLE="$LINUX_ARCH-linux-gnu"
         local CMAKE_CXX_FLAGS=(
           "--target=$TARGET_TRIPLE"
         )
         echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[*]}"
+      fi
+      ;;
+    *)
+      >&2 echo "Unsupported TARGET_OS '$TARGET_OS'"
+      exit 1
+  esac
+}
+
+resolve_try_compile_target_type_option () {
+  local TARGET_OS="$1"
+  case $TARGET_OS in
+    win32)
+      ;;
+
+    linux)
+      if [ "$CROSS_COMPILING" == '1' ]; then
+        echo '-DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY'
       fi
       ;;
     *)
@@ -200,6 +223,9 @@ LINKER_FLAGS="$(resolve_linker_flags "$TARGET_OS" "$LIB_INSTALL_PATH" "$TOOLCHAI
 
 CMAKE_CXX_FLAGS_OPTION="$(resolve_cxx_flags_option "$TARGET_OS")"
 
+CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION="$(resolve_try_compile_target_type_option "$TARGET_OS")"
+echo "CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION: $CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION"
+
 # MODULE_LINKER flags are for the VST2/VST3 modules (they don't listen to the EXE_LINKER flags)
 VERBOSE=1 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" cmake -B"$BUILD" \
 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
@@ -211,4 +237,5 @@ VERBOSE=1 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" cmake -B"$BUILD" \
 -DUSE_JACK="${USE_JACK[$TARGET_OS]}" \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
 "$CMAKE_CXX_FLAGS_OPTION" \
+"$CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION" \
 -DCMAKE_BUILD_TYPE="$CMAKE_BUILD_TYPE"

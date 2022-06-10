@@ -12,6 +12,13 @@ declare -A linux_TOOLCHAINS=( [x64]=amd64 [x86]=i386 [arm64]=arm64 )
 declare -A win32_REPOS=( [x64]=clang64 [x86]=clang32 [arm64]=clangarm64 )
 declare -A linux_REPOS=( [x64]=x86_64 [x86]=i386 [arm64]=aarch64 )
 
+DPKG_ARCH="${linux_TOOLCHAINS[$ARCH]}"
+if [ "$(dpkg --print-architecture)" != "$DPKG_ARCH" ]; then
+  CROSS_COMPILING='1'
+else
+  CROSS_COMPILING=''
+fi
+
 # builds lib paths such as the following:
 # /clang64/lib
 # /usr/lib/x86_64-linux-gnu
@@ -49,14 +56,30 @@ resolve_cxx_flags_option () {
       ;;
 
     linux)
-      local DPKG_ARCH="${linux_TOOLCHAINS[$ARCH]}"
       local LINUX_ARCH="${linux_REPOS[$ARCH]}"
-      if [ "$(dpkg --print-architecture)" != "$DPKG_ARCH" ]; then
+      if [ "$CROSS_COMPILING" == '1' ]; then
         local TARGET_TRIPLE="$LINUX_ARCH-linux-gnu"
         local CMAKE_CXX_FLAGS=(
           "--target=$TARGET_TRIPLE"
         )
         echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[*]}"
+      fi
+      ;;
+    *)
+      >&2 echo "Unsupported TARGET_OS '$TARGET_OS'"
+      exit 1
+  esac
+}
+
+resolve_try_compile_target_type_option () {
+  local TARGET_OS="$1"
+  case $TARGET_OS in
+    win32)
+      ;;
+
+    linux)
+      if [ "$CROSS_COMPILING" == '1' ]; then
+        echo '-DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY'
       fi
       ;;
     *)
@@ -84,6 +107,9 @@ echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
 
 CMAKE_CXX_FLAGS_OPTION="$(resolve_cxx_flags_option "$TARGET_OS")"
 echo "CMAKE_CXX_FLAGS_OPTION: $CMAKE_CXX_FLAGS_OPTION"
+
+CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION="$(resolve_try_compile_target_type_option "$TARGET_OS")"
+echo "CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION: $CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION"
 
 # OpenMP doesn't support static libraries on Windows:
 # https://github.com/llvm/llvm-project/blob/main/openmp/README.rst#options-for-libomp
@@ -122,4 +148,5 @@ PKG_CONFIG_PATH="$PKG_CONFIG_PATH" cmake -B"$BUILD" \
 -DCMAKE_POSITION_INDEPENDENT_CODE=on \
 "$CMAKE_CXX_FLAGS_OPTION" \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
+"$CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION" \
 -DCMAKE_BUILD_TYPE=Release

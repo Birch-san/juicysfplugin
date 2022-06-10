@@ -53,7 +53,7 @@ FROM ubuntu:$DEPS_UBUNTU_VER AS linux_xcompile
 RUN apt-get update -qq && \
 DEBIAN_FRONTEND=noninteractive apt-get install -qqy --no-install-recommends \
 automake libtool git ca-certificates \
-cmake make pkg-config clang lld \
+cmake make pkg-config clang lld llvm \
 && \
 apt-get clean -y && \
 rm -rf /var/lib/apt/lists/*
@@ -183,9 +183,9 @@ RUN ./make_fluidsynth.sh win32 arm64
 FROM linux_deps_x86_64 AS make_fluidsynth_linux_x86_64
 COPY --from=get_fluidsynth fluidsynth fluidsynth
 COPY llvm-scripts/fluidsynth/configure_fluidsynth.sh configure_fluidsynth.sh
-RUN ./configure_fluidsynth.sh linux x64
+# RUN ./configure_fluidsynth.sh linux x64
 COPY llvm-scripts/fluidsynth/make_fluidsynth.sh make_fluidsynth.sh
-RUN ./make_fluidsynth.sh linux x64
+# RUN ./make_fluidsynth.sh linux x64
 
 FROM linux_deps_i386 AS make_fluidsynth_linux_i386
 COPY --from=get_fluidsynth fluidsynth fluidsynth
