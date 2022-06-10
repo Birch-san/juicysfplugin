@@ -49,28 +49,6 @@ resolve_pkg_config_path () {
   echo "$LIB_INSTALL_PATH/pkgconfig"
 }
 
-resolve_cxx_flags_option () {
-  local TARGET_OS="$1"
-  case $TARGET_OS in
-    win32)
-      ;;
-
-    linux)
-      local LINUX_ARCH="${linux_REPOS[$ARCH]}"
-      if [ "$CROSS_COMPILING" == '1' ]; then
-        local TARGET_TRIPLE="$LINUX_ARCH-linux-gnu"
-        local CMAKE_CXX_FLAGS=(
-          "--target=$TARGET_TRIPLE"
-        )
-        echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[*]}"
-      fi
-      ;;
-    *)
-      >&2 echo "Unsupported TARGET_OS '$TARGET_OS'"
-      exit 1
-  esac
-}
-
 resolve_try_compile_target_type_option () {
   local TARGET_OS="$1"
   case $TARGET_OS in
@@ -104,9 +82,6 @@ echo "LIB_INSTALL_PATH: $LIB_INSTALL_PATH"
 
 PKG_CONFIG_PATH="$(resolve_pkg_config_path "$LIB_INSTALL_PATH")"
 echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
-
-CMAKE_CXX_FLAGS_OPTION="$(resolve_cxx_flags_option "$TARGET_OS")"
-echo "CMAKE_CXX_FLAGS_OPTION: $CMAKE_CXX_FLAGS_OPTION"
 
 CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION="$(resolve_try_compile_target_type_option "$TARGET_OS")"
 echo "CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION: $CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION"
@@ -146,7 +121,6 @@ PKG_CONFIG_PATH="$PKG_CONFIG_PATH" cmake -B"$BUILD" \
 -Denable-alsa=off \
 -Denable-systemd=off \
 -DCMAKE_POSITION_INDEPENDENT_CODE=on \
-"$CMAKE_CXX_FLAGS_OPTION" \
 -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
 "$CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION" \
 -DCMAKE_BUILD_TYPE=Release

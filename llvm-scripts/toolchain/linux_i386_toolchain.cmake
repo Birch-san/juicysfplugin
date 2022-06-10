@@ -13,9 +13,6 @@ set(CMAKE_CXX_COMPILER_TARGET ${triple})
 set(CMAKE_C_COMPILER   /usr/bin/clang)
 set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 
-set(CMAKE_C_LINK_EXECUTABLE /usr/bin/lld)
-set(CMAKE_CXX_LINK_EXECUTABLE /usr/bin/lld)
-
 # where is the target environment located
 # https://cmake.org/cmake/help/latest/command/find_library.html
 set(CMAKE_FIND_ROOT_PATH /usr)

@@ -17,15 +17,12 @@ else
   CROSS_COMPILING=''
 fi
 
-CMAKE_C_FLAGS=(-fPIC)
 if [ "$CROSS_COMPILING" == '1' ]; then
-  CMAKE_C_FLAGS+=(
-    "--target=$TARGET_TRIPLE"
-  )
   CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION='-DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY'
 else
   CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION=''
 fi
+CMAKE_C_FLAGS=(-fPIC)
 echo "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS[*]}"
 
 # let's disable every codec and see whether it works anyway

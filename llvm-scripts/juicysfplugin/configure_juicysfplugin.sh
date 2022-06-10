@@ -96,7 +96,6 @@ resolve_linker_flags () {
       ;;
 
     linux)
-      echo "-fuse-ld=lld"
       ;;
     *)
       >&2 echo "Unsupported TARGET_OS '$TARGET_OS'"
@@ -165,14 +164,6 @@ resolve_cxx_flags_option () {
       ;;
 
     linux)
-      local LINUX_ARCH="${linux_REPOS[$ARCH]}"
-      if [ "$CROSS_COMPILING" == '1' ]; then
-        local TARGET_TRIPLE="$LINUX_ARCH-linux-gnu"
-        local CMAKE_CXX_FLAGS=(
-          "--target=$TARGET_TRIPLE"
-        )
-        echo "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS[*]}"
-      fi
       ;;
     *)
       >&2 echo "Unsupported TARGET_OS '$TARGET_OS'"
