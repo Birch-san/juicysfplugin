@@ -77,13 +77,11 @@ cp include/fluidsynth/*.h "$INCLUDE_INSTALL_PATH/fluidsynth/"
 cp "$BUILD"/include/fluidsynth.h "$INCLUDE_INSTALL_PATH/fluidsynth.h"
 cp "$BUILD"/include/fluidsynth/*.h "$INCLUDE_INSTALL_PATH/fluidsynth/"
 
-TMPFILE="$(mktemp)"
 FLUIDSYNTH_PC="$PKG_CONFIG_PATH/fluidsynth.pc"
-awk -F'=' '$1 ~ /^prefix$/ {
+gawk -i inplace -F'=' '$1 ~ /^prefix$/ {
   $2="'"$INSTALL_PREFIX"'"
 }
 $1 ~ /^libdir$/ {
   $2="${pcfiledir}/.."
 }
-{ print $0 }' OFS== "$FLUIDSYNTH_PC" > "$TMPFILE"
-mv "$TMPFILE" "$FLUIDSYNTH_PC"
+{ print $0 }' OFS== "$FLUIDSYNTH_PC"

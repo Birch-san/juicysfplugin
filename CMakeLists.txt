@@ -217,7 +217,8 @@ target_link_libraries(JuicySFPlugin
         juce::juce_recommended_warning_flags)
 
 # Apple clang doesn't support -static-libgcc flag, but seems to make a portable binary regardless
-if (NOT BUILD_SHARED_LIBS AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+# our LLVM-MinGW toolchain for cross-compiling to Windows, needs static libgcc/libstdc++ otherwise it complains of missing DLLs on real Windows
+if (NOT BUILD_SHARED_LIBS AND CMAKE_SYSTEM_NAME STREQUAL "Windows")
   check_cxx_compiler_flag("-static-libgcc" CXX_SUPPORTS_STATIC_LIBGCC)
   append_if(CXX_SUPPORTS_STATIC_LIBGCC "-static-libgcc"
     CMAKE_EXE_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_SHARED_LINKER_FLAGS)

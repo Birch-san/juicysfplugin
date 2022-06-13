@@ -230,3 +230,23 @@ VERBOSE=1 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" cmake -B"$BUILD" \
 "$CMAKE_CXX_FLAGS_OPTION" \
 "$CMAKE_TRY_COMPILE_TARGET_TYPE_OPTION" \
 -DCMAKE_BUILD_TYPE="$CMAKE_BUILD_TYPE"
+
+if [ "$TARGET_OS" == "linux" ]; then
+  SHARED_TARGETS=('JuicySFPlugin_VST' 'JuicySFPlugin_VST3')
+  declare -A TARGET_LEAFNAMES=( ['JuicySFPlugin_VST']='libjuicysfplugin.so' ['JuicySFPlugin_VST3']='juicysfplugin.so' )
+  for SHARED_TARGET in "${SHARED_TARGETS[@]}"; do
+    TARGET_LEAFNAME="${TARGET_LEAFNAMES[$SHARED_TARGET]}"
+    LINK_OPTIONS_FILE="$BUILD/CMakeFiles/$SHARED_TARGET.dir/link.txt"
+    LINK_OPTIONS="$(grep "$LINK_OPTIONS_FILE" -e "$TARGET_LEAFNAME")"
+    read -a link_args <<< "$LINK_OPTIONS"
+    # not compiled with -fPIC, so cannot be included in a .so.
+    # we can dynamically-link to it though, as we expect the library to exist on the target Linux system
+    DONT_STATIC_LINK=(m)
+    for LIB_NAME in "${DONT_STATIC_LINK[@]}"; do
+      STATIC_LIB_PATH="$LIB_INSTALL_PATH/lib$LIB_NAME.a"
+      LINK_OPTION="-l$LIB_NAME"
+      link_args=("${link_args[@]/"$STATIC_LIB_PATH"/"$LINK_OPTION"}")
+    done
+    sed -i "$LINK_OPTIONS_FILE" -e "/$TARGET_LEAFNAME/!b;c${link_args[*]}"
+  done
+fi

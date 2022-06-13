@@ -19,9 +19,8 @@ mkdir -p "$DEST_PKG_CONFIG_DIR"
 mv "$SRC_INCLUDE_DIR"/* "$DEST_INCLUDE_DIR/"
 mv "$SRC_LIB_DIR"/liba{sound,topology}.a "$DEST_LIB_DIR/"
 mv "$SRC_PKG_CONFIG_DIR"/alsa{,-topology}.pc "$DEST_PKG_CONFIG_DIR/"
-TMPFILE="$(mktemp)"
 ALSA_PC="$DEST_PKG_CONFIG_DIR/alsa.pc"
-awk -F'=' '$1 ~ /^prefix$/ {
+gawk -i inplace -F'=' '$1 ~ /^prefix$/ {
   $2="/usr"
 }
 $1 ~ /^exec_prefix$/ {
@@ -30,5 +29,4 @@ $1 ~ /^exec_prefix$/ {
 $1 ~ /^libdir$/ {
   $2="${pcfiledir}/.."
 }
-{ print $0 }' OFS== "$ALSA_PC" > "$TMPFILE"
-mv "$TMPFILE" "$ALSA_PC"
+{ print $0 }' OFS== "$ALSA_PC"

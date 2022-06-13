@@ -3,8 +3,6 @@ set -eo pipefail
 ARCH="$1"
 TARGET_TRIPLE="$ARCH-linux-gnu"
 
-CFLAGS=(-fPIC)
-
 declare -A DPKG_ARCHS=( [x86_64]=amd64 [i386]=i386 [aarch64]=arm64 )
 
 DPKG_ARCH="${linux_TOOLCHAINS[$ARCH]}"
@@ -14,7 +12,7 @@ else
   CROSS_COMPILING=''
 fi
 
-DPKG_ARCH="${DPKG_ARCHS[$ARCH]}"
+CFLAGS=(-fPIC)
 if [ "$CROSS_COMPILING" == '1' ]; then
   CFLAGS+=(
     "--target=$TARGET_TRIPLE"

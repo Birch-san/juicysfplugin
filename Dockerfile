@@ -83,7 +83,13 @@ COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
 RUN ./configure_alsa.sh x86_64
 COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
 RUN ./make_alsa.sh x86_64
+COPY llvm-scripts/sndfile/clone_sndfile.sh clone_sndfile.sh
+RUN ./clone_sndfile.sh
 COPY llvm-scripts/toolchain/linux_amd64_toolchain.cmake /linux_amd64_toolchain.cmake
+COPY llvm-scripts/sndfile/configure_sndfile.sh configure_sndfile.sh
+RUN ./configure_sndfile.sh x86_64
+COPY llvm-scripts/sndfile/make_sndfile.sh make_sndfile.sh
+RUN ./make_sndfile.sh x86_64
 COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
 RUN ./clone_freetype.sh
 COPY llvm-scripts/freetype/configure_freetype.sh configure_freetype.sh
