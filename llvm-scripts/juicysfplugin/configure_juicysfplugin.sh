@@ -241,7 +241,7 @@ if [ "$TARGET_OS" == "linux" ]; then
     read -a link_args <<< "$LINK_OPTIONS"
     # not compiled with -fPIC, so cannot be included in a .so.
     # we can dynamically-link to it though, as we expect the library to exist on the target Linux system
-    DONT_STATIC_LINK=(m)
+    DONT_STATIC_LINK=(m dl rt pthread)
     for LIB_NAME in "${DONT_STATIC_LINK[@]}"; do
       STATIC_LIB_PATH="$LIB_INSTALL_PATH/lib$LIB_NAME.a"
       LINK_OPTION="-l$LIB_NAME"
