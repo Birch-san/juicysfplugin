@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
 set -eEo pipefail
-ARCH="$1"
-
 cd libsndfile
 
-TARGET_TRIPLE="$ARCH-linux-gnu"
 BUILD="build_$TARGET_TRIPLE"
 
-declare -A linux_TOOLCHAINS=( [x86_64]=amd64 [i386]=i386 [aarch64]=arm64 )
-TOOLCHAIN_ARCH="${linux_TOOLCHAINS[$ARCH]}"
-TOOLCHAIN_FILE="/linux_${TOOLCHAIN_ARCH}_toolchain.cmake"
-echo "toolchain file: $TOOLCHAIN_FILE"
-
-DPKG_ARCH="${linux_TOOLCHAINS[$ARCH]}"
 if [ "$(dpkg --print-architecture)" != "$DPKG_ARCH" ]; then
   CROSS_COMPILING='1'
 else

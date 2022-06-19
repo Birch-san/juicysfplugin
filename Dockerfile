@@ -42,6 +42,7 @@ RUN LLVM_MINGW_VER=$LLVM_MINGW_VER ./download_llvm_mingw.sh download_llvm_mingw.
 # RUN tar -xvf llvm-mingw.tar.xz --strip-components=1 -k && rm llvm-mingw.tar.xz
 RUN mkdir -p /opt/llvm-mingw && tar -xvf llvm-mingw.tar.xz --strip-components=1 -C /opt/llvm-mingw && rm llvm-mingw.tar.xz
 ENV PATH="/opt/llvm-mingw/bin:$PATH"
+ENV TARGET_OS=win32
 
 FROM ubuntu:$DEPS_UBUNTU_VER AS linux_xcompile
 # automake, libtool, git, ca-certificates needed to build libasound
@@ -57,59 +58,175 @@ cmake make pkg-config clang lld llvm \
 && \
 apt-get clean -y && \
 rm -rf /var/lib/apt/lists/*
+ENV TARGET_OS=linux
 COPY llvm-scripts/multi-arch-apt.sh multi-arch-apt.sh
 RUN ./multi-arch-apt.sh
+COPY llvm-scripts/get_juicy_deps_linux.sh get_juicy_deps_linux.sh
+
+
+
+FROM linux_xcompile AS linux_xcompile_aarch64
+ENV DPKG_ARCH="arm64"
+RUN ./get_juicy_deps_linux.sh
+COPY llvm-scripts/toolchain/linux_arm64_toolchain.cmake /linux_arm64_toolchain.cmake
+ENV TOOLCHAIN_FILE="/linux_arm64_toolchain.cmake"
+ENV TARGET_ARCH="aarch64"
+ENV TARGET_TRIPLE="${ARCH}-linux-gnu"
+ENV DEST_MULTIARCH_PREFIX="/usr"
+ENV DEST_INCLUDE_DIR="${DEST_MULTIARCH_PREFIX}/include"
+ENV DEST_LIB_DIR="${DEST_MULTIARCH_PREFIX}/lib/${TARGET_TRIPLE}"
+ENV DEST_PKG_CONFIG_DIR="${DEST_LIB_DIR}/pkgconfig"
+RUN mkdir -p "${DEST_PKG_CONFIG_DIR}"
+
+FROM linux_xcompile AS linux_xcompile_x86_64
+ENV DPKG_ARCH="amd64"
+RUN ./get_juicy_deps_linux.sh
+COPY llvm-scripts/toolchain/linux_amd64_toolchain.cmake /linux_amd64_toolchain.cmake
+ENV TOOLCHAIN_FILE="/linux_amd64_toolchain.cmake"
+ENV TARGET_ARCH="x86_64"
+ENV TARGET_TRIPLE="${ARCH}-linux-gnu"
+ENV DEST_MULTIARCH_PREFIX="/usr"
+ENV DEST_INCLUDE_DIR="${DEST_MULTIARCH_PREFIX}/include"
+ENV DEST_LIB_DIR="${DEST_MULTIARCH_PREFIX}/lib/${TARGET_TRIPLE}"
+ENV DEST_PKG_CONFIG_DIR="${DEST_LIB_DIR}/pkgconfig"
+RUN mkdir -p "${DEST_PKG_CONFIG_DIR}"
+
+FROM linux_xcompile AS linux_xcompile_i386
+ENV DPKG_ARCH="i386"
+RUN ./get_juicy_deps_linux.sh
+COPY llvm-scripts/toolchain/linux_i386_toolchain.cmake /linux_i386_toolchain.cmake
+ENV TOOLCHAIN_FILE="/linux_i386_toolchain.cmake"
+ENV TARGET_ARCH="i386"
+ENV TARGET_TRIPLE="${ARCH}-linux-gnu"
+ENV DEST_MULTIARCH_PREFIX="/usr"
+ENV DEST_INCLUDE_DIR="${DEST_MULTIARCH_PREFIX}/include"
+ENV DEST_LIB_DIR="${DEST_MULTIARCH_PREFIX}/lib/${TARGET_TRIPLE}"
+ENV DEST_PKG_CONFIG_DIR="${DEST_LIB_DIR}/pkgconfig"
+RUN mkdir -p "${DEST_PKG_CONFIG_DIR}"
+
+
+
+FROM linux_xcompile_aarch64 AS linux_alsa_aarch64
 COPY llvm-scripts/alsa/clone_alsa.sh clone_alsa.sh
 RUN ./clone_alsa.sh
-COPY llvm-scripts/get_fluidsynth_deps_linux.sh get_fluidsynth_deps_linux.sh
-
-FROM linux_xcompile AS linux_deps_aarch64
-RUN ./get_fluidsynth_deps_linux.sh arm64
 COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
-RUN ./configure_alsa.sh aarch64
+RUN ./configure_alsa.sh
 COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
-RUN ./make_alsa.sh aarch64
-COPY llvm-scripts/toolchain/linux_arm64_toolchain.cmake /linux_arm64_toolchain.cmake
-COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
-RUN ./clone_freetype.sh
-COPY llvm-scripts/freetype/configure_freetype.sh configure_freetype.sh
-RUN ./configure_freetype.sh aarch64
-COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
-RUN ./make_freetype.sh aarch64
+RUN ./make_alsa.sh
 
-FROM linux_xcompile AS linux_deps_x86_64
-RUN ./get_fluidsynth_deps_linux.sh amd64
-COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
-RUN ./configure_alsa.sh x86_64
-COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
-RUN ./make_alsa.sh x86_64
+FROM linux_xcompile_aarch64 AS linux_sndfile_aarch64
 COPY llvm-scripts/sndfile/clone_sndfile.sh clone_sndfile.sh
 RUN ./clone_sndfile.sh
-COPY llvm-scripts/toolchain/linux_amd64_toolchain.cmake /linux_amd64_toolchain.cmake
 COPY llvm-scripts/sndfile/configure_sndfile.sh configure_sndfile.sh
-RUN ./configure_sndfile.sh x86_64
+RUN ./configure_sndfile.sh
 COPY llvm-scripts/sndfile/make_sndfile.sh make_sndfile.sh
-RUN ./make_sndfile.sh x86_64
-COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
-RUN ./clone_freetype.sh
-COPY llvm-scripts/freetype/configure_freetype.sh configure_freetype.sh
-RUN ./configure_freetype.sh x86_64
-COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
-RUN ./make_freetype.sh x86_64
+RUN ./make_sndfile.sh
 
-FROM linux_xcompile AS linux_deps_i386
-RUN ./get_fluidsynth_deps_linux.sh i386
-COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
-RUN ./configure_alsa.sh i386
-COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
-RUN ./make_alsa.sh i386
-COPY llvm-scripts/toolchain/linux_i386_toolchain.cmake /linux_i386_toolchain.cmake
+FROM linux_xcompile_aarch64 AS linux_freetype_aarch64
 COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
 RUN ./clone_freetype.sh
 COPY llvm-scripts/freetype/configure_freetype.sh configure_freetype.sh
-RUN ./configure_freetype.sh i386
+RUN ./configure_freetype.sh
 COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
-RUN ./make_freetype.sh i386
+RUN ./make_freetype.sh
+
+FROM linux_xcompile_aarch64 AS linux_opus_aarch64
+COPY llvm-scripts/opus/clone_opus.sh clone_opus.sh
+RUN ./clone_opus.sh
+COPY llvm-scripts/opus/configure_opus.sh configure_opus.sh
+RUN ./configure_opus.sh
+COPY llvm-scripts/opus/make_opus.sh make_opus.sh
+RUN ./make_opus.sh
+
+
+
+FROM linux_xcompile_x86_64 AS linux_alsa_x86_64
+COPY llvm-scripts/alsa/clone_alsa.sh clone_alsa.sh
+RUN ./clone_alsa.sh
+COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
+RUN ./configure_alsa.sh
+COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
+RUN ./make_alsa.sh
+
+FROM linux_xcompile_x86_64 AS linux_sndfile_x86_64
+COPY llvm-scripts/sndfile/clone_sndfile.sh clone_sndfile.sh
+RUN ./clone_sndfile.sh
+COPY llvm-scripts/sndfile/configure_sndfile.sh configure_sndfile.sh
+RUN ./configure_sndfile.sh
+COPY llvm-scripts/sndfile/make_sndfile.sh make_sndfile.sh
+RUN ./make_sndfile.sh
+
+FROM linux_xcompile_x86_64 AS linux_freetype_x86_64
+COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
+RUN ./clone_freetype.sh
+COPY llvm-scripts/freetype/configure_freetype.sh configure_freetype.sh
+RUN ./configure_freetype.sh
+COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
+RUN ./make_freetype.sh
+
+FROM linux_xcompile_x86_64 AS linux_opus_x86_64
+COPY llvm-scripts/opus/clone_opus.sh clone_opus.sh
+RUN ./clone_opus.sh
+COPY llvm-scripts/opus/configure_opus.sh configure_opus.sh
+RUN ./configure_opus.sh
+COPY llvm-scripts/opus/make_opus.sh make_opus.sh
+RUN ./make_opus.sh
+
+
+
+FROM linux_xcompile_i386 AS linux_alsa_i386
+COPY llvm-scripts/alsa/clone_alsa.sh clone_alsa.sh
+RUN ./clone_alsa.sh
+COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
+RUN ./configure_alsa.sh
+COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
+RUN ./make_alsa.sh
+
+FROM linux_xcompile_i386 AS linux_sndfile_i386
+COPY llvm-scripts/sndfile/clone_sndfile.sh clone_sndfile.sh
+RUN ./clone_sndfile.sh
+COPY llvm-scripts/sndfile/configure_sndfile.sh configure_sndfile.sh
+RUN ./configure_sndfile.sh
+COPY llvm-scripts/sndfile/make_sndfile.sh make_sndfile.sh
+RUN ./make_sndfile.sh
+
+FROM linux_xcompile_i386 AS linux_freetype_i386
+COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
+RUN ./clone_freetype.sh
+COPY llvm-scripts/freetype/configure_freetype.sh configure_freetype.sh
+RUN ./configure_freetype.sh
+COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
+RUN ./make_freetype.sh
+
+FROM linux_xcompile_i386 AS linux_opus_i386
+COPY llvm-scripts/opus/clone_opus.sh clone_opus.sh
+RUN ./clone_opus.sh
+COPY llvm-scripts/opus/configure_opus.sh configure_opus.sh
+RUN ./configure_opus.sh
+COPY llvm-scripts/opus/make_opus.sh make_opus.sh
+RUN ./make_opus.sh
+
+
+
+FROM linux_xcompile_aarch64 AS linux_deps_aarch64
+COPY --from=linux_alsa_aarch64 alsa-lib/prefix alsa_prefix
+COPY --from=linux_sndfile_aarch64 libsndfile/prefix sndfile_prefix
+COPY --from=linux_freetype_aarch64 freetype/prefix freetype_prefix
+COPY --from=linux_opus_aarch64 opus/prefix opus_prefix
+
+FROM linux_xcompile_x86_64 AS linux_deps_x86_64
+COPY --from=linux_alsa_x86_64 alsa-lib/prefix alsa_prefix
+COPY --from=linux_sndfile_x86_64 libsndfile/prefix sndfile_prefix
+COPY --from=linux_freetype_x86_64 freetype/prefix freetype_prefix
+COPY --from=linux_opus_x86_64 opus/prefix opus_prefix
+
+FROM linux_xcompile_i386 AS linux_deps_i386
+COPY --from=linux_alsa_i386 alsa-lib/prefix alsa_prefix
+COPY --from=linux_sndfile_i386 libsndfile/prefix sndfile_prefix
+COPY --from=linux_freetype_i386 freetype/prefix freetype_prefix
+COPY --from=linux_opus_i386 opus/prefix opus_prefix
+
+
 
 FROM toolchain-common AS get_fluidsynth
 COPY llvm-scripts/fluidsynth/clone_fluidsynth.sh clone_fluidsynth.sh
@@ -125,62 +242,55 @@ RUN ./clone_juce.sh
 COPY llvm-scripts/juce/make_juce.sh make_juce.sh
 RUN ./make_juce.sh
 
-# FROM toolchain-common AS get_freetype
-# COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
-# RUN ./clone_freetype.sh
-
-# FROM get_freetype AS freetype_aarch64
-# COPY llvm-scripts/freetype/configure_freetype.sh configure_freetype.sh
-# RUN ./configure_freetype.sh aarch64
-# COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
-# RUN ./make_freetype.sh aarch64
-
-# FROM get_freetype AS freetype_x86_64
-# COPY llvm-scripts/freetype/configure_freetype.sh configure_freetype.sh
-# RUN ./configure_freetype.sh x86_64
-# COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
-# RUN ./make_freetype.sh x86_64
-
-# FROM get_freetype AS freetype_i386
-# COPY llvm-scripts/freetype/configure_freetype.sh configure_freetype.sh
-# RUN ./configure_freetype.sh i386
-# COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
-# RUN ./make_freetype.sh i386
-
 FROM toolchain-common AS msys2_deps
-COPY llvm-scripts/get_fluidsynth_deps_win32.sh get_fluidsynth_deps_win32.sh
+COPY llvm-scripts/get_juicy_deps_win32.sh get_juicy_deps_win32.sh
 
 FROM msys2_deps AS msys2_deps_x64
-RUN ./get_fluidsynth_deps_win32.sh x64
+RUN ./get_juicy_deps_win32.sh x64
 
 FROM msys2_deps AS msys2_deps_x86
-RUN ./get_fluidsynth_deps_win32.sh x86
+RUN ./get_juicy_deps_win32.sh x86
 
 FROM msys2_deps AS msys2_deps_aarch64
-RUN ./get_fluidsynth_deps_win32.sh arm64
+RUN ./get_juicy_deps_win32.sh arm64
 
 FROM llvm_mingw AS make_fluidsynth_win32_x64
+ENV DEST_PREFIX="/clang64"
+ENV DEST_INCLUDE_DIR="${DEST_PREFIX}/include"
+ENV DEST_LIB_DIR="${DEST_PREFIX}/lib"
+ENV DEST_PKG_CONFIG_DIR="${DEST_LIB_DIR}/pkgconfig"
 COPY --from=msys2_deps_x64 clang64 clang64
 COPY --from=get_fluidsynth fluidsynth fluidsynth
 COPY llvm-scripts/toolchain/win32_x86_64_toolchain.cmake /win32_x86_64_toolchain.cmake
+ENV TOOLCHAIN_FILE="/win32_x86_64_toolchain.cmake"
 COPY llvm-scripts/fluidsynth/configure_fluidsynth.sh configure_fluidsynth.sh
 RUN ./configure_fluidsynth.sh win32 x64
 COPY llvm-scripts/fluidsynth/make_fluidsynth.sh make_fluidsynth.sh
 RUN ./make_fluidsynth.sh win32 x64
 
 FROM llvm_mingw AS make_fluidsynth_win32_x86
+ENV DEST_PREFIX="/clang32"
+ENV DEST_INCLUDE_DIR="${DEST_PREFIX}/include"
+ENV DEST_LIB_DIR="${DEST_PREFIX}/lib"
+ENV DEST_PKG_CONFIG_DIR="${DEST_LIB_DIR}/pkgconfig"
 COPY --from=msys2_deps_x86 clang32 clang32
 COPY --from=get_fluidsynth fluidsynth fluidsynth
 COPY llvm-scripts/toolchain/win32_i686_toolchain.cmake /win32_i686_toolchain.cmake
+ENV TOOLCHAIN_FILE="/win32_i686_toolchain.cmake"
 COPY llvm-scripts/fluidsynth/configure_fluidsynth.sh configure_fluidsynth.sh
 RUN ./configure_fluidsynth.sh win32 x86
 COPY llvm-scripts/fluidsynth/make_fluidsynth.sh make_fluidsynth.sh
 RUN ./make_fluidsynth.sh win32 x86
 
 FROM llvm_mingw AS make_fluidsynth_win32_aarch64
+ENV DEST_PREFIX="/clangarm64"
+ENV DEST_INCLUDE_DIR="${DEST_PREFIX}/include"
+ENV DEST_LIB_DIR="${DEST_PREFIX}/lib"
+ENV DEST_PKG_CONFIG_DIR="${DEST_LIB_DIR}/pkgconfig"
 COPY --from=msys2_deps_aarch64 clangarm64 clangarm64
 COPY --from=get_fluidsynth fluidsynth fluidsynth
 COPY llvm-scripts/toolchain/win32_aarch64_toolchain.cmake /win32_aarch64_toolchain.cmake
+ENV TOOLCHAIN_FILE="/win32_aarch64_toolchain.cmake"
 COPY llvm-scripts/fluidsynth/configure_fluidsynth.sh configure_fluidsynth.sh
 RUN ./configure_fluidsynth.sh win32 arm64
 COPY llvm-scripts/fluidsynth/make_fluidsynth.sh make_fluidsynth.sh
