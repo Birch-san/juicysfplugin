@@ -71,7 +71,7 @@ RUN ./get_juicy_deps_linux.sh
 COPY llvm-scripts/toolchain/linux_arm64_toolchain.cmake /linux_arm64_toolchain.cmake
 ENV TOOLCHAIN_FILE="/linux_arm64_toolchain.cmake"
 ENV TARGET_ARCH="aarch64"
-ENV TARGET_TRIPLE="${ARCH}-linux-gnu"
+ENV TARGET_TRIPLE="${TARGET_ARCH}-linux-gnu"
 ENV DEST_MULTIARCH_PREFIX="/usr"
 ENV DEST_INCLUDE_DIR="${DEST_MULTIARCH_PREFIX}/include"
 ENV DEST_LIB_DIR="${DEST_MULTIARCH_PREFIX}/lib/${TARGET_TRIPLE}"
@@ -84,7 +84,7 @@ RUN ./get_juicy_deps_linux.sh
 COPY llvm-scripts/toolchain/linux_amd64_toolchain.cmake /linux_amd64_toolchain.cmake
 ENV TOOLCHAIN_FILE="/linux_amd64_toolchain.cmake"
 ENV TARGET_ARCH="x86_64"
-ENV TARGET_TRIPLE="${ARCH}-linux-gnu"
+ENV TARGET_TRIPLE="${TARGET_ARCH}-linux-gnu"
 ENV DEST_MULTIARCH_PREFIX="/usr"
 ENV DEST_INCLUDE_DIR="${DEST_MULTIARCH_PREFIX}/include"
 ENV DEST_LIB_DIR="${DEST_MULTIARCH_PREFIX}/lib/${TARGET_TRIPLE}"
@@ -97,7 +97,7 @@ RUN ./get_juicy_deps_linux.sh
 COPY llvm-scripts/toolchain/linux_i386_toolchain.cmake /linux_i386_toolchain.cmake
 ENV TOOLCHAIN_FILE="/linux_i386_toolchain.cmake"
 ENV TARGET_ARCH="i386"
-ENV TARGET_TRIPLE="${ARCH}-linux-gnu"
+ENV TARGET_TRIPLE="${TARGET_ARCH}-linux-gnu"
 ENV DEST_MULTIARCH_PREFIX="/usr"
 ENV DEST_INCLUDE_DIR="${DEST_MULTIARCH_PREFIX}/include"
 ENV DEST_LIB_DIR="${DEST_MULTIARCH_PREFIX}/lib/${TARGET_TRIPLE}"

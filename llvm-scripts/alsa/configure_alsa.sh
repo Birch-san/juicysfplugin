@@ -21,4 +21,4 @@ autoheader
 automake --foreign --copy --add-missing
 autoconf
 # --prefix doesn't understand multi-arch very well, so this will require some postprocessing
-CC=/usr/bin/clang CFLAGS="${CFLAGS[*]}" LDFLAGS=-fuse-ld=lld ./configure --enable-static=yes --enable-shared=no --host="$TARGET_TRIPLE" --prefix=prefix
+CC=/usr/bin/clang CFLAGS="${CFLAGS[*]}" LDFLAGS=-fuse-ld=lld ./configure --enable-static=yes --enable-shared=no --host="$TARGET_TRIPLE" --prefix="$(realpath './prefix')"
