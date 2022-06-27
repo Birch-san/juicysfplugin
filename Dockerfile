@@ -209,22 +209,46 @@ RUN ./make_opus.sh
 
 
 FROM linux_xcompile_aarch64 AS linux_deps_aarch64
-COPY --from=linux_alsa_aarch64 alsa-lib/prefix alsa_prefix
-COPY --from=linux_sndfile_aarch64 libsndfile/prefix sndfile_prefix
-COPY --from=linux_freetype_aarch64 freetype/prefix freetype_prefix
-COPY --from=linux_opus_aarch64 opus/prefix opus_prefix
+COPY --from=linux_alsa_aarch64 alsa-lib/prefix alsa-lib/prefix
+COPY llvm-scripts/alsa/install_alsa.sh install_alsa.sh
+RUN ./install_alsa.sh
+COPY --from=linux_sndfile_aarch64 libsndfile/prefix libsndfile/prefix
+COPY llvm-scripts/sndfile/install_sndfile.sh install_sndfile.sh
+RUN ./install_sndfile.sh
+COPY --from=linux_freetype_aarch64 freetype/prefix freetype/prefix
+COPY llvm-scripts/freetype/install_freetype.sh install_freetype.sh
+RUN ./install_freetype.sh
+COPY --from=linux_opus_aarch64 opus/prefix opus/prefix
+COPY llvm-scripts/opus/install_opus.sh install_opus.sh
+RUN ./install_opus.sh
 
 FROM linux_xcompile_x86_64 AS linux_deps_x86_64
-COPY --from=linux_alsa_x86_64 alsa-lib/prefix alsa_prefix
-COPY --from=linux_sndfile_x86_64 libsndfile/prefix sndfile_prefix
-COPY --from=linux_freetype_x86_64 freetype/prefix freetype_prefix
-COPY --from=linux_opus_x86_64 opus/prefix opus_prefix
+COPY --from=linux_alsa_x86_64 alsa-lib/prefix alsa-lib/prefix
+COPY llvm-scripts/alsa/install_alsa.sh install_alsa.sh
+RUN ./install_alsa.sh
+COPY --from=linux_sndfile_x86_64 libsndfile/prefix libsndfile/prefix
+COPY llvm-scripts/sndfile/install_sndfile.sh install_sndfile.sh
+RUN ./install_sndfile.sh
+COPY --from=linux_freetype_x86_64 freetype/prefix freetype/prefix
+COPY llvm-scripts/freetype/install_freetype.sh install_freetype.sh
+RUN ./install_freetype.sh
+COPY --from=linux_opus_x86_64 opus/prefix opus/prefix
+COPY llvm-scripts/opus/install_opus.sh install_opus.sh
+RUN ./install_opus.sh
 
 FROM linux_xcompile_i386 AS linux_deps_i386
-COPY --from=linux_alsa_i386 alsa-lib/prefix alsa_prefix
-COPY --from=linux_sndfile_i386 libsndfile/prefix sndfile_prefix
-COPY --from=linux_freetype_i386 freetype/prefix freetype_prefix
-COPY --from=linux_opus_i386 opus/prefix opus_prefix
+COPY --from=linux_alsa_i386 alsa-lib/prefix alsa-lib/prefix
+COPY llvm-scripts/alsa/install_alsa.sh install_alsa.sh
+RUN ./install_alsa.sh
+COPY --from=linux_sndfile_i386 libsndfile/prefix libsndfile/prefix
+COPY llvm-scripts/sndfile/install_sndfile.sh install_sndfile.sh
+RUN ./install_sndfile.sh
+COPY --from=linux_freetype_i386 freetype/prefix freetype/prefix
+COPY llvm-scripts/freetype/install_freetype.sh install_freetype.sh
+RUN ./install_freetype.sh
+COPY --from=linux_opus_i386 opus/prefix opus/prefix
+COPY llvm-scripts/opus/install_opus.sh install_opus.sh
+RUN ./install_opus.sh
 
 
 
