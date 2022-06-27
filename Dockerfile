@@ -106,22 +106,6 @@ RUN mkdir -p "${DEST_PKG_CONFIG_DIR}"
 
 
 
-FROM linux_xcompile_aarch64 AS linux_alsa_aarch64
-COPY llvm-scripts/alsa/clone_alsa.sh clone_alsa.sh
-RUN ./clone_alsa.sh
-COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
-RUN ./configure_alsa.sh
-COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
-RUN ./make_alsa.sh
-
-FROM linux_xcompile_aarch64 AS linux_sndfile_aarch64
-COPY llvm-scripts/sndfile/clone_sndfile.sh clone_sndfile.sh
-RUN ./clone_sndfile.sh
-COPY llvm-scripts/sndfile/configure_sndfile.sh configure_sndfile.sh
-RUN ./configure_sndfile.sh
-COPY llvm-scripts/sndfile/make_sndfile.sh make_sndfile.sh
-RUN ./make_sndfile.sh
-
 FROM linux_xcompile_aarch64 AS linux_freetype_aarch64
 COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
 RUN ./clone_freetype.sh
@@ -129,6 +113,14 @@ COPY llvm-scripts/freetype/configure_freetype.sh configure_freetype.sh
 RUN ./configure_freetype.sh
 COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
 RUN ./make_freetype.sh
+
+FROM linux_xcompile_aarch64 AS linux_alsa_aarch64
+COPY llvm-scripts/alsa/clone_alsa.sh clone_alsa.sh
+RUN ./clone_alsa.sh
+COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
+RUN ./configure_alsa.sh
+COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
+RUN ./make_alsa.sh
 
 FROM linux_xcompile_aarch64 AS linux_opus_aarch64
 COPY llvm-scripts/opus/clone_opus.sh clone_opus.sh
@@ -138,23 +130,20 @@ RUN ./configure_opus.sh
 COPY llvm-scripts/opus/make_opus.sh make_opus.sh
 RUN ./make_opus.sh
 
-
-
-FROM linux_xcompile_x86_64 AS linux_alsa_x86_64
-COPY llvm-scripts/alsa/clone_alsa.sh clone_alsa.sh
-RUN ./clone_alsa.sh
-COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
-RUN ./configure_alsa.sh
-COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
-RUN ./make_alsa.sh
-
-FROM linux_xcompile_x86_64 AS linux_sndfile_x86_64
+FROM linux_xcompile_aarch64 AS linux_sndfile_aarch64
 COPY llvm-scripts/sndfile/clone_sndfile.sh clone_sndfile.sh
 RUN ./clone_sndfile.sh
+COPY --from=linux_alsa_aarch64 alsa-lib/prefix alsa-lib/prefix
+COPY llvm-scripts/alsa/install_alsa.sh install_alsa.sh
+RUN ./install_alsa.sh
+COPY --from=linux_opus_aarch64 opus/prefix opus/prefix
+COPY llvm-scripts/opus/install_opus.sh install_opus.sh
+RUN ./install_opus.sh
 COPY llvm-scripts/sndfile/configure_sndfile.sh configure_sndfile.sh
 RUN ./configure_sndfile.sh
 COPY llvm-scripts/sndfile/make_sndfile.sh make_sndfile.sh
 RUN ./make_sndfile.sh
+
 
 FROM linux_xcompile_x86_64 AS linux_freetype_x86_64
 COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
@@ -164,6 +153,14 @@ RUN ./configure_freetype.sh
 COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
 RUN ./make_freetype.sh
 
+FROM linux_xcompile_x86_64 AS linux_alsa_x86_64
+COPY llvm-scripts/alsa/clone_alsa.sh clone_alsa.sh
+RUN ./clone_alsa.sh
+COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
+RUN ./configure_alsa.sh
+COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
+RUN ./make_alsa.sh
+
 FROM linux_xcompile_x86_64 AS linux_opus_x86_64
 COPY llvm-scripts/opus/clone_opus.sh clone_opus.sh
 RUN ./clone_opus.sh
@@ -172,23 +169,21 @@ RUN ./configure_opus.sh
 COPY llvm-scripts/opus/make_opus.sh make_opus.sh
 RUN ./make_opus.sh
 
-
-
-FROM linux_xcompile_i386 AS linux_alsa_i386
-COPY llvm-scripts/alsa/clone_alsa.sh clone_alsa.sh
-RUN ./clone_alsa.sh
-COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
-RUN ./configure_alsa.sh
-COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
-RUN ./make_alsa.sh
-
-FROM linux_xcompile_i386 AS linux_sndfile_i386
+FROM linux_xcompile_x86_64 AS linux_sndfile_x86_64
 COPY llvm-scripts/sndfile/clone_sndfile.sh clone_sndfile.sh
 RUN ./clone_sndfile.sh
+COPY --from=linux_alsa_x86_64 alsa-lib/prefix alsa-lib/prefix
+COPY llvm-scripts/alsa/install_alsa.sh install_alsa.sh
+RUN ./install_alsa.sh
+COPY --from=linux_opus_x86_64 opus/prefix opus/prefix
+COPY llvm-scripts/opus/install_opus.sh install_opus.sh
+RUN ./install_opus.sh
 COPY llvm-scripts/sndfile/configure_sndfile.sh configure_sndfile.sh
 RUN ./configure_sndfile.sh
 COPY llvm-scripts/sndfile/make_sndfile.sh make_sndfile.sh
 RUN ./make_sndfile.sh
+
+
 
 FROM linux_xcompile_i386 AS linux_freetype_i386
 COPY llvm-scripts/freetype/clone_freetype.sh clone_freetype.sh
@@ -198,6 +193,14 @@ RUN ./configure_freetype.sh
 COPY llvm-scripts/freetype/make_freetype.sh make_freetype.sh
 RUN ./make_freetype.sh
 
+FROM linux_xcompile_i386 AS linux_alsa_i386
+COPY llvm-scripts/alsa/clone_alsa.sh clone_alsa.sh
+RUN ./clone_alsa.sh
+COPY llvm-scripts/alsa/configure_alsa.sh configure_alsa.sh
+RUN ./configure_alsa.sh
+COPY llvm-scripts/alsa/make_alsa.sh make_alsa.sh
+RUN ./make_alsa.sh
+
 FROM linux_xcompile_i386 AS linux_opus_i386
 COPY llvm-scripts/opus/clone_opus.sh clone_opus.sh
 RUN ./clone_opus.sh
@@ -206,49 +209,63 @@ RUN ./configure_opus.sh
 COPY llvm-scripts/opus/make_opus.sh make_opus.sh
 RUN ./make_opus.sh
 
-
-
-FROM linux_xcompile_aarch64 AS linux_deps_aarch64
-COPY --from=linux_alsa_aarch64 alsa-lib/prefix alsa-lib/prefix
-COPY llvm-scripts/alsa/install_alsa.sh install_alsa.sh
-RUN ./install_alsa.sh
-COPY --from=linux_sndfile_aarch64 libsndfile/prefix libsndfile/prefix
-COPY llvm-scripts/sndfile/install_sndfile.sh install_sndfile.sh
-RUN ./install_sndfile.sh
-COPY --from=linux_freetype_aarch64 freetype/prefix freetype/prefix
-COPY llvm-scripts/freetype/install_freetype.sh install_freetype.sh
-RUN ./install_freetype.sh
-COPY --from=linux_opus_aarch64 opus/prefix opus/prefix
-COPY llvm-scripts/opus/install_opus.sh install_opus.sh
-RUN ./install_opus.sh
-
-FROM linux_xcompile_x86_64 AS linux_deps_x86_64
-COPY --from=linux_alsa_x86_64 alsa-lib/prefix alsa-lib/prefix
-COPY llvm-scripts/alsa/install_alsa.sh install_alsa.sh
-RUN ./install_alsa.sh
-COPY --from=linux_sndfile_x86_64 libsndfile/prefix libsndfile/prefix
-COPY llvm-scripts/sndfile/install_sndfile.sh install_sndfile.sh
-RUN ./install_sndfile.sh
-COPY --from=linux_freetype_x86_64 freetype/prefix freetype/prefix
-COPY llvm-scripts/freetype/install_freetype.sh install_freetype.sh
-RUN ./install_freetype.sh
-COPY --from=linux_opus_x86_64 opus/prefix opus/prefix
-COPY llvm-scripts/opus/install_opus.sh install_opus.sh
-RUN ./install_opus.sh
-
-FROM linux_xcompile_i386 AS linux_deps_i386
+FROM linux_xcompile_i386 AS linux_sndfile_i386
+COPY llvm-scripts/sndfile/clone_sndfile.sh clone_sndfile.sh
+RUN ./clone_sndfile.sh
 COPY --from=linux_alsa_i386 alsa-lib/prefix alsa-lib/prefix
 COPY llvm-scripts/alsa/install_alsa.sh install_alsa.sh
 RUN ./install_alsa.sh
-COPY --from=linux_sndfile_i386 libsndfile/prefix libsndfile/prefix
-COPY llvm-scripts/sndfile/install_sndfile.sh install_sndfile.sh
-RUN ./install_sndfile.sh
-COPY --from=linux_freetype_i386 freetype/prefix freetype/prefix
-COPY llvm-scripts/freetype/install_freetype.sh install_freetype.sh
-RUN ./install_freetype.sh
 COPY --from=linux_opus_i386 opus/prefix opus/prefix
 COPY llvm-scripts/opus/install_opus.sh install_opus.sh
 RUN ./install_opus.sh
+COPY llvm-scripts/sndfile/configure_sndfile.sh configure_sndfile.sh
+RUN ./configure_sndfile.sh
+COPY llvm-scripts/sndfile/make_sndfile.sh make_sndfile.sh
+RUN ./make_sndfile.sh
+
+
+
+FROM linux_xcompile_aarch64 AS linux_deps_aarch64
+COPY --from=linux_freetype_aarch64 freetype/prefix freetype/prefix
+COPY llvm-scripts/freetype/install_freetype.sh install_freetype.sh
+RUN ./install_freetype.sh
+COPY --from=linux_alsa_aarch64 alsa-lib/prefix alsa-lib/prefix
+COPY llvm-scripts/alsa/install_alsa.sh install_alsa.sh
+RUN ./install_alsa.sh
+COPY --from=linux_opus_aarch64 opus/prefix opus/prefix
+COPY llvm-scripts/opus/install_opus.sh install_opus.sh
+RUN ./install_opus.sh
+COPY --from=linux_sndfile_aarch64 libsndfile/prefix libsndfile/prefix
+COPY llvm-scripts/sndfile/install_sndfile.sh install_sndfile.sh
+RUN ./install_sndfile.sh
+
+FROM linux_xcompile_x86_64 AS linux_deps_x86_64
+COPY --from=linux_freetype_x86_64 freetype/prefix freetype/prefix
+COPY llvm-scripts/freetype/install_freetype.sh install_freetype.sh
+RUN ./install_freetype.sh
+COPY --from=linux_alsa_x86_64 alsa-lib/prefix alsa-lib/prefix
+COPY llvm-scripts/alsa/install_alsa.sh install_alsa.sh
+RUN ./install_alsa.sh
+COPY --from=linux_opus_x86_64 opus/prefix opus/prefix
+COPY llvm-scripts/opus/install_opus.sh install_opus.sh
+RUN ./install_opus.sh
+COPY --from=linux_sndfile_x86_64 libsndfile/prefix libsndfile/prefix
+COPY llvm-scripts/sndfile/install_sndfile.sh install_sndfile.sh
+RUN ./install_sndfile.sh
+
+FROM linux_xcompile_i386 AS linux_deps_i386
+COPY --from=linux_freetype_i386 freetype/prefix freetype/prefix
+COPY llvm-scripts/freetype/install_freetype.sh install_freetype.sh
+RUN ./install_freetype.sh
+COPY --from=linux_alsa_i386 alsa-lib/prefix alsa-lib/prefix
+COPY llvm-scripts/alsa/install_alsa.sh install_alsa.sh
+RUN ./install_alsa.sh
+COPY --from=linux_opus_i386 opus/prefix opus/prefix
+COPY llvm-scripts/opus/install_opus.sh install_opus.sh
+RUN ./install_opus.sh
+COPY --from=linux_sndfile_i386 libsndfile/prefix libsndfile/prefix
+COPY llvm-scripts/sndfile/install_sndfile.sh install_sndfile.sh
+RUN ./install_sndfile.sh
 
 
 
@@ -316,30 +333,30 @@ COPY --from=get_fluidsynth fluidsynth fluidsynth
 COPY llvm-scripts/toolchain/win32_aarch64_toolchain.cmake /win32_aarch64_toolchain.cmake
 ENV TOOLCHAIN_FILE="/win32_aarch64_toolchain.cmake"
 COPY llvm-scripts/fluidsynth/configure_fluidsynth.sh configure_fluidsynth.sh
-RUN ./configure_fluidsynth.sh win32 arm64
+RUN ./configure_fluidsynth.sh
 COPY llvm-scripts/fluidsynth/make_fluidsynth.sh make_fluidsynth.sh
-RUN ./make_fluidsynth.sh win32 arm64
+RUN ./make_fluidsynth.sh
 
 FROM linux_deps_x86_64 AS make_fluidsynth_linux_x86_64
 COPY --from=get_fluidsynth fluidsynth fluidsynth
 COPY llvm-scripts/fluidsynth/configure_fluidsynth.sh configure_fluidsynth.sh
-RUN ./configure_fluidsynth.sh linux x64
+RUN ./configure_fluidsynth.sh
 COPY llvm-scripts/fluidsynth/make_fluidsynth.sh make_fluidsynth.sh
-RUN ./make_fluidsynth.sh linux x64
+RUN ./make_fluidsynth.sh
 
 FROM linux_deps_i386 AS make_fluidsynth_linux_i386
 COPY --from=get_fluidsynth fluidsynth fluidsynth
 COPY llvm-scripts/fluidsynth/configure_fluidsynth.sh configure_fluidsynth.sh
-RUN ./configure_fluidsynth.sh linux x86
+RUN ./configure_fluidsynth.sh
 COPY llvm-scripts/fluidsynth/make_fluidsynth.sh make_fluidsynth.sh
-RUN ./make_fluidsynth.sh linux x86
+RUN ./make_fluidsynth.sh
 
 FROM linux_deps_aarch64 AS make_fluidsynth_linux_aarch64
 COPY --from=get_fluidsynth fluidsynth fluidsynth
 COPY llvm-scripts/fluidsynth/configure_fluidsynth.sh configure_fluidsynth.sh
-RUN ./configure_fluidsynth.sh linux arm64
+RUN ./configure_fluidsynth.sh
 COPY llvm-scripts/fluidsynth/make_fluidsynth.sh make_fluidsynth.sh
-RUN ./make_fluidsynth.sh linux arm64
+RUN ./make_fluidsynth.sh
 
 FROM llvm_mingw AS juicysfplugin_common_win32
 COPY --from=make_juce /linux_native/ /linux_native/

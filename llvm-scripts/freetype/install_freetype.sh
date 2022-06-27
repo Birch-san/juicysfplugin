@@ -8,7 +8,7 @@ SRC_INCLUDE_DIR="$INSTALL_PREFIX/include"
 SRC_LIB_DIR="$INSTALL_PREFIX/lib"
 SRC_PKG_CONFIG_DIR="$SRC_LIB_DIR/pkgconfig"
 
-cp -R include/* "$DEST_INCLUDE_DIR/"
+cp -R "$SRC_INCLUDE_DIR"/* "$DEST_INCLUDE_DIR/"
 mv "$SRC_INCLUDE_DIR"/freetype/config/* "$DEST_INCLUDE_DIR"/freetype/config/
 mv "$SRC_LIB_DIR"/libfreetype.a "$DEST_LIB_DIR/"
 mv "$SRC_PKG_CONFIG_DIR"/freetype2.pc "$DEST_PKG_CONFIG_DIR/"
