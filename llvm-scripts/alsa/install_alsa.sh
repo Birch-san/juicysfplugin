@@ -7,7 +7,6 @@ SRC_INCLUDE_DIR="$SRC_INSTALL_PREFIX/include"
 SRC_LIB_DIR="$SRC_INSTALL_PREFIX/lib"
 SRC_PKG_CONFIG_DIR="$SRC_LIB_DIR/pkgconfig"
 
-make install
 mv "$SRC_INCLUDE_DIR"/* "$DEST_INCLUDE_DIR/"
 mv "$SRC_LIB_DIR"/liba{sound,topology}.a "$DEST_LIB_DIR/"
 mv "$SRC_PKG_CONFIG_DIR"/alsa{,-topology}.pc "$DEST_PKG_CONFIG_DIR/"

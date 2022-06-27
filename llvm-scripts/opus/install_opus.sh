@@ -2,12 +2,7 @@
 set -eo pipefail
 cd opus
 
-BUILD="build_$TARGET_TRIPLE"
-
 INSTALL_PREFIX="prefix"
-mkdir -p "$INSTALL_PREFIX"
-
-cmake --install "$BUILD" --prefix "$INSTALL_PREFIX"
 
 SRC_INCLUDE_DIR="$INSTALL_PREFIX/include"
 SRC_LIB_DIR="$INSTALL_PREFIX/lib"

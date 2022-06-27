@@ -4,12 +4,6 @@ shopt -s nullglob
 
 cd fluidsynth
 
-BUILD="build_${TARGET_OS}_${ARCH}"
-
-INSTALL_PREFIX="prefix"
-mkdir -p "$INSTALL_PREFIX"
-cmake --install "$BUILD" --prefix "$INSTALL_PREFIX"
-
 # TODO write installer, making use of our new env vars
 
 # manual installation; not sure how to ask it to "only install libfluidsynth".

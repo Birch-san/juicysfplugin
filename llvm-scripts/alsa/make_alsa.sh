@@ -2,3 +2,4 @@
 set -eo pipefail
 cd alsa-lib
 make -j"$(($(grep -c ^processor /proc/cpuinfo)+1))"
+make install
