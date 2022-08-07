@@ -127,7 +127,7 @@ Or any output device that you can hear audio through.
 
 Install CMake, FluidSynth and Xcode using:
 
-    brew install cmake pkg-config
+    brew install cmake pkg-config readline
     xcode-select --install
 
 Check you have the correct dependencies installed:
@@ -147,6 +147,7 @@ Depending on the the operating system you are on/building for, swap the generato
 
 Compile a development version of the plugin using:
 
+    export PKG_CONFIG_PATH="/usr/local/opt/readline/lib/pkgconfig:$PKG_CONFIG_PATH"
     cmake \
       -G "Xcode" \
       -DCMAKE_BUILD_TYPE=Debug \

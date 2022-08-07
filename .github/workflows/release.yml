@@ -35,23 +35,23 @@ jobs:
           - os: ubuntu-latest
             name: linux
             generator: Unix Makefiles
-            path: ./build/Release
+            path: ./build/JuicySFPlugin_artefacts/Debug/VST3
           - os: macos-latest
             name: mac
             generator: Xcode
-            path: ./build/Release
+            path: ./build/JuicySFPlugin_artefacts/Debug/VST3
           - os: windows-latest
             name: win
             generator: Visual Studio 16 2019
-            path: ./build/Release
+            path: ./build/JuicySFPlugin_artefacts/Debug/VST3
     steps:
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get update && sudo apt-get install cmake pkg-config gcc "libstdc++6" libx11-xcb-dev libxcb-util-dev libxcb-cursor-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libcairo2-dev libgtkmm-3.0-dev libsqlite3-dev libxcb-keysyms1-dev libasound2-dev
+        run: sudo apt-get update && sudo apt-get install cmake pkg-config libreadline-dev gcc "libstdc++6" libx11-xcb-dev libxcb-util-dev libxcb-cursor-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libcairo2-dev libgtkmm-3.0-dev libsqlite3-dev libxcb-keysyms1-dev libasound2-dev
 
       - name: Install macOS dependencies
         if: matrix.os == 'macos-latest'
-        run: brew install cmake pkg-config
+        run: brew install cmake pkg-config readline
 
       - name: Install Windows dependencies
         if: matrix.os == 'windows-latest'
@@ -64,6 +64,7 @@ jobs:
 
       - name: Build plugins
         run: |
+          export PKG_CONFIG_PATH="/usr/local/opt/readline/lib/pkgconfig:$PKG_CONFIG_PATH"
           cmake \
             -G "${{ matrix.generator }}" \
             -DCMAKE_BUILD_TYPE=Release \
