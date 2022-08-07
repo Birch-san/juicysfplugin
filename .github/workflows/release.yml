@@ -1,0 +1,143 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_id: ${{ steps.draft_release.outputs.id }}
+      upload_url: ${{ steps.draft_release.outputs.upload_url }}
+    steps:
+      - name: Draft release
+        id: draft_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+
+  build_release:
+    name: Build release
+    needs: create_release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            name: linux
+            generator: Unix Makefiles
+            path: ./build/Release
+          - os: macos-latest
+            name: mac
+            generator: Xcode
+            path: ./build/Release
+          - os: windows-latest
+            name: win
+            generator: Visual Studio 16 2019
+            path: ./build/Release
+    steps:
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install cmake pkg-config gcc "libstdc++6" libx11-xcb-dev libxcb-util-dev libxcb-cursor-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libcairo2-dev libgtkmm-3.0-dev libsqlite3-dev libxcb-keysyms1-dev libasound2-dev
+
+      - name: Install macOS dependencies
+        if: matrix.os == 'macos-latest'
+        run: brew install cmake pkg-config
+
+      - name: Install Windows dependencies
+        if: matrix.os == 'windows-latest'
+        run: choco install cmake pkgconfiglite zip
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Build plugins
+        run: |
+          cmake \
+            -G "${{ matrix.generator }}" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DJUCE_BUILD_EXAMPLES=OFF \
+            -DJUCE_BUILD_EXTRAS=OFF \
+            -S ./ \
+            -B ./build
+          cmake --build ./build --config Release --target JuicySFPlugin_VST3
+
+      - name: List files
+        run: ls "${{ matrix.path }}"
+
+      - name: Metadata
+        run: |
+          npm install @studiorack/cli -g
+          cp -v ./src/assets/* "${{ matrix.path }}"
+          studiorack validate "${{ matrix.path }}/**/*.{vst,vst3}" --files --json --txt --zip --summary
+
+      - name: Upload
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const path = require('path');
+            const fs = require('fs');
+            const release_id = '${{ needs.create_release.outputs.upload_id }}';
+            for (let file of await fs.readdirSync('${{ matrix.path }}')) {
+              if (path.extname(file) === '.zip') {
+                console.log('upload zip', `${{ matrix.path }}/${file}`);
+                await github.repos.uploadReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  release_id: release_id,
+                  name: `${path.basename(file, path.extname(file))}-${{ matrix.name }}.zip`,
+                  data: await fs.readFileSync(`${{ matrix.path }}/${file}`)
+                });
+                if ("${{ matrix.os }}" == 'macos-latest') {
+                  console.log('upload png', `${{ matrix.path }}/${path.basename(file, path.extname(file))}.png`);
+                  await github.repos.uploadReleaseAsset({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    release_id: release_id,
+                    name: `${path.basename(file, path.extname(file))}.png`,
+                    data: await fs.readFileSync(`${{ matrix.path }}/${path.basename(file, path.extname(file))}.png`)
+                  });
+                  console.log('upload wav', `${{ matrix.path }}/${path.basename(file, path.extname(file))}.wav`);
+                  await github.repos.uploadReleaseAsset({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    release_id: release_id,
+                    name: `${path.basename(file, path.extname(file))}.wav`,
+                    data: await fs.readFileSync(`${{ matrix.path }}/${path.basename(file, path.extname(file))}.wav`)
+                  });
+                }
+              }
+            }
+      - name: Upload metadata
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ${{ matrix.path }}/plugins.json
+          asset_name: plugins.json
+          asset_content_type: application/json
+
+  publish_release:
+    name: Publish release
+    needs: [create_release, build_release]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ needs.create_release.outputs.upload_id }}
