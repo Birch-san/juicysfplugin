@@ -125,6 +125,38 @@ Or any output device that you can hear audio through.
 
 # Building from source (macOS)
 
+Install CMake, FluidSynth and Xcode using:
+
+    brew install cmake pkg-config
+    xcode-select --install
+
+Check you have the correct dependencies installed:
+
+    cmake -version
+    xcodebuild -version
+
+Ensure all git submodules are initialized:
+
+    git submodule update --init --recursive
+
+Depending on the the operating system you are on/building for, swap the generator string in the build commands:
+
+* Linux: "Unix Makefiles"
+* MacOS: "Xcode"
+* Windows: "Visual Studio 16 2019"
+
+Compile a development version of the plugin using:
+
+    cmake \
+      -G "Xcode" \
+      -DCMAKE_BUILD_TYPE=Debug \
+      -DJUCE_BUILD_EXAMPLES=ON \
+      -DJUCE_BUILD_EXTRAS=OFF \
+      -S ./ \
+      -B ./build
+
+    cmake --build ./build --config Debug --target JuicySFPlugin_VST3
+
 Install XCode and XCode command line tools. Accept terms.
 
 Install [JUCE](https://shop.juce.com/get-juce) 5.3 in `/Applications`.  
