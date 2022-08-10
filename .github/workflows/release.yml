@@ -47,11 +47,11 @@ jobs:
     steps:
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get update && sudo apt-get install cmake pkg-config libcurl webkit2gtk-4.0 sndfile libpulse-simple jack libpipewire-0.3 lash-1.0 libinstpatch-1.0 libsystemd libreadline-dev gcc "libstdc++6" libx11-xcb-dev libxcb-util-dev libxcb-cursor-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libcairo2-dev libgtkmm-3.0-dev libsqlite3-dev libxcb-keysyms1-dev libasound2-dev
+        run: sudo apt-get update && sudo apt-get install cmake pkg-config cmake-data libglib2.0-0 libsndfile-dev libasound2-dev libjack-dev portaudio19-dev libsdl2-dev libpulse-dev libdbus-1-dev libsystemd-dev libinstpatch-dev libreadline-dev 
 
       - name: Install macOS dependencies
         if: matrix.os == 'macos-latest'
-        run: brew install cmake pkg-config readline
+        run: brew install cmake readline glib gobject-introspection libsndfile pkg-config jack dbus-glib pulseaudio portaudio sdl2 libomp
 
       - name: Install Windows dependencies
         if: matrix.os == 'windows-latest'
