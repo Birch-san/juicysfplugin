@@ -47,7 +47,7 @@ jobs:
     steps:
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get update && sudo apt-get install cmake pkg-config libreadline-dev gcc "libstdc++6" libx11-xcb-dev libxcb-util-dev libxcb-cursor-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libcairo2-dev libgtkmm-3.0-dev libsqlite3-dev libxcb-keysyms1-dev libasound2-dev
+        run: sudo apt-get update && sudo apt-get install cmake pkg-config libcurl webkit2gtk-4.0 sndfile libpulse-simple jack libpipewire-0.3 lash-1.0 libinstpatch-1.0 libsystemd libreadline-dev gcc "libstdc++6" libx11-xcb-dev libxcb-util-dev libxcb-cursor-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libcairo2-dev libgtkmm-3.0-dev libsqlite3-dev libxcb-keysyms1-dev libasound2-dev
 
       - name: Install macOS dependencies
         if: matrix.os == 'macos-latest'
