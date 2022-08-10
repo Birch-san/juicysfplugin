@@ -48,11 +48,15 @@ jobs:
     steps:
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get update && sudo apt-get install cmake pkg-config cmake-data libglib2.0-0 libsndfile-dev libasound2-dev libjack-dev portaudio19-dev libsdl2-dev libpulse-dev libdbus-1-dev libsystemd-dev libinstpatch-dev libreadline-dev 
+        run: |
+          sudo apt-get update && sudo apt-get install cmake pkg-config gcc "libstdc++6" libx11-xcb-dev libxcb-util-dev libxcb-cursor-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libcairo2-dev libgtkmm-3.0-dev libsqlite3-dev libxcb-keysyms1-dev libasound2-dev libreadline-dev
+          export PKG_CONFIG_PATH="/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
 
       - name: Install macOS dependencies
         if: matrix.os == 'macos-latest'
-        run: brew install cmake readline glib gobject-introspection libsndfile pkg-config jack dbus-glib pulseaudio portaudio sdl2 libomp
+        run: |
+          brew install cmake readline glib gobject-introspection libsndfile pkg-config jack dbus-glib pulseaudio portaudio sdl2 libomp
+          export PKG_CONFIG_PATH="/usr/local/opt/readline/lib/pkgconfig:$PKG_CONFIG_PATH"
 
       - name: Install Windows dependencies
         if: matrix.os == 'windows-latest'
@@ -65,7 +69,6 @@ jobs:
 
       - name: Build plugins
         run: |
-          export PKG_CONFIG_PATH="/usr/local/opt/readline/lib/pkgconfig:$PKG_CONFIG_PATH"
           cmake \
             -G "${{ matrix.generator }}" \
             -DCMAKE_BUILD_TYPE=Release \
