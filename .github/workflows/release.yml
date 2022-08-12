@@ -67,15 +67,15 @@ jobs:
           curl -L http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/pkg-config_0.26-1_win32.zip -o pkg-config.zip
           unzip pkg-config.zip
           ls pkg-config
-          cp pkg-config\bin\pkg-config.exe C:\MinGW\bin
+          cp pkg-config/bin/pkg-config.exe C:\MinGW\bin
           curl -L http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip -o gettext-runtime.zip
           unzip gettext-runtime.zip
           ls gettext-runtime
-          cp gettext-runtime\bin\intl.dll C:\MinGW\bin
+          cp gettext-runtime/bin/intl.dll C:\MinGW\bin
           curl -L http://ftp.acc.umu.se/pub/gnome/binaries/win32/glib/2.28/glib_2.28.8-1_win32.zip -o glib.zip
           unzip glib.zip
           ls glib
-          cp glib\bin\libglib-2.0-0.dll C:\MinGW\bin
+          cp glib/bin/libglib-2.0-0.dll C:\MinGW\bin
 
       - name: Checkout code
         uses: actions/checkout@v2
