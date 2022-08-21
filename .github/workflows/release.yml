@@ -1,5 +1,9 @@
 name: Release
 
+defaults:
+  run:
+    shell: bash
+
 on:
   workflow_dispatch:
   push:
@@ -61,11 +65,11 @@ jobs:
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get update && sudo apt-get install cmake-data cmake libglib2.0-0 libsndfile-dev libasound2-dev libjack-dev portaudio19-dev libsdl2-dev libpulse-dev libdbus-1-dev libsystemd-dev libinstpatch-dev libreadline-dev g++-7 g++-8 clang-7 clang-8 clang-9 clang-10 clang-tidy-10
+        run: sudo apt-get update && sudo apt-get install fluidsynth cmake-data cmake libglib2.0-0 libsndfile-dev libasound2-dev libjack-dev portaudio19-dev libsdl2-dev libpulse-dev libdbus-1-dev libsystemd-dev libinstpatch-dev libreadline-dev g++-7 g++-8 clang-7 clang-8 clang-9 clang-10 clang-tidy-10
 
       - name: Install macOS dependencies
         if: matrix.os == 'macos-latest'
-        run: brew install cmake pulseaudio portaudio jack dbus sdl2
+        run: brew install fluidsynth cmake pulseaudio portaudio jack dbus sdl2
 
       - name: Install Windows dependencies
         if: matrix.os == 'windows-latest'
