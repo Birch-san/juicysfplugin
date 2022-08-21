@@ -62,6 +62,35 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update && sudo apt-get install libasound2-dev libjack-jackd2-dev ladspa-sdk libcurl4-openssl-dev libfreetype6-dev libx11-dev libxcomposite-dev libxcursor-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev mesa-common-dev
+          sudo apt-get update && sudo apt-get install autotools-dev automake autoconf libtool g++ autopoint make cmake bison flex yasm pkg-config libpulse-dev python3-dev gettext build-essential pkg-config curl libasound2-dev dpkg-dev debhelper build-essential devscripts fakeroot transfig gperf libdbus-glib-1-dev wget glib-networking libxtst-dev libxrandr-dev git intltool ccache python3-setuptools autogen maven make libreadline-dev
+
+      - name: Install macOS dependencies
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install cmake readline glib gobject-introspection libsndfile pkg-config jack dbus-glib pulseaudio portaudio sdl2 libomp
+          brew install glib gobject-introspection libsndfile pkg-config jack dbus-glib pulseaudio portaudio sdl2 libomp
+
+      - name: Install Windows dependencies
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install cmake curl zip unzip
+          curl -L http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/pkg-config_0.26-1_win32.zip -o pkg-config.zip
+          unzip pkg-config.zip
+          ls pkg-config
+          cp pkg-config/bin/pkg-config.exe C:\MinGW\bin
+          curl -L http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip -o gettext-runtime.zip
+          unzip gettext-runtime.zip
+          ls gettext-runtime
+          cp gettext-runtime/bin/intl.dll C:\MinGW\bin
+          curl -L http://ftp.acc.umu.se/pub/gnome/binaries/win32/glib/2.28/glib_2.28.8-1_win32.zip -o glib.zip
+          unzip glib.zip
+          ls glib
+          cp glib/bin/libglib-2.0-0.dll C:\MinGW\bin
+
       - name: Build JUCE dependency
         run: |
           cd JUCE
@@ -151,37 +180,6 @@ jobs:
       #       -B "${{ env.dir_build }}"
       #     cmake --build ${{ env.dir_build }} --config ${{ env.type }} --target JuicySFPlugin_VST3
 
-
-      # - name: Install Linux dependencies
-      #   if: matrix.os == 'ubuntu-latest'
-      #   run: |
-      #     sudo apt update && sudo apt install libasound2-dev libjack-jackd2-dev ladspa-sdk libcurl4-openssl-dev libfreetype6-dev libx11-dev libxcomposite-dev libxcursor-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev mesa-common-dev
-      #     sudo apt-get update && sudo apt-get install autotools-dev automake autoconf libtool g++ autopoint make cmake bison flex yasm pkg-config libpulse-dev python3-dev gettext build-essential pkg-config curl libasound2-dev dpkg-dev debhelper build-essential devscripts fakeroot transfig gperf libdbus-glib-1-dev wget glib-networking libxtst-dev libxrandr-dev git intltool ccache python3-setuptools autogen maven make libreadline-dev
-      #     export PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH"
-
-      # - name: Install macOS dependencies
-      #   if: matrix.os == 'macos-latest'
-      #   run: |
-      #     brew install cmake readline glib gobject-introspection libsndfile pkg-config jack dbus-glib pulseaudio portaudio sdl2 libomp
-      #     brew install glib gobject-introspection libsndfile pkg-config jack dbus-glib pulseaudio portaudio sdl2 libomp
-      #     export PKG_CONFIG_PATH="/usr/local/opt/readline/lib/pkgconfig:$PKG_CONFIG_PATH"
-
-      # - name: Install Windows dependencies
-      #   if: matrix.os == 'windows-latest'
-      #   run: |
-      #     choco install cmake curl zip unzip
-      #     curl -L http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/pkg-config_0.26-1_win32.zip -o pkg-config.zip
-      #     unzip pkg-config.zip
-      #     ls pkg-config
-      #     cp pkg-config/bin/pkg-config.exe C:\MinGW\bin
-      #     curl -L http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip -o gettext-runtime.zip
-      #     unzip gettext-runtime.zip
-      #     ls gettext-runtime
-      #     cp gettext-runtime/bin/intl.dll C:\MinGW\bin
-      #     curl -L http://ftp.acc.umu.se/pub/gnome/binaries/win32/glib/2.28/glib_2.28.8-1_win32.zip -o glib.zip
-      #     unzip glib.zip
-      #     ls glib
-      #     cp glib/bin/libglib-2.0-0.dll C:\MinGW\bin
 
       - name: List files generated
         run: |
