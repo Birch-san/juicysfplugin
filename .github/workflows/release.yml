@@ -3,8 +3,8 @@ name: Release
 on:
   workflow_dispatch:
   push:
-    tags:
-      - "v*"
+    # tags:
+    #   - "v*"
 
 env:
   dir_build: build
@@ -12,22 +12,22 @@ env:
   type: Release
 
 jobs:
-  create_release:
-    name: Create release
-    runs-on: ubuntu-latest
-    outputs:
-      upload_id: ${{ steps.draft_release.outputs.id }}
-      upload_url: ${{ steps.draft_release.outputs.upload_url }}
-    steps:
-      - name: Draft release
-        id: draft_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
+  # create_release:
+  #   name: Create release
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     upload_id: ${{ steps.draft_release.outputs.id }}
+  #     upload_url: ${{ steps.draft_release.outputs.upload_url }}
+  #   steps:
+  #     - name: Draft release
+  #       id: draft_release
+  #       uses: actions/create-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         tag_name: ${{ github.ref }}
+  #         release_name: Release ${{ github.ref }}
+  #         draft: true
 
   build_release:
     name: Build release
@@ -99,68 +99,68 @@ jobs:
           cd ${{ matrix.path }}
           find "$(pwd)"
 
-      - name: Metadata
-        run: |
-          npm install @studiorack/cli -g
-          cp -v ./src/assets/* "${{ matrix.path }}"
-          studiorack validate "${{ matrix.path }}/**/*.{vst,vst3}" --files --json --txt --zip --summary
+      # - name: Metadata
+      #   run: |
+      #     npm install @studiorack/cli -g
+      #     cp -v ./src/assets/* "${{ matrix.path }}"
+      #     studiorack validate "${{ matrix.path }}/**/*.{vst,vst3}" --files --json --txt --zip --summary
 
-      - name: Upload
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const path = require('path');
-            const fs = require('fs');
-            const release_id = '${{ needs.create_release.outputs.upload_id }}';
-            for (let file of await fs.readdirSync('${{ matrix.path }}')) {
-              if (path.extname(file) === '.zip') {
-                console.log('upload zip', `${{ matrix.path }}/${file}`);
-                await github.repos.uploadReleaseAsset({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  release_id: release_id,
-                  name: `${path.basename(file, path.extname(file))}-${{ matrix.name }}.zip`,
-                  data: await fs.readFileSync(`${{ matrix.path }}/${file}`)
-                });
-                if ("${{ matrix.os }}" == 'macos-latest') {
-                  console.log('upload png', `${{ matrix.path }}/${path.basename(file, path.extname(file))}.png`);
-                  await github.repos.uploadReleaseAsset({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    release_id: release_id,
-                    name: `${path.basename(file, path.extname(file))}.png`,
-                    data: await fs.readFileSync(`${{ matrix.path }}/${path.basename(file, path.extname(file))}.png`)
-                  });
-                  console.log('upload wav', `${{ matrix.path }}/${path.basename(file, path.extname(file))}.wav`);
-                  await github.repos.uploadReleaseAsset({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    release_id: release_id,
-                    name: `${path.basename(file, path.extname(file))}.wav`,
-                    data: await fs.readFileSync(`${{ matrix.path }}/${path.basename(file, path.extname(file))}.wav`)
-                  });
-                }
-              }
-            }
-      - name: Upload metadata
-        if: matrix.os == 'macos-latest'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: ${{ matrix.path }}/plugins.json
-          asset_name: plugins.json
-          asset_content_type: application/json
+      # - name: Upload
+      #   uses: actions/github-script@v3
+      #   with:
+      #     github-token: ${{secrets.GITHUB_TOKEN}}
+      #     script: |
+      #       const path = require('path');
+      #       const fs = require('fs');
+      #       const release_id = '${{ needs.create_release.outputs.upload_id }}';
+      #       for (let file of await fs.readdirSync('${{ matrix.path }}')) {
+      #         if (path.extname(file) === '.zip') {
+      #           console.log('upload zip', `${{ matrix.path }}/${file}`);
+      #           await github.repos.uploadReleaseAsset({
+      #             owner: context.repo.owner,
+      #             repo: context.repo.repo,
+      #             release_id: release_id,
+      #             name: `${path.basename(file, path.extname(file))}-${{ matrix.name }}.zip`,
+      #             data: await fs.readFileSync(`${{ matrix.path }}/${file}`)
+      #           });
+      #           if ("${{ matrix.os }}" == 'macos-latest') {
+      #             console.log('upload png', `${{ matrix.path }}/${path.basename(file, path.extname(file))}.png`);
+      #             await github.repos.uploadReleaseAsset({
+      #               owner: context.repo.owner,
+      #               repo: context.repo.repo,
+      #               release_id: release_id,
+      #               name: `${path.basename(file, path.extname(file))}.png`,
+      #               data: await fs.readFileSync(`${{ matrix.path }}/${path.basename(file, path.extname(file))}.png`)
+      #             });
+      #             console.log('upload wav', `${{ matrix.path }}/${path.basename(file, path.extname(file))}.wav`);
+      #             await github.repos.uploadReleaseAsset({
+      #               owner: context.repo.owner,
+      #               repo: context.repo.repo,
+      #               release_id: release_id,
+      #               name: `${path.basename(file, path.extname(file))}.wav`,
+      #               data: await fs.readFileSync(`${{ matrix.path }}/${path.basename(file, path.extname(file))}.wav`)
+      #             });
+      #           }
+      #         }
+      #       }
+      # - name: Upload metadata
+      #   if: matrix.os == 'macos-latest'
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ needs.create_release.outputs.upload_url }}
+      #     asset_path: ${{ matrix.path }}/plugins.json
+      #     asset_name: plugins.json
+      #     asset_content_type: application/json
 
-  publish_release:
-    name: Publish release
-    needs: [create_release, build_release]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: eregon/publish-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        release_id: ${{ needs.create_release.outputs.upload_id }}
+  # publish_release:
+  #   name: Publish release
+  #   needs: [create_release, build_release]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: eregon/publish-release@v1
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     with:
+  #       release_id: ${{ needs.create_release.outputs.upload_id }}
