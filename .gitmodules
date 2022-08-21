@@ -1,0 +1,6 @@
+[submodule "JUCE"]
+	path = JUCE
+	url = https://github.com/juce-framework/JUCE
+[submodule "fluidsynth"]
+	path = fluidsynth
+	url = https://github.com/FluidSynth/fluidsynth.git

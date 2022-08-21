@@ -1,0 +1,253 @@
+name: Release
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+env:
+  dir_build: build
+  dir_source: .
+  type: Release
+
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_id: ${{ steps.draft_release.outputs.id }}
+      upload_url: ${{ steps.draft_release.outputs.upload_url }}
+    steps:
+      - name: Draft release
+        id: draft_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+
+  build_release:
+    name: Build release
+    needs: create_release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            name: linux
+            generator: Unix Makefiles
+            flags: -Denable-portaudio=1 -Denable-ladspa=1
+            path: ./build/JuicySFPlugin_artefacts/Debug/VST3
+          - os: macos-latest
+            name: mac
+            generator: Unix Makefiles
+            flags: -Denable-portaudio=1 -Denable-ladspa=1
+            path: ./build/JuicySFPlugin_artefacts/Debug/VST3
+          - os: windows-latest
+            name: win
+            generator: Visual Studio 17 2022
+            flags: -Denable-jack=0 -Denable-pulseaudio=0 -Denable-ladspa=0 -Denable-dbus=0 -Denable-readline=0 -Denable-sdl2=0 -Denable-libinstpatch=0
+            path: ./build/JuicySFPlugin_artefacts/Debug/VST3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update && sudo apt-get install libasound2-dev libjack-jackd2-dev ladspa-sdk libcurl4-openssl-dev libfreetype6-dev libx11-dev libxcomposite-dev libxcursor-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev mesa-common-dev
+          sudo apt-get update && sudo apt-get install autotools-dev automake autoconf libtool g++ autopoint make cmake bison flex yasm pkg-config libpulse-dev python3-dev gettext build-essential pkg-config curl libasound2-dev dpkg-dev debhelper build-essential devscripts fakeroot transfig gperf libdbus-glib-1-dev wget glib-networking libxtst-dev libxrandr-dev git intltool ccache python3-setuptools autogen maven make libreadline-dev
+
+      - name: Install macOS dependencies
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install cmake readline glib gobject-introspection libsndfile pkg-config jack dbus-glib pulseaudio portaudio sdl2 libomp
+          brew install glib gobject-introspection libsndfile pkg-config jack dbus-glib pulseaudio portaudio sdl2 libomp
+
+      - name: Install Windows dependencies
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install cmake curl zip unzip
+          curl -L http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/pkg-config_0.26-1_win32.zip -o pkg-config.zip
+          unzip pkg-config.zip
+          ls pkg-config
+          cp pkg-config/bin/pkg-config.exe C:\MinGW\bin
+          curl -L http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip -o gettext-runtime.zip
+          unzip gettext-runtime.zip
+          ls gettext-runtime
+          cp gettext-runtime/bin/intl.dll C:\MinGW\bin
+          curl -L http://ftp.acc.umu.se/pub/gnome/binaries/win32/glib/2.28/glib_2.28.8-1_win32.zip -o glib.zip
+          unzip glib.zip
+          ls glib
+          cp glib/bin/libglib-2.0-0.dll C:\MinGW\bin
+
+      - name: Build JUCE dependency
+        run: |
+          cd JUCE
+          cmake -B cmake-build-install -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$HOME/juicydeps"
+          cmake --build cmake-build-install --target install
+
+      - name: Build Fluidsynth dependency
+        run: |
+          cd fluidsynth
+          cmake -Bbuild -DCMAKE_INSTALL_PREFIX="$HOME/juicydeps" \
+            -DBUILD_SHARED_LIBS=off \
+            -Denable-portaudio=off \
+            -Denable-dbus=off \
+            -Denable-aufile=off \
+            -Denable-ipv6=off \
+            -Denable-jack=off \
+            -Denable-ladspa=off \
+            -Denable-libinstpatch=off \
+            -Denable-libsndfile=on \
+            -Denable-midishare=off \
+            -Denable-opensles=off \
+            -Denable-oboe=off \
+            -Denable-network=off \
+            -Denable-oss=off \
+            -Denable-dsound=off \
+            -Denable-wasapi=off \
+            -Denable-waveout=off \
+            -Denable-winmidi=off \
+            -Denable-sdl2=off \
+            -Denable-pkgconfig=on \
+            -Denable-pulseaudio=off \
+            -Denable-readline=off \
+            -Denable-threads=on \
+            -Denable-openmp=on \
+            -Denable-coreaudio=off \
+            -Denable-coremidi=off \
+            -Denable-framework=off \
+            -Denable-lash=off \
+            -Denable-alsa=off \
+            -Denable-systemd=off \
+            -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --target install
+
+      - name: Build JuicySF
+        run: |
+          cmake \
+            -G "${{ matrix.generator }}" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DJUCE_BUILD_EXAMPLES=OFF \
+            -DJUCE_BUILD_EXTRAS=OFF \
+            -S ./ \
+            -B ./build
+          cmake --build ./build --config Release --target JuicySFPlugin_VST3
+
+      # - name: Install Linux dependencies
+      #   if: matrix.os == 'ubuntu-latest'
+      #   run: sudo apt-get update && sudo apt-get install fluidsynth cmake-data cmake libglib2.0-0 libsndfile-dev libasound2-dev libjack-dev portaudio19-dev libsdl2-dev libpulse-dev libdbus-1-dev libsystemd-dev libinstpatch-dev libreadline-dev g++-7 g++-8 clang-7 clang-8 clang-9 clang-10 clang-tidy-10
+
+      # - name: Install macOS dependencies
+      #   if: matrix.os == 'macos-latest'
+      #   run: brew install fluidsynth cmake pulseaudio portaudio jack dbus sdl2
+
+      # - name: Install Windows dependencies
+      #   if: matrix.os == 'windows-latest'
+      #   run: |
+      #     mkdir D:/deps
+      #     cd D:/deps
+      #     curl -LfsS -o gtk-bundle-dev.zip http://ftp.gnome.org/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip
+      #     curl -LfsS -o libsndfile-dev.zip http://www.mega-nerd.com/libsndfile/files/libsndfile-1.0.28-w64.zip
+      #     7z x -aos -- gtk-bundle-dev.zip
+      #     7z x -aos -- libsndfile-dev.zip
+      #     mv ./lib/libsndfile-1.lib ./lib/sndfile.lib
+      #     mv ./lib/libsndfile-1.def ./lib/sndfile.def
+      #     rm -rf C:/Strawberry/perl/bin/pkg-config*
+      #     echo "/deps/bin" >> $GITHUB_PATH
+
+      # - name: Build plugins
+      #   run: |
+      #     cmake \
+      #       -G "${{ matrix.generator }}" \
+      #       -DCMAKE_BUILD_TYPE="${{ env.type }}" \
+      #       -DCMAKE_INSTALL_PREFIX=$HOME/fluidsynth_install \
+      #       -DCMAKE_VERBOSE_MAKEFILE=1 \
+      #       -DNO_GUI=1 \
+      #       ${{ matrix.flags }} \
+      #       -S "${{ env.dir_source }}" \
+      #       -B "${{ env.dir_build }}"
+      #     cmake --build ${{ env.dir_build }} --config ${{ env.type }} --target JuicySFPlugin_VST3
+
+
+      - name: List files generated
+        run: |
+          cd ${{ matrix.path }}
+          find "$(pwd)"
+
+      - name: Metadata
+        run: |
+          npm install @studiorack/cli -g
+          cp -v ./src/assets/* "${{ matrix.path }}"
+          studiorack validate "${{ matrix.path }}/**/*.{vst,vst3}" --files --json --txt --zip --summary
+
+      - name: Upload
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const path = require('path');
+            const fs = require('fs');
+            const release_id = '${{ needs.create_release.outputs.upload_id }}';
+            for (let file of await fs.readdirSync('${{ matrix.path }}')) {
+              if (path.extname(file) === '.zip') {
+                console.log('upload zip', `${{ matrix.path }}/${file}`);
+                await github.repos.uploadReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  release_id: release_id,
+                  name: `${path.basename(file, path.extname(file))}-${{ matrix.name }}.zip`,
+                  data: await fs.readFileSync(`${{ matrix.path }}/${file}`)
+                });
+                if ("${{ matrix.os }}" == 'macos-latest') {
+                  console.log('upload png', `${{ matrix.path }}/${path.basename(file, path.extname(file))}.png`);
+                  await github.repos.uploadReleaseAsset({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    release_id: release_id,
+                    name: `${path.basename(file, path.extname(file))}.png`,
+                    data: await fs.readFileSync(`${{ matrix.path }}/${path.basename(file, path.extname(file))}.png`)
+                  });
+                  console.log('upload wav', `${{ matrix.path }}/${path.basename(file, path.extname(file))}.wav`);
+                  await github.repos.uploadReleaseAsset({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    release_id: release_id,
+                    name: `${path.basename(file, path.extname(file))}.wav`,
+                    data: await fs.readFileSync(`${{ matrix.path }}/${path.basename(file, path.extname(file))}.wav`)
+                  });
+                }
+              }
+            }
+      - name: Upload metadata
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ${{ matrix.path }}/plugins.json
+          asset_name: plugins.json
+          asset_content_type: application/json
+
+  publish_release:
+    name: Publish release
+    needs: [create_release, build_release]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ needs.create_release.outputs.upload_id }}
