@@ -1,0 +1,91 @@
+name: Build VST3 Linux
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+
+    runs-on: ${{ matrix.runner }}
+    name: VST3 Linux ${{ matrix.arch }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y \
+            cmake ninja-build build-essential pkg-config git \
+            libfluidsynth-dev \
+            libasound2-dev \
+            libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev \
+            libgl-dev libfreetype-dev libfontconfig1-dev \
+            libharfbuzz-dev
+
+      - name: Cache JUCE
+        id: cache-juce
+        uses: actions/cache@v4
+        with:
+          path: /opt/JUCE
+          key: juce-7.0.12-${{ matrix.arch }}
+
+      - name: Clone and install JUCE
+        if: steps.cache-juce.outputs.cache-hit != 'true'
+        run: |
+          git clone --depth 1 --branch 7.0.12 \
+            https://github.com/juce-framework/JUCE.git /tmp/JUCE
+          cmake -B /tmp/JUCE/build -S /tmp/JUCE \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=/opt/JUCE \
+            -DJUCE_BUILD_EXTRAS=OFF \
+            -DJUCE_BUILD_EXAMPLES=OFF
+          cmake --build /tmp/JUCE/build --target install
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -S . \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH=/opt/JUCE \
+            -DBUILD_SHARED_LIBS=ON \
+            -DJUCE_COPY_PLUGIN_AFTER_BUILD=FALSE
+
+      - name: Build VST3
+        run: cmake --build build --target JuicySFPlugin_VST3 --parallel
+
+      - name: Locate VST3 binary
+        id: locate
+        run: |
+          SO=$(find build -name "*.so" -path "*/VST3/*" | head -1)
+          echo "so=$SO" >> "$GITHUB_OUTPUT"
+          ls -lh "$SO"
+
+      - name: Verify artifact size ≥ 1 MB
+        run: |
+          SO="${{ steps.locate.outputs.so }}"
+          SIZE=$(stat -c%s "$SO")
+          echo "Size: $SIZE bytes"
+          if [ "$SIZE" -lt 1048576 ]; then
+            echo "ERROR: artifact is smaller than 1 MB ($SIZE bytes)"
+            exit 1
+          fi
+
+      - name: Upload VST3 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: juicysfplugin-vst3-linux-${{ matrix.arch }}
+          path: build/**/*.vst3
+          if-no-files-found: error
